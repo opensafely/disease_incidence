@@ -1,12 +1,167 @@
 version: '3.0'
 
-# Ignore this`expectation` block. It is required but not used, and will be removed in future versions.
 expectations:
-  population_size: 1000
+  population_size: 10000
 
 actions:
-  generate_dataset:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition.py --output output/dataset.csv.gz
+             
+  # generate_dataset:
+  #   run: ehrql:v1 generate-dataset analysis/dataset_definition_measures.py
+  #     --output output/dataset_definition.csv
+  #     --
+  #     --start-date "2023-04-01"
+  #     --intervals 12
+  #   outputs:
+  #     highly_sensitive:
+  #       cohort: output/dataset_definition.csv 
+
+  measures_dataset:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset.csv
+      --
+      --start-date "2023-04-01"
+      --intervals 12
     outputs:
-      highly_sensitive:
-        dataset: output/dataset.csv.gz
+      moderately_sensitive:
+        measure_csv: output/measures/measures_dataset.csv
+        doc1: output/measures/measures_dataset_rheumatoid_arthritis.csv 
+        doc2: output/measures/measures_dataset_axial_spondyloarthritis.csv 
+
+  # create_cohorts_ehrQL:
+  #   run: stata-mp:latest analysis/000_define_covariates_ehrQL.do
+  #   needs: [generate_dataset]
+  #   outputs:
+  #     highly_sensitive:
+  #       log1: logs/cleaning_dataset_ehrQL.log 
+  #       data1: output/data/file_eia_all_ehrQL.dta
+
+  # generate_study_population_allpts:
+  #   run: cohortextractor:latest generate_cohort --study-definition study_definition_allpts
+  #   outputs:
+  #     highly_sensitive:
+  #       cohort: output/input_allpts.csv
+     
+  # create_cohorts_allpts:
+  #   run: stata-mp:latest analysis/001_define_covariates_allpts.do
+  #   needs: [generate_study_population_allpts]
+  #   outputs:
+  #     highly_sensitive:
+  #       log1: logs/cleaning_dataset_allpts.log 
+  #       data1: output/data/file_eia_allpts.dta        
+
+  # run_baseline_tables_allpts:
+  #   run: stata-mp:latest analysis/101_baseline_characteristics_allpts.do
+  #   needs: [create_cohorts_allpts]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/descriptive_tables_allpts.log      
+  #       doc1: output/tables/baseline_allpts.csv      
+
+  # run_baseline_tables:
+  #   run: stata-mp:latest analysis/100_baseline_characteristics.do
+  #   needs: [create_cohorts_ehrQL]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/descriptive_tables.log   
+  #       doc1: output/tables/baseline_bydiagnosis.csv   
+  #       doc2: output/tables/baseline_byyear.csv 
+  #       doc3: output/tables/referral_bydiag_nomiss.csv   
+  #       doc4: output/tables/referral_byyear_nomiss.csv   
+  #       doc5: output/tables/referral_byregion_nomiss.csv   
+  #       doc6: output/tables/drug_bydiag_miss.csv 
+  #       doc7: output/tables/drug_byyear_miss.csv 
+  #       doc8: output/tables/drug_byyear_ra_miss.csv   
+  #       doc9: output/tables/drug_byyear_psa_miss.csv
+  #       doc10: output/tables/drug_byyear_undiff_miss.csv
+  #       doc11: output/tables/drug_byyearanddisease.csv
+  #       doc12: output/tables/drug_byyearandregion.csv
+  #       doc13: output/tables/diag_count_bymonth.csv
+  #       doc14: output/tables/diag_count_byyear.csv
+  #       doc15: output/tables/appt_count_bymonth.csv
+  #       doc16: output/tables/diag_count_byyear_ethn.csv
+  #       doc17: output/tables/diag_count_byyear_imd.csv
+  #       doc18: output/tables/diag_count_bymonth_female.csv
+  #       doc19: output/tables/diag_count_bymonth_male.csv
+  #       doc20: output/tables/diag_count_byyear_female.csv
+  #       doc21: output/tables/diag_count_byyear_male.csv
+  #       figure1: output/figures/incidence_twoway_rounded.svg
+  #       figure2: output/figures/incidence_twoway_appt.svg
+  #       figure3: output/figures/incidence_twoway_rounded_female.svg
+  #       figure4: output/figures/incidence_twoway_rounded_male.svg
+  
+  # run_itsa_models:
+  #   run: stata-mp:latest analysis/200_itsa_models.do
+  #   needs: [create_cohorts_ehrQL]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/itsa_models.log   
+  #       figure1:  output/figures/ITSA_diagnostic_delay_newey.svg
+  #       figure2:  output/figures/ITSA_diagnostic_delay_prais.svg
+  #       figure3:  output/figures/ITSA_diagnostic_delay_GP_newey.svg
+  #       figure4:  output/figures/ITSA_diagnostic_delay_GP_prais.svg
+  #       doc1: output/tables/gp_to_appt_ITSA_table.csv
+  
+  # run_itsa_models_drugs:
+  #   run: stata-mp:latest analysis/201_itsa_models_drugs.do
+  #   needs: [create_cohorts_ehrQL]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/itsa_models_drugs.log   
+  #       figure1:  output/figures/ITSA_csDMARD_delay_newey.svg
+  #       figure2:  output/figures/ITSA_csDMARD_delay_prais.svg
+  #       figure3: output/figures/ITSA_csDMARD_delay_newey_sensitivity.svg
+  #       figure4: output/figures/ITSA_csDMARD_delay_prais_sensitivity.svg
+  #       doc1: output/tables/appt_to_csdmard_ITSA_table.csv
+
+  # run_box_plots:
+  #   run: stata-mp:latest analysis/300_box_plots.do
+  #   needs: [create_cohorts_ehrQL]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/box_plots.log
+  #       figure 1: output/figures/regional_qs1_bar_overall.svg
+  #       figure 2: output/figures/regional_qs1_bar_2019.svg 
+  #       figure 3: output/figures/regional_qs1_bar_2020.svg       
+  #       figure 4: output/figures/regional_qs2_bar_overall.svg  
+  #       figure 5: output/figures/regional_qs2_bar_2019.svg 
+  #       figure 6: output/figures/regional_qs2_bar_2020.svg    
+  #       figure 7: output/figures/regional_qs2_bar_GP_overall.svg  
+  #       figure 8: output/figures/regional_qs2_bar_GP_2019.svg     
+  #       figure 9: output/figures/regional_qs2_bar_GP_2020.svg 
+  #       figure 10: output/figures/regional_qs2_bar_GP_merged.svg
+  #       figure 11: output/figures/regional_qs2_bar_GP_ethnicity.svg
+  #       figure 12: output/figures/regional_qs2_bar_GP_imd.svg
+  #       figure 13: output/figures/regional_csdmard_bar_overall.svg  
+  #       figure 14: output/figures/regional_csdmard_bar_2019.svg     
+  #       figure 15: output/figures/regional_csdmard_bar_2020.svg 
+  #       figure 16: output/figures/regional_csdmard_bar_merged.svg
+  #       figure 17: output/figures/regional_csdmard_bar_ethnicity.svg
+  #       figure 18: output/figures/regional_csdmard_bar_imd.svg
+
+  # run_redacted_tables:
+  #   run: stata-mp:latest analysis/400_redacted_tables.do
+  #   needs: [create_cohorts_ehrQL]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/redacted_tables.log   
+  #       doc1: output/tables/table_1_rounded_bydiag.csv   
+  #       doc2: output/tables/table_mean_bydiag_rounded.csv 
+  #       doc3: output/tables/table_median_bydiag_rounded.csv   
+  #       doc4: output/tables/table_median_bydiag_rounded_to21.csv   
+  #       doc5: output/tables/ITSA_tables_appt_delay_rounded.csv   
+  #       doc6: output/tables/ITSA_tables_csdmard_delay_rounded.csv 
+  #       doc7: output/tables/drug_byyearanddisease_rounded.csv 
+  #       doc8: output/tables/first_csdmard_rounded.csv   
+  #       doc9: output/tables/drug_byyearandregion_rounded.csv
+  #       doc10: output/tables/referral_byregion_rounded.csv
+  #       doc11: output/tables/consultation_medium_rounded.csv
+  #       doc12: output/tables/table_median_bydiag_rounded_to21_report.csv 
+  #       doc13: output/tables/first_csdmard_rounded_report.csv  
+
+  # run_redacted_tables_allpts:
+  #   run: stata-mp:latest analysis/401_redacted_tables_allpts.do
+  #   needs: [create_cohorts_allpts]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/redacted_tables_allpts.log   
+  #       doc1: output/tables/table_1_rounded_allpts.csv             
