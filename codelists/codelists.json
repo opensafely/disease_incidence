@@ -24,12 +24,6 @@
       "downloaded_at": "2024-08-19 09:51:00.004245Z",
       "sha": "bb2bfbfdcd1631a27ef9c1faf5ba9c95b8beaf27"
     },
-    "user-markdrussell-referral-rheumatology.csv": {
-      "id": "user/markdrussell/referral-rheumatology/6bc8e5e3",
-      "url": "https://www.opencodelists.org/codelist/user/markdrussell/referral-rheumatology/6bc8e5e3/",
-      "downloaded_at": "2024-08-19 09:51:00.150801Z",
-      "sha": "6905817b91b0fe74de27fd32f7ab13030c7a43df"
-    },
     "opensafely-cancer-excluding-lung-and-haematological.csv": {
       "id": "opensafely/cancer-excluding-lung-and-haematological/2020-04-15",
       "url": "https://www.opencodelists.org/codelist/opensafely/cancer-excluding-lung-and-haematological/2020-04-15/",
@@ -84,11 +78,11 @@
       "downloaded_at": "2024-08-19 09:51:01.610356Z",
       "sha": "c5c8b3fb290a31a49442ee57503b7c6067c44a40"
     },
-    "opensafely-ethnicity.csv": {
-      "id": "opensafely/ethnicity/2020-04-27",
-      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity/2020-04-27/",
-      "downloaded_at": "2024-08-19 09:51:01.751265Z",
-      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    "opensafely-ethnicity-snomed-0removed.csv": {
+      "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
+      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
+      "downloaded_at": "2024-09-06 13:28:04.244676Z",
+      "sha": "8b849b5b785d80306e488d0109640c8c1d2da01b"
     },
     "opensafely-haematological-cancer.csv": {
       "id": "opensafely/haematological-cancer/2020-04-15",
@@ -131,6 +125,18 @@
       "url": "https://www.opencodelists.org/codelist/opensafely/stroke-updated/2020-06-02/",
       "downloaded_at": "2024-08-19 09:51:02.767480Z",
       "sha": "e62a8af49698022220de1e1e438d6b6c611e666e"
+    },
+    "bristol-multiple-sclerosis-icd10-v13.csv": {
+      "id": "bristol/multiple-sclerosis-icd10-v13/31e7874a",
+      "url": "https://www.opencodelists.org/codelist/bristol/multiple-sclerosis-icd10-v13/31e7874a/",
+      "downloaded_at": "2024-08-21 12:42:59.424646Z",
+      "sha": "7a14f783d25f63d5928adc223e0338dc6d20f54e"
+    },
+    "opensafely-multiple-sclerosis-v2.csv": {
+      "id": "opensafely/multiple-sclerosis-v2/063627df",
+      "url": "https://www.opencodelists.org/codelist/opensafely/multiple-sclerosis-v2/063627df/",
+      "downloaded_at": "2024-08-21 13:44:40.380299Z",
+      "sha": "e89c12f28e67e5c8dedd322f936a279cc837c564"
     }
   }
 }

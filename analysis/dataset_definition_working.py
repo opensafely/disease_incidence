@@ -3,12 +3,27 @@ from ehrql.tables.tpp import patients, medications, practice_registrations, clin
 from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
+import sys
+from argparse import ArgumentParser
 
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
 
-index_date = "2015-03-01"
-end_date = "2023-02-28"
+# Arguments (from project.yaml)
+parser = ArgumentParser()
+parser.add_argument("--start-date", type=str)
+parser.add_argument("--intervals", type=int)
+
+args = parser.parse_args()
+
+start_date = args.start_date
+intervals = args.intervals
+
+# index_date = INTERVAL.start_date
+# end_date = INTERVAL.end_date
+
+index_date = "2023-04-01"
+end_date = "2023-04-30"
 
 # Incident diagnostic code in primary care record (SNOMED) (assuming before study end date)
 def first_code_in_period_snomed(dx_codelist):
@@ -71,58 +86,49 @@ def preceding_registration(dx_date):
             practice_registrations.practice_pseudo_id,
         ).last_for_patient()
 
-# Define sex, date of death (only need to capture once) 
+# Define demographics, date of death, practice registration
 dataset.sex = patients.sex
-dataset.date_of_death = patients.date_of_death
 
-# Define patient ethnicity
-latest_ethnicity_code = (
-    clinical_events.where(clinical_events.snomedct_code.is_in(codelists.ethnicity_codes))
-    .where(clinical_events.date.is_on_or_before(end_date))
-    .sort_by(clinical_events.date)
-    .last_for_patient()
-    .snomedct_code
-)
-
-latest_ethnicity = latest_ethnicity_code.to_category(codelists.ethnicity_codes)
-
-dataset.ethnicity = case(
-    when(latest_ethnicity == "1").then("White"),
-    when(latest_ethnicity == "2").then("Mixed"),
-    when(latest_ethnicity == "3").then("Asian or Asian British"),
-    when(latest_ethnicity == "4").then("Black or Black British"),
-    when(latest_ethnicity == "5").then("Chinese or Other Ethnic Groups"),
-    otherwise="missing",
-)
-
-# Define patient IMD, using latest data for each patient
-latest_address_per_patient = addresses.sort_by(addresses.start_date).last_for_patient()
-imd_rounded = latest_address_per_patient.imd_rounded
-dataset.imd_quintile = case(
-    when((imd_rounded >= 0) & (imd_rounded < int(32844 * 1 / 5))).then("1"),
-    when(imd_rounded < int(32844 * 2 / 5)).then("2"),
-    when(imd_rounded < int(32844 * 3 / 5)).then("3"),
-    when(imd_rounded < int(32844 * 4 / 5)).then("4"),
-    when(imd_rounded < int(32844 * 5 / 5)).then("5"),
+dataset.age = patients.age_on(index_date)
+dataset.age_band = case(  
+    when((dataset.age >= 0) & (dataset.age < 4)).then("age_0_4"),
+    when((dataset.age >= 5) & (dataset.age < 9)).then("age_5_9"),
+    when((dataset.age >= 10) & (dataset.age < 14)).then("age_10_14"),
+    when((dataset.age >= 15) & (dataset.age < 19)).then("age_15_19"),
+    when((dataset.age >= 20) & (dataset.age < 24)).then("age_20_24"),
+    when((dataset.age >= 25) & (dataset.age < 29)).then("age_25_29"),
+    when((dataset.age >= 30) & (dataset.age < 34)).then("age_30_34"),
+    when((dataset.age >= 35) & (dataset.age < 39)).then("age_35_39"),
+    when((dataset.age >= 40) & (dataset.age < 44)).then("age_40_44"),
+    when((dataset.age >= 45) & (dataset.age < 49)).then("age_45_49"),
+    when((dataset.age >= 50) & (dataset.age < 54)).then("age_50_54"),
+    when((dataset.age >= 55) & (dataset.age < 59)).then("age_55_59"),
+    when((dataset.age >= 60) & (dataset.age < 64)).then("age_60_64"),
+    when((dataset.age >= 65) & (dataset.age < 69)).then("age_65_69"),
+    when((dataset.age >= 70) & (dataset.age < 74)).then("age_70_74"),
+    when((dataset.age >= 75) & (dataset.age < 79)).then("age_75_79"),
+    when((dataset.age >= 80) & (dataset.age < 84)).then("age_80_84"),
+    when((dataset.age >= 85) & (dataset.age < 89)).then("age_85_89"),
+    when((dataset.age >= 90)).then("age_greater_equal_90"),
     otherwise="Missing",
 )
 
-# Any practice registration before study end date
-# If registered with multiple practices, sort by most recent then longest duration then practice ID)
-dataset.any_registration = practice_registrations.where(
-            practice_registrations.start_date <= end_date
-        ).except_where(
-            practice_registrations.end_date < index_date    
-        ).exists_for_patient()
+dataset.date_of_death = patients.date_of_death
 
-# Define population as any registered patient after index date - then apply further restrictions later
+dataset.currently_registered = practice_registrations.for_patient_on(index_date).exists_for_patient()
+dataset.preceding_reg_index = preceding_registration(index_date).exists_for_patient()
+
+# Define population
 dataset.define_population(
-    (dataset.any_registration == True)
+    ((dataset.age >= 0) & (dataset.age < 110))
     & ((dataset.sex == "male") | (dataset.sex == "female"))
+    & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
+    & (dataset.currently_registered)
 )  
 
 # List of diseases and codelists to cycle through
 diseases = ["rheumatoid_arthritis", "diabetes_mellitus", "multiple_sclerosis"]
+# diseases = ["multiple_sclerosis"]
 codelist_types = ["snomed", "ctv", "icd"]
 
 for disease in diseases:
@@ -150,6 +156,10 @@ for disease in diseases:
         else:
             dataset.add_column(f"{disease}_{codelist_type}_inc_date", None)
 
+    # print((getattr(dataset, f"{disease}_snomed_inc_date", None)), file=sys.stderr)
+    # print((getattr(dataset, f"{disease}_ctv_inc_date", None)), file=sys.stderr)
+    # print((getattr(dataset, f"{disease}_icd_inc_date", None)), file=sys.stderr)
+
     # Incident date for each disease
     dataset.add_column(f"{disease}_inc_date",
         minimum_of(*[date for date in [
@@ -159,16 +169,44 @@ for disease in diseases:
             ] if date is not None]),
     )
 
+    # Prevalent diagnosis
+    dataset.add_column(f"{disease}_prev", 
+        case(
+            when(getattr(dataset, f"{disease}_inc_date") < index_date).then(True),
+            otherwise=False,
+        )
+    )
+    
+    # Incident diagnosis (i.e. incident date within interval window)
+    dataset.add_column(f"{disease}_inc_case", 
+        case(
+            when(((getattr(dataset, f"{disease}_inc_date")) >= index_date) & ((getattr(dataset, f"{disease}_inc_date")) <= end_date)).then(True),
+            otherwise=False,
+        )
+    )
+
     # 12 months registration preceding incident diagnosis date
     dataset.add_column(f"{disease}_preceding_reg_inc", 
         preceding_registration(getattr(dataset, f"{disease}_inc_date")
         ).exists_for_patient()
     )
 
-    # Alive at incident diagnosis date
+    # Death after incident date or not died
     dataset.add_column(f"{disease}_alive_inc",
         case(                     
             when((dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) | (dataset.date_of_death.is_null())).then(True),
             otherwise=False,
         )
     )
+
+    # Incident case and preceding registration and alive
+    dataset.add_column(f"{disease}_inc_case_12m_alive", 
+        case(
+            when(((getattr(dataset, f"{disease}_inc_case")) == True)
+                & ((getattr(dataset, f"{disease}_preceding_reg_inc") == True))
+                & ((getattr(dataset, f"{disease}_alive_inc") == True))                
+                ).then(True),
+            otherwise=False,
+        )
+    )
+

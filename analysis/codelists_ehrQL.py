@@ -3,8 +3,8 @@ from ehrql import codelist_from_csv
 
 # DEMOGRAPHIC CODELIST
 ethnicity_codes = codelist_from_csv(
-    "codelists/opensafely-ethnicity.csv",
-    column="Code",
+    "codelists/opensafely-ethnicity-snomed-0removed.csv",
+    column="snomedcode",
     category_column="Grouping_6",
 )
 
@@ -24,7 +24,7 @@ psoriatic_arthritis_codes = codelist_from_csv(
     "codelists/user-markdrussell-psoriatic-arthritis.csv", column="code",
 )
 
-rheumatoid_arthritis = codelist_from_csv(
+rheumatoid_arthritis_snomed = codelist_from_csv(
     "codelists/user-markdrussell-new-rheumatoid-arthritis.csv", column="code",
 )
 
@@ -36,7 +36,7 @@ chronic_cardiac_disease_codes = codelist_from_csv(
     "codelists/opensafely-chronic-cardiac-disease.csv", column="CTV3ID",
 )
 
-diabetes_codes = codelist_from_csv(
+diabetes_mellitus_ctv = codelist_from_csv(
     "codelists/opensafely-diabetes.csv", column="CTV3ID",
 )
 
@@ -85,6 +85,12 @@ ckd_codes = codelist_from_csv(
 
 bmi_codes = ["60621009", "846931000000101"]
 
-referral_rheumatology = codelist_from_csv(
-    "codelists/user-markdrussell-referral-rheumatology.csv", column = "code"
+multiple_sclerosis_ctv = codelist_from_csv(
+    "codelists/opensafely-multiple-sclerosis-v2.csv",
+    column="code",
+)
+
+multiple_sclerosis_icd = codelist_from_csv(
+    "codelists/bristol-multiple-sclerosis-icd10-v13.csv",
+    column="code",
 )
