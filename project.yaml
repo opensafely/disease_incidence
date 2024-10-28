@@ -20,7 +20,7 @@ actions:
       --intervals 96
     needs: [generate_dataset]
     outputs:
-      moderately_sensitive:
+      highly_sensitive:
         measure_csv: output/measures/measures_dataset.csv
 
   run_incidence_graphs:
