@@ -200,7 +200,7 @@ for (j in 1:length(disease_list)) {
       ) +
       ggtitle(dis)
     
-    ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, "svg"), plot = c1, width = 8, height = 6, device = "svg")
+    ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, ".svg"), plot = c1, width = 8, height = 6, device = "svg")
     
     print(c1)
   
