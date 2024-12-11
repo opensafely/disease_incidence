@@ -14,7 +14,7 @@ USER-INSTALLED ADO:
 
 **Set filepaths
 *global projectdir "C:\Users\Mark\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
-*global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
+global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 global projectdir `c(pwd)'
 di "$projectdir"
 
@@ -117,14 +117,20 @@ save "$projectdir/output/data/arima_nonstandardised.dta", replace //change to re
 outsheet * using "$projectdir/output/data/arima_nonstandardised.csv" , comma replace //change to remove _new when ready	
 
 *Calculate the age-standardized incidence rate (ASIR): use age specific incidence data - European Standard Population 2013
-import excel "$projectdir/output/data/ESP.xls", sheet("Sheet1") firstrow clear
-drop if age=="All"
-save "$projectdir/output/data/esp_for_standardisation.dta", replace
-
-* Apply the Standard Population Weights: multiply crude age-specific incidence rates by corresponding standard population weights
 use "$projectdir/output/data/processed_nonstandardised.dta", clear
-merge m:1 age using "$projectdir/output/data/esp_for_standardisation.dta", nogen
 
+*Append includes the European Standard Population 2013
+gen prop=10500 if age=="age_0_9"
+replace prop=11000 if age=="age_10_19"
+replace prop=12000 if age=="age_20_29"
+replace prop=13500 if age=="age_30_39"
+replace prop=14000 if age=="age_40_49"
+replace prop=13500 if age=="age_50_59"
+replace prop=11500 if age=="age_60_69"
+replace prop=9000 if age=="age_70_79"
+replace prop=5000 if age=="age_greater_equal_80"
+
+*Apply the Standard Population Weights: multiply crude age-specific incidence rates by corresponding standard population weights
 *Generate standardised incidence and prevalence, overall and by sex
 gen new_value = prop*ratio_100000
 bys disease mo_year_diagn measure: egen sum_new_value_male=sum(new_value) if sex=="male" 
