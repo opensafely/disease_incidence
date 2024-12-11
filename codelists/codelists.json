@@ -1,46 +1,10 @@
 {
   "files": {
-    "user-markdrussell-psoriatic-arthritis.csv": {
-      "id": "user/markdrussell/psoriatic-arthritis/6c69f57e",
-      "url": "https://www.opencodelists.org/codelist/user/markdrussell/psoriatic-arthritis/6c69f57e/",
-      "downloaded_at": "2024-08-19 09:50:59.560483Z",
-      "sha": "78ddeb25b661ae4e2c9f2aff79a7d519989888ca"
-    },
-    "user-markdrussell-axial-spondyloarthritis.csv": {
-      "id": "user/markdrussell/axial-spondyloarthritis/057968b4",
-      "url": "https://www.opencodelists.org/codelist/user/markdrussell/axial-spondyloarthritis/057968b4/",
-      "downloaded_at": "2024-08-19 09:50:59.730498Z",
-      "sha": "dd31e0813e19ce9818d6fe909d2104395abaf480"
-    },
-    "user-markdrussell-new-rheumatoid-arthritis.csv": {
-      "id": "user/markdrussell/new-rheumatoid-arthritis/535a8249",
-      "url": "https://www.opencodelists.org/codelist/user/markdrussell/new-rheumatoid-arthritis/535a8249/",
-      "downloaded_at": "2024-08-19 09:50:59.878016Z",
-      "sha": "28044875a1f74e2d5d50be3178b6349720416e6d"
-    },
-    "user-markdrussell-undiff-eia.csv": {
-      "id": "user/markdrussell/undiff-eia/459a5829",
-      "url": "https://www.opencodelists.org/codelist/user/markdrussell/undiff-eia/459a5829/",
-      "downloaded_at": "2024-08-19 09:51:00.004245Z",
-      "sha": "bb2bfbfdcd1631a27ef9c1faf5ba9c95b8beaf27"
-    },
-    "opensafely-cancer-excluding-lung-and-haematological.csv": {
-      "id": "opensafely/cancer-excluding-lung-and-haematological/2020-04-15",
-      "url": "https://www.opencodelists.org/codelist/opensafely/cancer-excluding-lung-and-haematological/2020-04-15/",
-      "downloaded_at": "2024-08-19 09:51:00.334905Z",
-      "sha": "8fa1164b587028c4bd5903289e0948642d399e56"
-    },
     "opensafely-chronic-cardiac-disease.csv": {
       "id": "opensafely/chronic-cardiac-disease/2020-04-08",
       "url": "https://www.opencodelists.org/codelist/opensafely/chronic-cardiac-disease/2020-04-08/",
       "downloaded_at": "2024-08-19 09:51:00.491981Z",
       "sha": "2267f6fada9c77a2bbf62ce7a1c07ddf48348d61"
-    },
-    "opensafely-chronic-liver-disease.csv": {
-      "id": "opensafely/chronic-liver-disease/2020-06-02",
-      "url": "https://www.opencodelists.org/codelist/opensafely/chronic-liver-disease/2020-06-02/",
-      "downloaded_at": "2024-08-19 09:51:00.616883Z",
-      "sha": "d31d212d23c5f0e15f63236d2106282fb070bd7c"
     },
     "opensafely-chronic-kidney-disease.csv": {
       "id": "opensafely/chronic-kidney-disease/2020-04-14",
@@ -72,35 +36,11 @@
       "downloaded_at": "2024-08-19 09:51:01.399384Z",
       "sha": "f2781f0c9a0617b30996d681a798eedd152a09af"
     },
-    "opensafely-dmards.csv": {
-      "id": "opensafely/dmards/2020-06-23",
-      "url": "https://www.opencodelists.org/codelist/opensafely/dmards/2020-06-23/",
-      "downloaded_at": "2024-08-19 09:51:01.610356Z",
-      "sha": "c5c8b3fb290a31a49442ee57503b7c6067c44a40"
-    },
     "opensafely-ethnicity-snomed-0removed.csv": {
       "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
       "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
       "downloaded_at": "2024-09-06 13:28:04.244676Z",
       "sha": "8b849b5b785d80306e488d0109640c8c1d2da01b"
-    },
-    "opensafely-haematological-cancer.csv": {
-      "id": "opensafely/haematological-cancer/2020-04-15",
-      "url": "https://www.opencodelists.org/codelist/opensafely/haematological-cancer/2020-04-15/",
-      "downloaded_at": "2024-08-19 09:51:01.944520Z",
-      "sha": "59d65c613a7b984ba46eca8a74eedcc6320609fe"
-    },
-    "opensafely-hypertension.csv": {
-      "id": "opensafely/hypertension/2020-04-28",
-      "url": "https://www.opencodelists.org/codelist/opensafely/hypertension/2020-04-28/",
-      "downloaded_at": "2024-08-19 09:51:02.094341Z",
-      "sha": "b0d7bbf6ea767366db458bc6f6d37955ae331cc7"
-    },
-    "opensafely-lung-cancer.csv": {
-      "id": "opensafely/lung-cancer/2020-04-15",
-      "url": "https://www.opencodelists.org/codelist/opensafely/lung-cancer/2020-04-15/",
-      "downloaded_at": "2024-08-19 09:51:02.227638Z",
-      "sha": "645584a20f81c4d76187a2c305c904e8b8c63dbb"
     },
     "opensafely-smoking-clear.csv": {
       "id": "opensafely/smoking-clear/2020-04-29",
@@ -113,12 +53,6 @@
       "url": "https://www.opencodelists.org/codelist/opensafely/smoking-unclear/2020-04-29/",
       "downloaded_at": "2024-08-19 09:51:02.495736Z",
       "sha": "d9dad3e9d9491f765863b2617114c521957b6db1"
-    },
-    "opensafely-solid-organ-transplantation.csv": {
-      "id": "opensafely/solid-organ-transplantation/2020-04-10",
-      "url": "https://www.opencodelists.org/codelist/opensafely/solid-organ-transplantation/2020-04-10/",
-      "downloaded_at": "2024-08-19 09:51:02.632598Z",
-      "sha": "94178a9e19770b9c43c08fe42df6ab5ed0d9ec49"
     },
     "opensafely-stroke-updated.csv": {
       "id": "opensafely/stroke-updated/2020-06-02",

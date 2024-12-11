@@ -358,13 +358,13 @@ foreach disease_ of local levels {
 }
 /*	
 keep if measure_inc==1
-keep if measure == "rheumatoid_arthritis_incidence"
-keep if disease == "Rheumatoid Arthritis"
+keep if measure == "***"
+keep if disease == "***"
 
 *Lowess
 twoway scatter asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) || lowess asr_all mo_year_diagn, ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(prev_lowess, replace) saving("$projectdir/output/figures/prev_lowess.gph", replace)
 
-*Test Lowess with gout data - not good enough
+*Test Lowess with data - not good enough
 import delimited "$projectdir/output/data/incidence_month_rounded.csv", clear
 gen monyear = monthly(mo_year_diagn, "MY", 2000) + 1200
 format monyear %tmMon-CCYY
@@ -373,12 +373,12 @@ rename monyear mo_year_diagn
 
 keep if sex=="All"
 
-twoway scatter incidence mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) || lowess incidence mo_year_diagn, ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("Gout", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(prev_lowess, replace) saving("$projectdir/output/figures/prev_lowess.gph", replace)
+twoway scatter incidence mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) || lowess incidence mo_year_diagn, ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("Disease", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(prev_lowess, replace) saving("$projectdir/output/figures/prev_lowess.gph", replace)
 
 *Moving average
 use "$projectdir/output/data/processed_standardised.dta", clear
 
-twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) lcolor(bluishgray)|| line asr_all_ma mo_year_diagn, lcolor(midblue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("Rheumatoid Arthritis", size(medium)) xline(722) legend(off) name(nc_adj_ma, replace) saving("$projectdir/output/figures/inc_adj_ma.gph", replace)
+twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) lcolor(bluishgray)|| line asr_all_ma mo_year_diagn, lcolor(midblue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("Disease", size(medium)) xline(722) legend(off) name(nc_adj_ma, replace) saving("$projectdir/output/figures/inc_adj_ma.gph", replace)
 
 
 
@@ -386,7 +386,7 @@ twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 po
 
 use "$projectdir/output/data/processed_standardised.dta", clear
 
-keep if measure == "rheumatoid_arthritis_incidence"
+keep if measure == ***
 
 sort mo_year_diagn
 keep mo_year_diagn ratio_all_100000 //use crude incidence rate 
@@ -481,7 +481,7 @@ replace predicted_series = inc_rate[1] in 1
 replace predicted_series = predicted_series[_n-1] + inc_rate_diff_p3 in 2/L
 twoway (tsline inc_rate predicted_series)
 
-*Try with gout data
+*Try with data
 import delimited "$projectdir/output/data/incidence_month_rounded.csv", clear
 
 keep if sex=="All"
@@ -492,11 +492,11 @@ format mo_year_diagn_clean %tmMon_CCYY
 drop mo_year_diagn
 rename mo_year_diagn_clean mo_year_diagn
 
-keep mo_year_diagn incidence_gout year
-rename incidence_gout inc_rate
+keep mo_year_diagn incidence year
+rename incidence inc_rate
 gen t=_n
 
-save "$projectdir/output/data/raw_incidence_gout.dta", replace
+save "$projectdir/output/data/raw_incidence.dta", replace
 
 keep if year<2020
 
@@ -554,15 +554,15 @@ drop fvar
 *Merge with original data
 replace inc_rate_pR = inc_rate if t<61
 keep t inc_rate_pR
-merge 1:1 t using "$projectdir/output/data/raw_incidence_gout.dta", nogen
+merge 1:1 t using "$projectdir/output/data/raw_incidence.dta", nogen
 
 *Generate 3-monthly moving averages of IR
 gen inc_rate_ma =(inc_rate[_n-1]+inc_rate[_n]+inc_rate[_n+1])/3
 gen inc_rate_pR_ma =(inc_rate_pR[_n-1]+inc_rate_pR[_n]+inc_rate_pR[_n+1])/3
 
 *Plot graph of observed and predicted
-twoway connected inc_rate mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) lcolor(bluishgray) msymbol(circle) || line inc_rate_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || connected inc_rate_pR mo_year_diagn if t>60, color(orange%50) lstyle(solid) lcolor(orange%50) msymbol(circle) || line inc_rate_pR_ma mo_year_diagn if t>60, lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("Gout", size(medium)) xline(722) legend(off) name(gout_inc_adj_ma, replace) saving("$projectdir/output/figures/gout_inc_adj_ma.gph", replace)
-	graph export "$projectdir/output/figures/gout_inc_adj_ma.svg", replace		
+twoway connected inc_rate mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) lcolor(bluishgray) msymbol(circle) || line inc_rate_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || connected inc_rate_pR mo_year_diagn if t>60, color(orange%50) lstyle(solid) lcolor(orange%50) msymbol(circle) || line inc_rate_pR_ma mo_year_diagn if t>60, lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(662 "2015" 674 "2016" 686 "2017" 698 "2018" 710 "2019" 722 "2020" 734 "2021" 746 "2022" 758 "2023" 770 "2024", nogrid labsize(small))  title("Disease", size(medium)) xline(722) legend(off) name(inc_adj_ma, replace) saving("$projectdir/output/figures/inc_adj_ma.gph", replace)
+	graph export "$projectdir/output/figures/inc_adj_ma.svg", replace		
 	
 *Run using differenced data 
 arimaauto inc_rate_diff, nostepwise 

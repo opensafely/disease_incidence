@@ -31,7 +31,7 @@ dir_create(here::here("output/figures"), showWarnings = FALSE, recurse = TRUE)
 dir_create(here::here("output/tables"), showWarnings = FALSE, recurse = TRUE)
 
 sink("logs/sarima_log.txt")
-pdf("output/figures/sarima_plots.pdf", width = 8, height = 6)
+#pdf("output/figures/sarima_plots.pdf", width = 8, height = 6)
 
 # Incidence data
 df <-read.csv("output/data/arima_nonstandardised.csv")
@@ -200,7 +200,7 @@ for (j in 1:length(disease_list)) {
       ) +
       ggtitle(dis)
     
-    ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, ".svg"), plot = c1, width = 8, height = 6, device = "svg")
+    ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, "svg"), plot = c1, width = 8, height = 6, device = "svg")
     
     print(c1)
   
@@ -690,136 +690,6 @@ sink()
 #   ###### OUTPUT FILE
 #   write.csv(df_count,"df_count_MS",row.names = FALSE)
 # 
-# 
-# ######################################################
-# #Save all model estimates 
-# #####################################################
-# 
-# 
-# #The following is a function that takes all the model post-estimations for each of the conditions and
-# #tabulates them
-# #We have saved the post-estimates for each condition from running the sarima pacakage as model1.count, model2.count etc. 
-# 
-# arima_stripper2 <- function(models){
-#   #initialise vectors
-#   strip_model <- models  #List of each model in [[1]], [[2]] etc. containing all model post estimates 
-#   #vectors of length n containing NA i.e. ( NA NA ... ) (n= number of models)
-#   coef_length <- rep(NA,length(models))
-#   AIC <- coef_length
-#   sigma_2 <- AIC
-#   log_lik <- AIC
-#   ARIMA_mod <- coef_length
-#   
-#   #loop to get variables from each model
-#   for(i in 1:length(models)){
-#     #strip_model[[i]] <- data.frame(paste0(round(coef(models[[i]]),3)," (",round(sqrt(diag(vcov(models[[i]]))),3),")"))
-#     
-#     strip_model[[i]] <- data.frame(paste0(
-#       round(models[[i]]$ttable[,1],3),
-#       " (",
-#       round(models[[i]]$ttable[,1]-1.96*models[[i]]$ttable[,2],3),   
-#   #I'm using the normal distribution to derive confidence intervals, it has been compared to intervals generated using the t-distribution which the arima package does and are very similar
-#       ", ",
-#       round(models[[i]]$ttable[,1]+1.96*models[[i]]$ttable[,2],3),
-#       ")", 
-#       ", ",
-#       round(models[[i]]$ttable[,4],3)
-#     ))
-#     #a list with each item [[1]], [[2]] etc. as a dataframe of model1, model2 etc. each df has 1 column
-#     
-#     colnames(strip_model[[i]]) <- "Coefficient (95% CI), p-value"  #name column in data frame above
-#     
-#     rownames(strip_model[[i]]) <- names(models[[i]]$ttable[,1]) #name rows with parameter name: ma1, ar1, sma1, sar1 etc etc. 
-#     
-#     AIC[i] <- models[[i]]$fit$aic #Fill in AIC vector with the AIC of each model 
-#     sigma_2[i] <- models[[i]]$fit[2] #Fill in vector for sigma2
-#     log_lik[i] <- models[[i]]$fit[5]  #Fill in vector for log likelihood
-#     coef_length[i] <- length(strip_model[[i]][,1]) #fill in coef length vector: number of parameters for each model 
-#     arma<- unlist(models[[i]]$fit[7])  #number of parameters used i.e. p,d,q,P,D,Q,S but note it's ordered p,q,P,Q,S,d,D
-#     ARIMA_mod[i]<- paste0("ARIMA(",arma[1],",",arma[6],",", arma[2],")(",arma[3],",",arma[7],",", arma[4],")[",arma[5],"]") #vector where each value= "(p,d,q)(P,D,Q)[S]" for each model 
-#   }
-#   
-#   #Initilise table by taking the model with the most variables
-#   order_length <- order(-coef_length)  #order of the model with the most to least number of parameters in a vector 
-#   #order values in each vector below 
-#   AIC <- AIC[order_length] 
-#   ARIMA_mod <- ARIMA_mod[order_length]
-#   sigma_2 <- sigma_2[order_length]
-#   log_lik <-log_lik[order_length]
-#   strip_model <- strip_model[order_length] #order items in list 
-#   
-#   
-#   model_out <- strip_model[[1]]  #take first model and create dataframe  
-#   model_out$coef <- rownames(model_out) #create a new column called coef that are the parameter names (ar1, ar2 etc.)
-#   colnames(model_out) <- c(paste("Model",order_length[1]),"Coefficient (S.E)")
-#   
-#   
-#   #merge model results to get a table of all results for all conditions 
-#   for(i in 2:(length(models))){ #same as above but for models 2 onwards, create a dataframe for each model 
-#     dummy_mod <- strip_model[[i]]
-#     dummy_mod$coef <- rownames(dummy_mod)
-#     colnames(dummy_mod) <- c(paste("Model",order_length[i]),"Coefficient (S.E)")
-#     model_out <- merge(model_out,dummy_mod , by = "Coefficient (S.E)",all.x=TRUE, all.y=TRUE) #merge all models, note: we need to keep all rows from each dataframe 
-#   }
-#   
-#   ##Order by AIC and add in AIC, loglikelihood and sigma^2 estimate
-#   AIC_order <- order(order_length)
-#   dash <- rep("-",length(models)+1)
-#   AIC <- c("AIC",round(AIC,3))
-#   sigma_2 <- unlist(sigma_2)
-#   sigma_2 <- c("Sigma^2 estimate",round(sigma_2,2))
-#   log_lik <- unlist(log_lik )
-#   log_lik <- c("Log likelihood",round(log_lik,3))
-#   ARIMA_mod <- c("Coefficient (95% CI), p-value",ARIMA_mod)
-#   model_out <- rbind(ARIMA_mod,dash,model_out,dash,AIC,sigma_2,log_lik)
-#   model_out <- model_out[,c(1,AIC_order+1)]
-#   colnames(model_out) <- c("",colnames(model_out)[2:length(model_out[1,])])
-#   
-#   return(model_out)
-# }
-# 
-# 
-# 
-# #All saved models from running the sarima package 
-# models <- list(model1.count, model2.count , model3.count, model4.count , model5.count, model6.count ,
-#                model7.count, model8.count , model9.count, model10.count , model11.count, model12.count ,
-#                model13.count, model15.count , model16.count, model17.count , model18.count, model19.count ,
-#                model20.count)
-# 
-# ##Use the function above to create the table of all model post-estimates 
-# models <- arima_stripper2(models)
-# colnames(models) <- c("", "Anxiety Disorders", "Asthma", "Atrial Fibrillation", "CHD", "CKD", "COPD", "Dementia", "Depression", 
-#                       "Diabetes Mellitus", "Epilepsy", "Heart Failure", "Hypertension", "Inflammatory Bowel Disease", "PVD", "Rheumatoid Arthritis",  "Stroke & TIA",
-#                       "Type 1 Diabetes" , "Type 2 Diabetes" ,           "Undetermined Type Diabetes")
-# 
-# #check_counts <-models
-# #View(check_counts)
-# #output table 
-# write.csv(check_counts,"Incidence_model_estimates_counts_20May2022.csv",row.names = FALSE)
-# 
-# 
-# 
-# #Save all models for rates 
-# models <- list(model1.gp, model2.gp , model3.gp, model4.gp , model5.gp, model6.gp ,
-#                model7.gp, model8.gp , model9.gp, model10.gp , model11.gp, model12.gp,
-#                model13.gp, model15.gp , model16.gp, model17.gp , model18.gp, model19.gp,
-#                model20.gp)
-# 
-# ##Use the function above to create the table of all model post-estimates 
-# models <- arima_stripper2(models)
-# colnames(models) <- c("", "Anxiety Disorders", "Asthma", "Atrial Fibrillation", "CHD", "CKD", "COPD", "Dementia", "Depression", 
-#                       "Diabetes Mellitus", "Epilepsy", "Heart Failure", "Hypertension", "Inflammatory Bowel Disease", "PVD", "Rheumatoid Arthritis",  "Stroke & TIA",
-#                       "Type 1 Diabetes" , "Type 2 Diabetes" ,           "Undetermined Type Diabetes")
-# 
-# #check_rates <-models
-# #View(check_rates)
-# #output table 
-# write.csv(check_rates,"Incidence_model_estimates_gprates_20May2022.csv",row.names = FALSE)
-# 
-# 
-
-
-
 
 ################################################################################################################## END 
 
