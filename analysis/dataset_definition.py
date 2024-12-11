@@ -108,7 +108,7 @@ dataset.imd_quintile = case(
 )
 
 # Any practice registration before study end date
-# If registered with multiple practices, sort by most recent then longest duration then practice ID)
+# If registered with multiple practices, sort by most recent then longest duration then practice ID
 dataset.any_registration = practice_registrations.where(
             practice_registrations.start_date <= end_date
         ).except_where(
