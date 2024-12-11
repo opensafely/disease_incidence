@@ -16,44 +16,86 @@ clear_smoking_codes = codelist_from_csv(
 )
 
 # CLINICAL CONDITIONS CODELISTS
-chronic_cardiac_disease_codes = codelist_from_csv(
-    "codelists/opensafely-chronic-cardiac-disease.csv", column="CTV3ID",
+asthma_snomed = codelist_from_csv(
+    "codelists/opensafely-asthma-diagnosis-codes.csv", column="code",
 )
 
-diabetes_mellitus_ctv = codelist_from_csv(
-    "codelists/opensafely-diabetes.csv", column="CTV3ID",
+copd_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-copd_cod.csv", column="code",
 )
 
-hba1c_new_codes = ["XaPbt", "Xaeze", "Xaezd"]
-hba1c_old_codes = ["X772q", "XaERo", "XaERp"]
-
-chronic_respiratory_disease_codes = codelist_from_csv(
-    "codelists/opensafely-chronic-respiratory-disease.csv",
-    column="CTV3ID",
+copd_icd = codelist_from_csv(
+    "codelists/opensafely-copd-secondary-care.csv", column="code",
 )
 
-copd_codes = codelist_from_csv(
-    "codelists/opensafely-current-copd.csv", column="CTV3ID",
+chd_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-chd_cod.csv", column="code",
 )
 
-stroke_codes = codelist_from_csv(
-    "codelists/opensafely-stroke-updated.csv", column="CTV3ID",
+stroke_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-strk_cod.csv", column="code",
 )
 
-creatinine_codes = ["XE2q5"]
-
-ckd_codes = codelist_from_csv(
-    "codelists/opensafely-chronic-kidney-disease.csv", column="CTV3ID",
+stroke_icd = codelist_from_csv(
+    "codelists/opensafely-stroke-secondary-care.csv", column="icd",
 )
 
-bmi_codes = ["60621009", "846931000000101"]
+heart_failure_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-hf_cod.csv", column="code",
+)
+
+dementia_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-dem_cod.csv", column="code",
+)
 
 multiple_sclerosis_ctv = codelist_from_csv(
-    "codelists/opensafely-multiple-sclerosis-v2.csv",
-    column="code",
+    "codelists/opensafely-multiple-sclerosis-v2.csv", column="code",
 )
 
 multiple_sclerosis_icd = codelist_from_csv(
-    "codelists/bristol-multiple-sclerosis-icd10-v13.csv",
-    column="code",
+    "codelists/bristol-multiple-sclerosis-icd10-v13.csv", column="code",
+)
+
+epilepsy_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-epil_cod.csv", column="code",
+)
+
+crohns_disease_ctv = codelist_from_csv(
+    "codelists/opensafely-crohns-disease.csv", column="code",
+)
+
+ulcerative_colitis_ctv = codelist_from_csv(
+    "codelists/opensafely-ulcerative-colitis.csv", column="code",
+)
+
+dm_type2_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-dmtype2_cod.csv", column="code",
+)
+
+dm_type1_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-dmtype1_cod.csv", column="code",
+)
+
+ckd_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-ckd_cod.csv", column="code",
+)
+
+psoriasis_ctv = codelist_from_csv(
+    "codelists/opensafely-psoriasis.csv", column="code",
+)
+
+atopic_dermatitis_ctv = codelist_from_csv(
+    "codelists/opensafely-atopic-dermatitis.csv", column="code",
+)
+
+osteoporosis_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-osteo_cod.csv", column="code",
+)
+
+hiv_snomed = codelist_from_csv(
+    "codelists/opensafely-hiv-aids.csv", column="code",
+)
+
+depression_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-depr_cod.csv", column="code",
 )

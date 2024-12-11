@@ -1,22 +1,70 @@
 {
   "files": {
-    "opensafely-chronic-cardiac-disease.csv": {
-      "id": "opensafely/chronic-cardiac-disease/2020-04-08",
-      "url": "https://www.opencodelists.org/codelist/opensafely/chronic-cardiac-disease/2020-04-08/",
-      "downloaded_at": "2024-08-19 09:51:00.491981Z",
-      "sha": "2267f6fada9c77a2bbf62ce7a1c07ddf48348d61"
+    "opensafely-asthma-diagnosis-codes.csv": {
+      "id": "opensafely/asthma-diagnosis-codes/5e5df80f",
+      "url": "https://www.opencodelists.org/codelist/opensafely/asthma-diagnosis-codes/5e5df80f/",
+      "downloaded_at": "2024-12-11 20:29:12.122953Z",
+      "sha": "1b24131f34cecb31f9f610ef39b0f43ae017553c"
     },
-    "opensafely-chronic-kidney-disease.csv": {
-      "id": "opensafely/chronic-kidney-disease/2020-04-14",
-      "url": "https://www.opencodelists.org/codelist/opensafely/chronic-kidney-disease/2020-04-14/",
-      "downloaded_at": "2024-08-19 09:51:00.767315Z",
-      "sha": "08e003f1222fe26781288b2eeff22db99780f202"
+    "nhsd-primary-care-domain-refsets-copd_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/copd_cod/0b593d79",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/copd_cod/0b593d79/",
+      "downloaded_at": "2024-12-11 20:29:12.280984Z",
+      "sha": "5d08ae3a50efe6a5fa54806e9ffce16d14ba9955"
     },
-    "opensafely-chronic-respiratory-disease.csv": {
-      "id": "opensafely/chronic-respiratory-disease/2020-04-10",
-      "url": "https://www.opencodelists.org/codelist/opensafely/chronic-respiratory-disease/2020-04-10/",
-      "downloaded_at": "2024-08-19 09:51:00.926181Z",
-      "sha": "77946d9b844f348daf5c8c9e81346b9776d13998"
+    "opensafely-copd-secondary-care.csv": {
+      "id": "opensafely/copd-secondary-care/35734162",
+      "url": "https://www.opencodelists.org/codelist/opensafely/copd-secondary-care/35734162/",
+      "downloaded_at": "2024-12-11 20:29:12.360916Z",
+      "sha": "83bc1fc962ce3c09248be11d58cd22b3128ddc51"
+    },
+    "nhsd-primary-care-domain-refsets-chd_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/chd_cod/53d4d722",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/chd_cod/53d4d722/",
+      "downloaded_at": "2024-12-11 20:29:12.474885Z",
+      "sha": "0dab9c8229e0005df9d4c01950469818c8f10d49"
+    },
+    "nhsd-primary-care-domain-refsets-strk_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/strk_cod/4ce1f018",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/strk_cod/4ce1f018/",
+      "downloaded_at": "2024-12-11 20:29:12.656030Z",
+      "sha": "b1b9e1cedbd0c76a81f4a71d9bf1002cda4edf73"
+    },
+    "opensafely-stroke-secondary-care.csv": {
+      "id": "opensafely/stroke-secondary-care/2b8aa4a9",
+      "url": "https://www.opencodelists.org/codelist/opensafely/stroke-secondary-care/2b8aa4a9/",
+      "downloaded_at": "2024-12-11 20:29:12.827371Z",
+      "sha": "04aeb4b87dcf27651e34c287fdffe023bce38591"
+    },
+    "nhsd-primary-care-domain-refsets-hf_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/hf_cod/34993072",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hf_cod/34993072/",
+      "downloaded_at": "2024-12-11 20:29:12.981508Z",
+      "sha": "c1fdc20e835c8e00b50e4728592b79bb3e3ee887"
+    },
+    "nhsd-primary-care-domain-refsets-dem_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dem_cod/271b70a4",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dem_cod/271b70a4/",
+      "downloaded_at": "2024-12-11 20:29:13.164635Z",
+      "sha": "96defdd5b5345aaed6c6e2e71188c966288e4731"
+    },
+    "bristol-multiple-sclerosis-icd10-v13.csv": {
+      "id": "bristol/multiple-sclerosis-icd10-v13/31e7874a",
+      "url": "https://www.opencodelists.org/codelist/bristol/multiple-sclerosis-icd10-v13/31e7874a/",
+      "downloaded_at": "2024-08-21 12:42:59.424646Z",
+      "sha": "7a14f783d25f63d5928adc223e0338dc6d20f54e"
+    },
+    "opensafely-multiple-sclerosis-v2.csv": {
+      "id": "opensafely/multiple-sclerosis-v2/063627df",
+      "url": "https://www.opencodelists.org/codelist/opensafely/multiple-sclerosis-v2/063627df/",
+      "downloaded_at": "2024-08-21 13:44:40.380299Z",
+      "sha": "e89c12f28e67e5c8dedd322f936a279cc837c564"
+    },
+    "nhsd-primary-care-domain-refsets-epil_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/epil_cod/16243d51",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/epil_cod/16243d51/",
+      "downloaded_at": "2024-12-11 20:29:13.574353Z",
+      "sha": "569fb7772727ccd3a09d6d8c981af5e663619e98"
     },
     "opensafely-crohns-disease.csv": {
       "id": "opensafely/crohns-disease/223a39f5",
@@ -24,17 +72,59 @@
       "downloaded_at": "2024-08-19 09:51:01.066316Z",
       "sha": "63230a0cc37cc199ffd4920cfcbe6d3188c602bf"
     },
-    "opensafely-current-copd.csv": {
-      "id": "opensafely/current-copd/2020-05-06",
-      "url": "https://www.opencodelists.org/codelist/opensafely/current-copd/2020-05-06/",
-      "downloaded_at": "2024-08-19 09:51:01.224332Z",
-      "sha": "bab838b50e256ceef8b9d2f6ca1132491e522bda"
+    "opensafely-ulcerative-colitis.csv": {
+      "id": "opensafely/ulcerative-colitis/3b49ad2a",
+      "url": "https://www.opencodelists.org/codelist/opensafely/ulcerative-colitis/3b49ad2a/",
+      "downloaded_at": "2024-12-11 20:29:13.900080Z",
+      "sha": "9add66e0b6b15665c772806314c2f481ed56c468"
     },
-    "opensafely-diabetes.csv": {
-      "id": "opensafely/diabetes/2020-04-15",
-      "url": "https://www.opencodelists.org/codelist/opensafely/diabetes/2020-04-15/",
-      "downloaded_at": "2024-08-19 09:51:01.399384Z",
-      "sha": "f2781f0c9a0617b30996d681a798eedd152a09af"
+    "nhsd-primary-care-domain-refsets-dmtype2_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dmtype2_cod/5e4a9aae",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmtype2_cod/5e4a9aae/",
+      "downloaded_at": "2024-12-11 20:29:14.040435Z",
+      "sha": "387e64c3c30326515da4db1302a0bd9515f75e67"
+    },
+    "nhsd-primary-care-domain-refsets-dmtype1_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dmtype1_cod/2c80f090",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmtype1_cod/2c80f090/",
+      "downloaded_at": "2024-12-11 20:29:14.204949Z",
+      "sha": "23e6cb9c5555fb756c9a68295bd701b6ddb34ebd"
+    },
+    "nhsd-primary-care-domain-refsets-ckd_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ckd_cod/5fd801cc",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ckd_cod/5fd801cc/",
+      "downloaded_at": "2024-12-11 20:29:14.324037Z",
+      "sha": "3a32f20ef7b33b9cdda2128754d3f394f28f0165"
+    },
+    "opensafely-psoriasis.csv": {
+      "id": "opensafely/psoriasis/01091de1",
+      "url": "https://www.opencodelists.org/codelist/opensafely/psoriasis/01091de1/",
+      "downloaded_at": "2024-12-11 20:29:14.497788Z",
+      "sha": "9bcaf40cef8b3624037e8b4ed318cefa62f8cc8c"
+    },
+    "opensafely-atopic-dermatitis.csv": {
+      "id": "opensafely/atopic-dermatitis/2ce98a3d",
+      "url": "https://www.opencodelists.org/codelist/opensafely/atopic-dermatitis/2ce98a3d/",
+      "downloaded_at": "2024-12-11 20:29:14.663035Z",
+      "sha": "753280d5ed2069133a1142dc2eb22fc1aa078e12"
+    },
+    "nhsd-primary-care-domain-refsets-osteo_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/osteo_cod/5d1bd8d9",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/osteo_cod/5d1bd8d9/",
+      "downloaded_at": "2024-12-11 20:29:14.829755Z",
+      "sha": "bc7e135ca0ce304a7c611f137c4c9ece2ca146be"
+    },
+    "opensafely-hiv-aids.csv": {
+      "id": "opensafely/hiv-aids/1efade93",
+      "url": "https://www.opencodelists.org/codelist/opensafely/hiv-aids/1efade93/",
+      "downloaded_at": "2024-12-11 20:29:15.073853Z",
+      "sha": "6c26564c2cc6973d77950da7a771f986701df133"
+    },
+    "nhsd-primary-care-domain-refsets-depr_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/depr_cod/0e0bfd6f",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/depr_cod/0e0bfd6f/",
+      "downloaded_at": "2024-12-11 20:29:15.253991Z",
+      "sha": "fe8bce134ed68b81aee0a15f8f258bfb31fc0c1c"
     },
     "opensafely-ethnicity-snomed-0removed.csv": {
       "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
@@ -53,24 +143,6 @@
       "url": "https://www.opencodelists.org/codelist/opensafely/smoking-unclear/2020-04-29/",
       "downloaded_at": "2024-08-19 09:51:02.495736Z",
       "sha": "d9dad3e9d9491f765863b2617114c521957b6db1"
-    },
-    "opensafely-stroke-updated.csv": {
-      "id": "opensafely/stroke-updated/2020-06-02",
-      "url": "https://www.opencodelists.org/codelist/opensafely/stroke-updated/2020-06-02/",
-      "downloaded_at": "2024-08-19 09:51:02.767480Z",
-      "sha": "e62a8af49698022220de1e1e438d6b6c611e666e"
-    },
-    "bristol-multiple-sclerosis-icd10-v13.csv": {
-      "id": "bristol/multiple-sclerosis-icd10-v13/31e7874a",
-      "url": "https://www.opencodelists.org/codelist/bristol/multiple-sclerosis-icd10-v13/31e7874a/",
-      "downloaded_at": "2024-08-21 12:42:59.424646Z",
-      "sha": "7a14f783d25f63d5928adc223e0338dc6d20f54e"
-    },
-    "opensafely-multiple-sclerosis-v2.csv": {
-      "id": "opensafely/multiple-sclerosis-v2/063627df",
-      "url": "https://www.opencodelists.org/codelist/opensafely/multiple-sclerosis-v2/063627df/",
-      "downloaded_at": "2024-08-21 13:44:40.380299Z",
-      "sha": "e89c12f28e67e5c8dedd322f936a279cc837c564"
     }
   }
 }
