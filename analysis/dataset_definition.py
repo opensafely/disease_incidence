@@ -122,7 +122,7 @@ dataset.define_population(
 )  
 
 # List of diseases and codelists to cycle through
-diseases = ["asthma", "copd", "multiple_sclerosis"]
+diseases = ["multiple_sclerosis"]
 # diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression"]
 codelist_types = ["snomed", "ctv", "icd"]
 
