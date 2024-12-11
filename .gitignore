@@ -5,6 +5,7 @@ __pycache__
 .python-version
 /output/*
 /logs/*
+/logs/*.txt
 metadata/*
 venv/
 .DS_Store
