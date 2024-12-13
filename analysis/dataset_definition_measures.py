@@ -175,22 +175,22 @@ for disease in diseases:
         },
         )  
         
-    # Incidence by ethnicity (Nb. not age and sex)
-    measures.define_measure(
-        name=disease + "_incidence_ethnicity",
-        numerator=incidence_numerators[f"{disease}_inc_num"],
-        denominator=incidence_denominators[f"{disease}_inc_denom"],
-        group_by={
-            "ethnicity": dataset.ethnicity,
-        },
-        )
+    # # Incidence by ethnicity (Nb. not age and sex)
+    # measures.define_measure(
+    #     name=disease + "_incidence_ethnicity",
+    #     numerator=incidence_numerators[f"{disease}_inc_num"],
+    #     denominator=incidence_denominators[f"{disease}_inc_denom"],
+    #     group_by={
+    #         "ethnicity": dataset.ethnicity,
+    #     },
+    #     )
 
-    # Incidence by IMD quintile (Nb. not age and sex)
-    measures.define_measure(
-        name=disease + "_incidence_imd",
-        numerator=incidence_numerators[f"{disease}_inc_num"],
-        denominator=incidence_denominators[f"{disease}_inc_denom"],
-        group_by={
-            "imd": dataset.imd_quintile,
-        },
-        )    
+    # # Incidence by IMD quintile (Nb. not age and sex)
+    # measures.define_measure(
+    #     name=disease + "_incidence_imd",
+    #     numerator=incidence_numerators[f"{disease}_inc_num"],
+    #     denominator=incidence_denominators[f"{disease}_inc_denom"],
+    #     group_by={
+    #         "imd": dataset.imd_quintile,
+    #     },
+    #     )    
