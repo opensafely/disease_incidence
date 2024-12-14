@@ -173,6 +173,8 @@ for (j in 1:length(disease_list)) {
     df_new <- df_new %>%
       arrange(index) %>%
       mutate(mean_ma = rollmean(mean, k = 3, fill = NA, align = "center"))
+    
+    write.csv(df_new, file = paste0("output/tables/values_", var, "_", dis, ".csv"), row.names = FALSE)
   
     #observed and predicted graphs to check model predictions against observed values
     c1<- 

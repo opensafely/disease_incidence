@@ -58,4 +58,5 @@ actions:
         figure7: output/figures/seasonal_acf_*.svg
         figure8: output/figures/auto_residuals_*.svg
         figure9: output/figures/obs_pred_*.svg
-        table1: output/tables/change_incidence_byyear.csv    
+        table1: output/tables/change_incidence_byyear.csv
+        table2: output/tables/values_*.csv   
