@@ -44,7 +44,7 @@ names(df)[names(df) == "numerator"] <- "count" #standardise to common variable n
 df<- df %>% filter(sex=="All") %>% select(disease, year, mo_year_diagn, incidence, count) 
 df$month <- substr(df$mo_year_diagn, 1, 3)
 df$mo_year_diagn <- gsub("-", " ", df$mo_year_diagn)
-df$mo_year_diagn <- sub("(\\d{2})$", "20\\1", df$mo_year_diagn)
+#df$mo_year_diagn <- sub("(\\d{2})$", "20\\1", df$mo_year_diagn)
 df$mon_year <- df$mo_year_diagn
 df$mo_year_diagn <- as.Date(paste0("01 ", df$mo_year_diagn), format = "%d %b %Y")
 month_lab <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
