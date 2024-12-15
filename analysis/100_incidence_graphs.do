@@ -14,7 +14,7 @@ USER-INSTALLED ADO:
 
 **Set filepaths
 *global projectdir "C:\Users\Mark\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
-global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
+*global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 global projectdir `c(pwd)'
 di "$projectdir"
 
@@ -32,12 +32,24 @@ log using "$logdir/descriptive_tables.log", replace
 **Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
-**Use cleaned data from previous step
-import delimited "$projectdir/output/measures/measures_dataset.csv", clear
+**Import and append measures datasets - could local this
+import delimited "$projectdir/output/measures/measures_dataset_2015.csv", clear
+save "$projectdir/output/data/measures_appended.dta", replace
+
+forval year = 2016(1)2022{
+	import delimited "$projectdir/output/measures/measures_dataset_`year'.csv", clear
+	append using "$projectdir/output/data/measures_appended.dta"
+	save "$projectdir/output/data/measures_appended.dta", replace 
+}
+
+sort measure interval_start sex age
+save "$projectdir/output/data/measures_appended.dta", replace 
 
 set scheme plotplainblind
 
 *Descriptive statistics======================================================================*/
+
+use "$projectdir/output/data/measures_appended.dta", clear 
 
 rename interval_start interval_start_s
 gen interval_start = date(interval_start_s, "YMD") 

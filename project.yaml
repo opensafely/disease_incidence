@@ -12,20 +12,97 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition.csv 
 
-  measures_dataset:
+  measures_dataset_2015:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset.csv
+      --output output/measures/measures_dataset_2015.csv
       --
       --start-date "2015-03-01"
-      --intervals 96
+      --intervals 12
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset.csv
+        measure_csv: output/measures/measures_dataset_2015.csv
+
+  measures_dataset_2016:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2016.csv
+      --
+      --start-date "2016-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2016.csv
+
+  measures_dataset_2017:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2017.csv
+      --
+      --start-date "2017-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2017.csv
+
+  measures_dataset_2018:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2018.csv
+      --
+      --start-date "2018-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2018.csv
+
+  measures_dataset_2019:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2019.csv
+      --
+      --start-date "2019-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2019.csv
+
+  measures_dataset_2020:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2020.csv
+      --
+      --start-date "2020-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2020.csv
+
+  measures_dataset_2021:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2021.csv
+      --
+      --start-date "2021-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2021.csv
+
+  measures_dataset_2022:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2022.csv
+      --
+      --start-date "2022-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2022.csv
 
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
-    needs: [measures_dataset]
+    needs: [measures_dataset_2015, measures_dataset_2016, measures_dataset_2017, measures_dataset_2018, measures_dataset_2019, measures_dataset_2020, measures_dataset_2021, measures_dataset_2022]
     outputs:
       moderately_sensitive:
         log1: logs/descriptive_tables.log   
@@ -45,7 +122,7 @@ actions:
 
   run_sarima:
     run: r:latest analysis/200_sarima.R
-    needs: [measures_dataset, run_incidence_graphs]
+    needs: [run_incidence_graphs]
     outputs:
       moderately_sensitive:
         log1: logs/sarima_log.txt   
