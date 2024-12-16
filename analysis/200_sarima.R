@@ -70,7 +70,7 @@ for (j in 1:length(disease_list)) {
   df_dis <- df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
   
   #Keep only data from before March 2020 and save to separate df
-  df_obs <- df_dis[which(df_dis$index<61),]
+  df_obs <- df_dis[which(df_dis$index<49),]
   
   # Loop through incidence and count
   for (i in 1:length(variables)) {
@@ -79,7 +79,7 @@ for (j in 1:length(disease_list)) {
     
     #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
     p1 <- ggplot(data = df_dis,aes(x = index, y = .data[[var]]))+geom_point()+geom_line()+
-      scale_x_continuous(breaks = seq(1, max(df_dis$index), by = 12),labels = rep(df_dis$year, 7)[seq(1, 96, by = 12)])+
+      scale_x_continuous(breaks = seq(1, max(df_dis$index), by = 12),labels = rep(df_dis$year, 7)[seq(1, 84, by = 12)])+
       theme_minimal()+
       xlab("Year of diagnosis")+ 
       ylab(y_label)+
@@ -103,7 +103,7 @@ for (j in 1:length(disease_list)) {
     print(p1)
 
     #Convert to time series object 
-    df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2015,3))
+    df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,3))
     assign(paste0("ts_", var), df_obs_rate)
   
     #Plot time series - 1) raw data; 2) 1st order difference (yt- yt-1); 3) 1st order seasonal difference (yt-yt-1)-(yt-12-yt-12-1); checking for stationarity (i.e. remove trends over time by differencing)
@@ -119,17 +119,17 @@ for (j in 1:length(disease_list)) {
     
     #View ACF/PACF plots of undifferenced data (noting the extent of autocorrelation between time points)
     svg(filename = paste0("output/figures/raw_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(df_obs_rate, max.lag=59) 
+    acf2(df_obs_rate, max.lag=47) 
     dev.off()
     
     #View ACF/PACF plots of differenced data (checking for autocorrelation after differencing)
     svg(filename = paste0("output/figures/differenced_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(diff(df_obs_rate), max.lag=46)
+    acf2(diff(df_obs_rate), max.lag=34)
     dev.off()
     
     #View ACF/PACF plots of differenced/seasonally differenced data (checking for autocorrelation after differencing)
     svg(filename = paste0("output/figures/seasonal_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(diff(diff(df_obs_rate,12)), max.lag=46)
+    acf2(diff(diff(df_obs_rate,12)), max.lag=34)
     dev.off()
     
     #Use auto.arima to fit SARIMA model - will identify p/q parameters that optimise AIC, but we need to double check residuals 
@@ -143,7 +143,7 @@ for (j in 1:length(disease_list)) {
     svg(filename = paste0("output/figures/auto_residuals_", var, "_", dis, ".svg"), width = 8, height = 6)
     checkresiduals(suggested.rate)
     dev.off()
-    Box.test(suggested.rate$residuals, lag = 71, type = "Ljung-Box")
+    Box.test(suggested.rate$residuals, lag = 59, type = "Ljung-Box")
   
     #Forecast 24 months from March 2020 and convert to time series object
     fc.rate  <- forecast(m1.rate, h=36)
@@ -182,12 +182,12 @@ for (j in 1:length(disease_list)) {
       geom_point(aes(y = .data[[var]]), color="#ADD8E6", size=3)+
       geom_line(aes(y = .data[[var]]), color="#ADD8E6")+
       geom_line(aes(y = moving_average), color = "blue", linetype = "solid", size=0.7)+
-      geom_point(data = df_new %>% filter(index > 60), aes(y = mean), color="orange", alpha = 0.7, size=3)+
-      geom_line(data = df_new %>% filter(index > 60), aes(y = mean), color="orange")+
-      geom_line(data = df_new %>% filter(index > 60), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
-      geom_ribbon(data = df_new %>% filter(index > 60), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
-      geom_vline(xintercept = 61, linetype = "dashed", color = "grey")+
-      scale_x_continuous(breaks = seq(1, max(df_new$index), by = 12),labels = rep(df_new$year, 7)[seq(1, 96, by = 12)])+
+      geom_point(data = df_new %>% filter(index > 48), aes(y = mean), color="orange", alpha = 0.7, size=3)+
+      geom_line(data = df_new %>% filter(index > 48), aes(y = mean), color="orange")+
+      geom_line(data = df_new %>% filter(index > 48), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
+      geom_ribbon(data = df_new %>% filter(index > 48), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
+      geom_vline(xintercept = 49, linetype = "dashed", color = "grey")+
+      scale_x_continuous(breaks = seq(1, max(df_new$index), by = 12),labels = rep(df_new$year, 7)[seq(1, 84, by = 12)])+
       scale_fill_viridis_d()+
       scale_colour_viridis_d()+
       theme_minimal()+
@@ -211,9 +211,9 @@ for (j in 1:length(disease_list)) {
     print(c1)
   
     #Calculate percentage difference between observed and predicted
-    #i.e. months 61-72=2020, 73-84=2021, 85-96=2022, 61-96=2020+2021+2022) 
-    a<- c(60, 72, 84, 60)
-    b<- c(72, 84, 96, 96)
+    #i.e. months 49-60 =2020, 61-72=2021, 73-84=2022, 49-84=2020+2021+2022)
+    a<- c(48, 60, 72, 48)
+    b<- c(60, 72, 84, 84)
     
     results_list <- list()
     
@@ -310,17 +310,17 @@ graphics.off()
 sink()
 
   ###### OUTPUT FILE
-  write.csv(df,"df_output.csv",row.names = FALSE)
+  write.csv(df,"output/tables/df_output.csv",row.names = FALSE)
 
 
-  ######### Now run manually for other incidence rate #################
+# ######## Now run manually for other incidence rate #################
 # 
-#   df_dis <- df[df$disease == "Gout", ]
+#   df_dis <- df[df$disease == "Stroke", ]
 # 
 #   df_dis <-df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
 # 
 #   #Keep only data from before March 2020 and save to separate df
-#   df_obs <-df_dis[which(df_dis$index<61),]
+#   df_obs <-df_dis[which(df_dis$index<49),]
 # 
 #   #Generate df copies for incidence and count
 #   df_incidence <-df_dis
@@ -328,14 +328,14 @@ sink()
 # 
 #   #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
 #   p1 <- ggplot(data = df_incidence,aes(x = index,y = incidence ,colour = factor(year)))+geom_point()+geom_line()+
-#     scale_x_continuous(breaks = seq(1, max(df_incidence$index), by = 12),labels = rep(df_incidence$year, 7)[seq(1, 96, by = 12)])+
+#     scale_x_continuous(breaks = seq(1, max(df_incidence$index), by = 12),labels = rep(df_incidence$year, 7)[seq(1, 84, by = 12)])+
 #     scale_color_viridis_d(name = "Year")+
 #     theme_minimal()+
 #     xlab(NULL)+ ylab("Rate per 100,000 population")
 #   p1
 # 
 #   #Convert to time series object
-#   df_obs_rate <- ts(df_obs$incidence, frequency=12, start=c(2015,3))
+#   df_obs_rate <- ts(df_obs$incidence, frequency=12, start=c(2016,3))
 #   df_obs_rate
 # 
 #   #Plot time series - 1) raw data; 2) 1st order difference (yt- yt-1); 3) 1st order seasonal difference (yt-yt-1)-(yt-12-yt-12-1); checking for stationarity (i.e. remove trends over time by differencing)
@@ -345,10 +345,10 @@ sink()
 #   plot(diff(diff(df_obs_rate),12),type = "l");abline(h=0,col = "red") #seasonal difference of 1st difference data
 # 
 #   #View ACF/PACF plots of undifferenced data (noting the extent of autocorrelation between time points)
-#   acf2(df_obs_rate, max.lag=59)
+#   acf2(df_obs_rate, max.lag=47)
 # 
 #   #View ACF/PACF plots of differenced/seasonally differenced data (checking for autocorrelation after differencing)
-#   acf2(diff(diff(df_obs_rate,12)), max.lag=46)
+#   acf2(diff(diff(df_obs_rate,12)), max.lag=34)
 # 
 #   #Use auto.arima to fit SARIMA model - will identify p/q parameters that optimise AIC, but we need to double check residuals
 #   suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE)
@@ -358,7 +358,7 @@ sink()
 # 
 #   #check residuals
 #   checkresiduals(suggested.rate)
-#   Box.test(suggested.rate$residuals, lag = 71, type = "Ljung-Box")
+#   Box.test(suggested.rate$residuals, lag = 59, type = "Ljung-Box")
 # 
 #   #NOTE: The R packages arima and sarima give the same results, both are used below for practical reasons
 #   #i.e. arima gives precise confidence intervals and shows the overall p-value from the Ljung-Box test
@@ -410,12 +410,12 @@ sink()
 #     geom_point(aes(y=incidence), color="#ADD8E6", size=3)+
 #     geom_line(aes(y=incidence), color="#ADD8E6")+
 #     geom_line(aes(y = incidence_ma), color = "blue", linetype = "solid", size=0.7)+
-#     geom_point(data = df_incidence %>% filter(index > 60), aes(y=mean), color="orange", alpha = 0.7, size=3)+
-#     geom_line(data = df_incidence %>% filter(index > 60), aes(y=mean), color="orange")+
-#     geom_line(data = df_incidence %>% filter(index > 60), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
-#     geom_ribbon(data = df_incidence %>% filter(index > 60), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
-#     geom_vline(xintercept = 61, linetype = "dashed", color = "grey")+
-#     scale_x_continuous(breaks = seq(1, max(df_incidence$index), by = 12),labels = rep(df_incidence$year, 7)[seq(1, 96, by = 12)])+
+#     geom_point(data = df_incidence %>% filter(index > 48), aes(y=mean), color="orange", alpha = 0.7, size=3)+
+#     geom_line(data = df_incidence %>% filter(index > 48), aes(y=mean), color="orange")+
+#     geom_line(data = df_incidence %>% filter(index > 48), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
+#     geom_ribbon(data = df_incidence %>% filter(index > 48), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
+#     geom_vline(xintercept = 49, linetype = "dashed", color = "grey")+
+#     scale_x_continuous(breaks = seq(1, max(df_incidence$index), by = 12),labels = rep(df_incidence$year, 7)[seq(1, 84, by = 12)])+
 #     scale_fill_viridis_d()+
 #     scale_colour_viridis_d()+
 #     theme_minimal()+
@@ -436,9 +436,9 @@ sink()
 #   c1
 # 
 #   #Calculate percentage difference between observed and predicted
-#   #i.e. months 61-72 =2020, 73-84=2021, 85-96=2022, 61-96=2020+2021+2022)
-#   a<- c(60, 72, 84, 60)
-#   b<- c(72, 84, 96, 96)
+#   #i.e. months 49-60 =2020, 61-72=2021, 73-84=2022, 49-84=2020+2021+2022)
+#   a<- c(48, 60, 72, 48)
+#   b<- c(60, 72, 84, 84)
 # 
 #   results_list <- list()
 # 
@@ -510,13 +510,13 @@ sink()
 # 
 #   # The final summary table after the loop
 #   View(rates.summary)
-#   
+# 
 #   ###### OUTPUT FILES
-#   write.csv(rates.summary,"LongTermConditions_Table1_rates_DM_incidence.csv",row.names = FALSE)
-#   
+#   write.csv(rates.summary,"output/tables/LongTermConditions_Table1_rates_DM_incidence.csv",row.names = FALSE)
+# 
 #   ###### OUTPUT FILE
-#   write.csv(df_incidence,"df_incidence_DM.csv",row.names = FALSE)
-#   
+#   write.csv(df_incidence,"output/tables/df_incidence_DM.csv",row.names = FALSE)
+#
 #   ######### Now run manually for count #################
 #   
 #   #Graphs of observed count data - visually check the data for consistency of trends and seasonal patterns
@@ -691,10 +691,10 @@ sink()
 #   View(rates.summary)
 #   
 #   ###### OUTPUT FILES
-#   write.csv(rates.summary,"LongTermConditions_Table1_rates_MS_count.csv",row.names = FALSE)
+#   write.csv(rates.summary,"output/tables/LongTermConditions_Table1_rates_MS_count.csv",row.names = FALSE)
 #   
 #   ###### OUTPUT FILE
-#   write.csv(df_count,"df_count_MS",row.names = FALSE)
+#   write.csv(df_count,"output/tables/df_count_MS",row.names = FALSE)
 # 
 
 ################################################################################################################## END 

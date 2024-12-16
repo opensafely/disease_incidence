@@ -102,7 +102,7 @@ actions:
 
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
-    needs: [measures_dataset_2015, measures_dataset_2016, measures_dataset_2017, measures_dataset_2018, measures_dataset_2019, measures_dataset_2020, measures_dataset_2021, measures_dataset_2022]
+    needs: [generate_dataset, measures_dataset_2015, measures_dataset_2016, measures_dataset_2017, measures_dataset_2018, measures_dataset_2019, measures_dataset_2020, measures_dataset_2021, measures_dataset_2022]
     outputs:
       moderately_sensitive:
         log1: logs/descriptive_tables.log   
@@ -119,6 +119,7 @@ actions:
         figure11: output/figures/adj_ma_sex2_*.svg
         figure12: output/figures/adj_ma_age_*.svg
         data1: output/data/arima_nonstandardised.csv
+        data2: output/tables/data_availability_check.csv
 
   run_sarima:
     run: r:latest analysis/200_sarima.R
