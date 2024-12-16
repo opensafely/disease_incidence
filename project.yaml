@@ -12,17 +12,6 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition.csv 
 
-  measures_dataset_2015:
-    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_2015.csv
-      --
-      --start-date "2015-03-01"
-      --intervals 12
-    needs: [generate_dataset]
-    outputs:
-      highly_sensitive:
-        measure_csv: output/measures/measures_dataset_2015.csv
-
   measures_dataset_2016:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
       --output output/measures/measures_dataset_2016.csv
@@ -100,9 +89,31 @@ actions:
       highly_sensitive:
         measure_csv: output/measures/measures_dataset_2022.csv
 
+  measures_dataset_2023:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2023.csv
+      --
+      --start-date "2023-03-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2023.csv
+   
+  measures_dataset_2024:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2024.csv
+      --
+      --start-date "2024-03-01"
+      --intervals 6
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2024.csv
+
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
-    needs: [generate_dataset, measures_dataset_2015, measures_dataset_2016, measures_dataset_2017, measures_dataset_2018, measures_dataset_2019, measures_dataset_2020, measures_dataset_2021, measures_dataset_2022]
+    needs: [generate_dataset, measures_dataset_2016, measures_dataset_2017, measures_dataset_2018, measures_dataset_2019, measures_dataset_2020, measures_dataset_2021, measures_dataset_2022, measures_dataset_2023, measures_dataset_2024]
     outputs:
       moderately_sensitive:
         log1: logs/descriptive_tables.log   
@@ -119,7 +130,6 @@ actions:
         figure11: output/figures/adj_ma_sex2_*.svg
         figure12: output/figures/adj_ma_age_*.svg
         data1: output/data/arima_nonstandardised.csv
-        data2: output/tables/data_availability_check.csv
 
   run_sarima:
     run: r:latest analysis/200_sarima.R

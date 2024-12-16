@@ -68,6 +68,7 @@ for (j in 1:length(disease_list)) {
   dis <- disease_list[j]
   df_dis <- df[df$disease == dis, ]
   df_dis <- df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
+  max_index <- max(df_dis$index)
   
   #Keep only data from before March 2020 and save to separate df
   df_obs <- df_dis[which(df_dis$index<49),]
@@ -79,7 +80,7 @@ for (j in 1:length(disease_list)) {
     
     #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
     p1 <- ggplot(data = df_dis,aes(x = index, y = .data[[var]]))+geom_point()+geom_line()+
-      scale_x_continuous(breaks = seq(1, max(df_dis$index), by = 12),labels = rep(df_dis$year, 7)[seq(1, 84, by = 12)])+
+      scale_x_continuous(breaks = seq(1, max_index, by = 12),labels = rep(df_dis$year, 7)[seq(1, max_index, by = 12)])+
       theme_minimal()+
       xlab("Year of diagnosis")+ 
       ylab(y_label)+
@@ -145,8 +146,8 @@ for (j in 1:length(disease_list)) {
     dev.off()
     Box.test(suggested.rate$residuals, lag = 59, type = "Ljung-Box")
   
-    #Forecast 24 months from March 2020 and convert to time series object
-    fc.rate  <- forecast(m1.rate, h=36)
+    #Forecast 24 months from March 2020 and convert to time series object - could change h to max_index - pre-March 2020
+    fc.rate  <- forecast(m1.rate, h=54)
   
     #Forecasted rates 
     fc.ratemean <- ts(as.numeric(fc.rate$mean), start=c(2020,3), frequency=12)
@@ -187,7 +188,7 @@ for (j in 1:length(disease_list)) {
       geom_line(data = df_new %>% filter(index > 48), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
       geom_ribbon(data = df_new %>% filter(index > 48), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
       geom_vline(xintercept = 49, linetype = "dashed", color = "grey")+
-      scale_x_continuous(breaks = seq(1, max(df_new$index), by = 12),labels = rep(df_new$year, 7)[seq(1, 84, by = 12)])+
+      scale_x_continuous(breaks = seq(1, max_index, by = 12),labels = rep(df_new$year, 7)[seq(1, max_index, by = 12)])+
       scale_fill_viridis_d()+
       scale_colour_viridis_d()+
       theme_minimal()+
@@ -211,13 +212,13 @@ for (j in 1:length(disease_list)) {
     print(c1)
   
     #Calculate percentage difference between observed and predicted
-    #i.e. months 49-60 =2020, 61-72=2021, 73-84=2022, 49-84=2020+2021+2022)
-    a<- c(48, 60, 72, 48)
-    b<- c(60, 72, 84, 84)
+    #i.e. months 49-60 =2020, 61-72=2021, 73-84=2022, 85-max_index=2023/24, 49-max=2020+2021+2022+2023+2024)
+    a<- c(48, 60, 72, 84, 48)
+    b<- c(60, 72, 84, max_index, max_index)
     
     results_list <- list()
     
-    for (i in 1:4) {
+    for (i in 1:5) {
       
       observed_val <- df_new %>%
         filter(index > a[i] & index <= b[i]) %>%
@@ -272,6 +273,12 @@ for (j in 1:length(disease_list)) {
         rates.summary <- merge(rates.summary, current_summary, by = "row.names", all = TRUE) %>%
           select(-Row.names)
       } else if (i == 4) {
+        current_summary <- results_list[[i]] %>%
+          select(observed, predicted, absolute_change, percentage_change)
+        colnames(current_summary)[1:4] <- paste0(colnames(current_summary)[1:4], ".202324")
+        rates.summary <- merge(rates.summary, current_summary, by = "row.names", all = TRUE) %>%
+          select(-Row.names)
+      } else if (i == 5) {
         current_summary <- results_list[[i]] %>%
           select(observed, predicted, absolute_change, percentage_change)
         colnames(current_summary)[1:4] <- paste0(colnames(current_summary)[1:4], ".total")
