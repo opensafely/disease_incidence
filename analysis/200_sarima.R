@@ -134,8 +134,8 @@ for (j in 1:length(disease_list)) {
     dev.off()
     
     #Use auto.arima to fit SARIMA model - will identify p/q parameters that optimise AIC, but we need to double check residuals 
-    #suggested.rate<- auto.arima(df_obs_rate, seasonal=TRUE, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
-    suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
+    suggested.rate<- auto.arima(df_obs_rate, seasonal=TRUE, max.d=1, max.D=1, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
+    #suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
     m1.rate <-suggested.rate
     m1.rate
     confint(m1.rate)
