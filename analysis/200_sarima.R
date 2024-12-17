@@ -71,7 +71,7 @@ for (j in 1:length(disease_list)) {
   max_index <- max(df_dis$index)
   
   #Keep only data from before March 2020 and save to separate df
-  df_obs <- df_dis[which(df_dis$index<49),]
+  df_obs <- df_dis[which(df_dis$index<48),]
   
   # Loop through incidence and count
   for (i in 1:length(variables)) {
@@ -104,7 +104,7 @@ for (j in 1:length(disease_list)) {
     print(p1)
 
     #Convert to time series object 
-    df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,3))
+    df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,4))
     assign(paste0("ts_", var), df_obs_rate)
   
     #Plot time series - 1) raw data; 2) 1st order difference (yt- yt-1); 3) 1st order seasonal difference (yt-yt-1)-(yt-12-yt-12-1); checking for stationarity (i.e. remove trends over time by differencing)
@@ -120,22 +120,22 @@ for (j in 1:length(disease_list)) {
     
     #View ACF/PACF plots of undifferenced data (noting the extent of autocorrelation between time points)
     svg(filename = paste0("output/figures/raw_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(df_obs_rate, max.lag=47) 
+    acf2(df_obs_rate, max.lag=46) 
     dev.off()
     
     #View ACF/PACF plots of differenced data (checking for autocorrelation after differencing)
     svg(filename = paste0("output/figures/differenced_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(diff(df_obs_rate), max.lag=34)
+    acf2(diff(df_obs_rate), max.lag=33)
     dev.off()
     
     #View ACF/PACF plots of differenced/seasonally differenced data (checking for autocorrelation after differencing)
     svg(filename = paste0("output/figures/seasonal_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(diff(diff(df_obs_rate,12)), max.lag=34)
+    acf2(diff(diff(df_obs_rate,12)), max.lag=33)
     dev.off()
     
     #Use auto.arima to fit SARIMA model - will identify p/q parameters that optimise AIC, but we need to double check residuals 
-    suggested.rate<- auto.arima(df_obs_rate, seasonal=TRUE, d=1, D=1, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
-    #suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
+    #suggested.rate<- auto.arima(df_obs_rate, seasonal=TRUE, d=1, D=1, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
+    suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE) 
     m1.rate <-suggested.rate
     m1.rate
     confint(m1.rate)
@@ -144,10 +144,10 @@ for (j in 1:length(disease_list)) {
     svg(filename = paste0("output/figures/auto_residuals_", var, "_", dis, ".svg"), width = 8, height = 6)
     checkresiduals(suggested.rate)
     dev.off()
-    Box.test(suggested.rate$residuals, lag = 59, type = "Ljung-Box")
+    Box.test(suggested.rate$residuals, lag = 58, type = "Ljung-Box")
   
     #Forecast 24 months from March 2020 and convert to time series object - could change h to max_index - pre-March 2020
-    fc.rate  <- forecast(m1.rate, h=54)
+    fc.rate  <- forecast(m1.rate, h=55)
   
     #Forecasted rates 
     fc.ratemean <- ts(as.numeric(fc.rate$mean), start=c(2020,3), frequency=12)
@@ -183,11 +183,11 @@ for (j in 1:length(disease_list)) {
       geom_point(aes(y = .data[[var]]), color="#ADD8E6", size=3)+
       geom_line(aes(y = .data[[var]]), color="#ADD8E6")+
       geom_line(aes(y = moving_average), color = "blue", linetype = "solid", size=0.7)+
-      geom_point(data = df_new %>% filter(index > 48), aes(y = mean), color="orange", alpha = 0.7, size=3)+
-      geom_line(data = df_new %>% filter(index > 48), aes(y = mean), color="orange")+
-      geom_line(data = df_new %>% filter(index > 48), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
-      geom_ribbon(data = df_new %>% filter(index > 48), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
-      geom_vline(xintercept = 49, linetype = "dashed", color = "grey")+
+      geom_point(data = df_new %>% filter(index > 47), aes(y = mean), color="orange", alpha = 0.7, size=3)+
+      geom_line(data = df_new %>% filter(index > 47), aes(y = mean), color="orange")+
+      geom_line(data = df_new %>% filter(index > 47), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
+      geom_ribbon(data = df_new %>% filter(index > 47), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
+      geom_vline(xintercept = 48, linetype = "dashed", color = "grey")+
       scale_x_continuous(breaks = seq(1, max_index, by = 12),labels = rep(df_new$year, 7)[seq(1, max_index, by = 12)])+
       scale_fill_viridis_d()+
       scale_colour_viridis_d()+
@@ -212,9 +212,9 @@ for (j in 1:length(disease_list)) {
     print(c1)
   
     #Calculate percentage difference between observed and predicted
-    #i.e. months 49-60 =2020, 61-72=2021, 73-84=2022, 85-max_index=2023/24, 49-max=2020+2021+2022+2023+2024)
-    a<- c(48, 60, 72, 84, 48)
-    b<- c(60, 72, 84, max_index, max_index)
+    #i.e. months 48-59 =2020, 60-71=2021, 72-83=2022, 84-max_index=2023/24, 48-max=2020+2021+2022+2023+2024)
+    a<- c(47, 59, 71, 83, 47)
+    b<- c(59, 71, 83, max_index, max_index)
     
     results_list <- list()
     

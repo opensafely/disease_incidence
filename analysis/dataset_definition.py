@@ -7,8 +7,8 @@ import codelists_ehrQL as codelists
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
 
-index_date = "2016-03-01"
-end_date = "2024-08-31"
+index_date = "2016-04-01"
+end_date = "2024-09-30"
 
 # Incident diagnostic code in primary care record (SNOMED) (assuming before study end date)
 def first_code_in_period_snomed(dx_codelist):
@@ -122,7 +122,7 @@ dataset.define_population(
 )  
 
 # List of diseases and codelists to cycle through
-diseases = ["multiple_sclerosis"]
+diseases = ["crohns_disease"]
 # diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression"]
 codelist_types = ["snomed", "ctv", "icd"]
 
