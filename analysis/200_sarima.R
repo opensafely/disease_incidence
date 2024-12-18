@@ -79,8 +79,9 @@ for (j in 1:length(disease_list)) {
     y_label <- y_labels[i]
     
     #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
-    p1 <- ggplot(data = df_dis,aes(x = index, y = .data[[var]]))+geom_point()+geom_line()+
-      scale_x_continuous(breaks = seq(1, max_index, by = 12),labels = rep(df_dis$year, 7)[seq(1, max_index, by = 12)])+
+    p1 <- ggplot(data = df_dis,aes(x = mo_year_diagn, y = .data[[var]]))+geom_point()+geom_line()+
+      scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "1 year"),
+      date_labels = "%Y")+
       theme_minimal()+
       xlab("Year of diagnosis")+ 
       ylab(y_label)+
@@ -179,17 +180,17 @@ for (j in 1:length(disease_list)) {
   
     #observed and predicted graphs to check model predictions against observed values
     c1<- 
-      ggplot(data = df_new,aes(x = index))+
+      ggplot(data = df_new,aes(x = mo_year_diagn))+
       geom_point(aes(y = .data[[var]]), color="#ADD8E6", size=3)+
       geom_line(aes(y = .data[[var]]), color="#ADD8E6")+
       geom_line(aes(y = moving_average), color = "blue", linetype = "solid", size=0.7)+
-      geom_point(data = df_new %>% filter(index > 47), aes(y = mean), color="orange", alpha = 0.7, size=3)+
-      geom_line(data = df_new %>% filter(index > 47), aes(y = mean), color="orange")+
-      geom_line(data = df_new %>% filter(index > 47), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
-      geom_ribbon(data = df_new %>% filter(index > 47), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
-      geom_vline(xintercept = 48, linetype = "dashed", color = "grey")+
-      scale_x_continuous(breaks = seq(1, max_index, by = 12),labels = rep(df_new$year, 7)[seq(1, max_index, by = 12)])+
-      scale_fill_viridis_d()+
+      geom_point(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange", alpha = 0.7, size=3)+
+      geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange")+
+      geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
+      geom_ribbon(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
+      geom_vline(xintercept = as.Date("2020-03-01"), linetype = "dashed", color = "grey")+
+      scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "1 year"),
+      date_labels = "%Y")+
       scale_colour_viridis_d()+
       theme_minimal()+
       xlab("Year of diagnosis")+
@@ -322,24 +323,25 @@ sink()
 
 # ######## Now run manually for other incidence rate #################
 # 
-#   df_dis <- df[df$disease == "Stroke", ]
-# 
-#   df_dis <-df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
-# 
-#   #Keep only data from before March 2020 and save to separate df
-#   df_obs <-df_dis[which(df_dis$index<49),]
-# 
-#   #Generate df copies for incidence and count
-#   df_incidence <-df_dis
-#   df_count <-df_dis
-# 
-#   #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
-#   p1 <- ggplot(data = df_incidence,aes(x = index,y = incidence ,colour = factor(year)))+geom_point()+geom_line()+
-#     scale_x_continuous(breaks = seq(1, max(df_incidence$index), by = 12),labels = rep(df_incidence$year, 7)[seq(1, 84, by = 12)])+
-#     scale_color_viridis_d(name = "Year")+
-#     theme_minimal()+
-#     xlab(NULL)+ ylab("Rate per 100,000 population")
-#   p1
+  # df_dis <- df[df$disease == "Crohns Disease", ]
+  # 
+  # df_dis <-df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
+  # 
+  # #Keep only data from before March 2020 and save to separate df
+  # df_obs <-df_dis[which(df_dis$index<49),]
+  # 
+  # #Generate df copies for incidence and count
+  # df_incidence <-df_dis
+  # df_count <-df_dis
+  # 
+  # #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
+  # p1 <- ggplot(data = df_incidence,aes(x = mo_year_diagn,y = incidence ,colour = factor(year)))+geom_point()+geom_line()+
+  #   scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "1 year"),
+  #                date_labels = "%Y")+
+  #   scale_color_viridis_d(name = "Year")+
+  #   theme_minimal()+
+  #   xlab(NULL)+ ylab("Rate per 100,000 population")
+  # p1
 # 
 #   #Convert to time series object
 #   df_obs_rate <- ts(df_obs$incidence, frequency=12, start=c(2016,3))
