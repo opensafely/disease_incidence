@@ -1,148 +1,328 @@
 {
   "files": {
-    "opensafely-asthma-diagnosis-codes.csv": {
-      "id": "opensafely/asthma-diagnosis-codes/5e5df80f",
-      "url": "https://www.opencodelists.org/codelist/opensafely/asthma-diagnosis-codes/5e5df80f/",
-      "downloaded_at": "2024-12-11 20:29:12.122953Z",
-      "sha": "1b24131f34cecb31f9f610ef39b0f43ae017553c"
+    "nhsd-primary-care-domain-refsets-ast_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ast_cod/3a005293",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ast_cod/3a005293/",
+      "downloaded_at": "2024-12-31 14:51:35.604031Z",
+      "sha": "7b099c79624e12d0fe172e1c1aa60de70d94ad10"
+    },
+    "nhsd-primary-care-domain-refsets-astadmsn_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/astadmsn_cod/3f5c6982",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/astadmsn_cod/3f5c6982/",
+      "downloaded_at": "2024-12-31 14:51:35.734682Z",
+      "sha": "1b3aba9c130dafdc6a1aea3254ac6db6dfd6169b"
+    },
+    "nhsd-primary-care-domain-refsets-astres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/astres_cod/530fc5c8",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/astres_cod/530fc5c8/",
+      "downloaded_at": "2024-12-31 14:51:35.866354Z",
+      "sha": "98e2d004cc77c059f3383e22b6d909c561439040"
+    },
+    "user-markdrussell-asthma-secondary-care.csv": {
+      "id": "user/markdrussell/asthma-secondary-care/2a250f1b",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/asthma-secondary-care/2a250f1b/",
+      "downloaded_at": "2024-12-31 14:51:36.001107Z",
+      "sha": "d71d9a3f40d36c4da740031d80a47d450cd50e5e"
     },
     "nhsd-primary-care-domain-refsets-copd_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/copd_cod/0b593d79",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/copd_cod/0b593d79/",
-      "downloaded_at": "2024-12-11 20:29:12.280984Z",
-      "sha": "5d08ae3a50efe6a5fa54806e9ffce16d14ba9955"
+      "id": "nhsd-primary-care-domain-refsets/copd_cod/3a5ef7dc",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/copd_cod/3a5ef7dc/",
+      "downloaded_at": "2024-12-31 14:51:36.134399Z",
+      "sha": "6a02ab5caaccff0b4fd779ba96611cbe78717438"
     },
-    "opensafely-copd-secondary-care.csv": {
-      "id": "opensafely/copd-secondary-care/35734162",
-      "url": "https://www.opencodelists.org/codelist/opensafely/copd-secondary-care/35734162/",
-      "downloaded_at": "2024-12-11 20:29:12.360916Z",
-      "sha": "83bc1fc962ce3c09248be11d58cd22b3128ddc51"
+    "nhsd-primary-care-domain-refsets-copdadmsn_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/copdadmsn_cod/35d15b44",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/copdadmsn_cod/35d15b44/",
+      "downloaded_at": "2024-12-31 14:51:36.254022Z",
+      "sha": "171a3c7ed439dc8c89faf7154b9680caa7e38ff2"
+    },
+    "nhsd-primary-care-domain-refsets-copdres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/copdres_cod/67806ca0",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/copdres_cod/67806ca0/",
+      "downloaded_at": "2024-12-31 14:51:36.379130Z",
+      "sha": "58b2a092a7379250596e0a46897d1ae8e95277ca"
+    },
+    "user-markdrussell-COPD_admission.csv": {
+      "id": "user/markdrussell/COPD_admission/43348250",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/COPD_admission/43348250/",
+      "downloaded_at": "2024-12-31 14:51:36.500465Z",
+      "sha": "0d22272c95cfa9e7b35bd503229095983d7ab16e"
     },
     "nhsd-primary-care-domain-refsets-chd_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/chd_cod/53d4d722",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/chd_cod/53d4d722/",
-      "downloaded_at": "2024-12-11 20:29:12.474885Z",
-      "sha": "0dab9c8229e0005df9d4c01950469818c8f10d49"
+      "id": "nhsd-primary-care-domain-refsets/chd_cod/0f32f87c",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/chd_cod/0f32f87c/",
+      "downloaded_at": "2024-12-31 14:51:36.633839Z",
+      "sha": "7b47b2cb6c00a2fc71ad9dfb1030bd6b08418535"
+    },
+    "user-markdrussell-coronary-heart-disease-secondary-care.csv": {
+      "id": "user/markdrussell/coronary-heart-disease-secondary-care/11159be6",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/coronary-heart-disease-secondary-care/11159be6/",
+      "downloaded_at": "2024-12-31 14:51:36.838561Z",
+      "sha": "6b582a29db957e91c27947957a6e4fe2809a1e58"
     },
     "nhsd-primary-care-domain-refsets-strk_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/strk_cod/4ce1f018",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/strk_cod/4ce1f018/",
-      "downloaded_at": "2024-12-11 20:29:12.656030Z",
-      "sha": "b1b9e1cedbd0c76a81f4a71d9bf1002cda4edf73"
+      "id": "nhsd-primary-care-domain-refsets/strk_cod/78779ff3",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/strk_cod/78779ff3/",
+      "downloaded_at": "2024-12-31 14:51:36.968792Z",
+      "sha": "b43c467ddf0b39acde84699cfc70bb96646da02a"
     },
-    "opensafely-stroke-secondary-care.csv": {
-      "id": "opensafely/stroke-secondary-care/2b8aa4a9",
-      "url": "https://www.opencodelists.org/codelist/opensafely/stroke-secondary-care/2b8aa4a9/",
-      "downloaded_at": "2024-12-11 20:29:12.827371Z",
-      "sha": "04aeb4b87dcf27651e34c287fdffe023bce38591"
+    "nhsd-primary-care-domain-refsets-tia_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/tia_cod/1625df86",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/tia_cod/1625df86/",
+      "downloaded_at": "2024-12-31 14:51:37.129378Z",
+      "sha": "582c570c9e3f0229587e15ae38a343042efce060"
+    },
+    "user-markdrussell-stroke-and-tia-secondary-care.csv": {
+      "id": "user/markdrussell/stroke-and-tia-secondary-care/780628b0",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/stroke-and-tia-secondary-care/780628b0/",
+      "downloaded_at": "2024-12-31 14:51:37.303634Z",
+      "sha": "c5f1b4a105418075dd0ac2d862be5685d82aa9b5"
     },
     "nhsd-primary-care-domain-refsets-hf_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/hf_cod/34993072",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hf_cod/34993072/",
-      "downloaded_at": "2024-12-11 20:29:12.981508Z",
-      "sha": "c1fdc20e835c8e00b50e4728592b79bb3e3ee887"
+      "id": "nhsd-primary-care-domain-refsets/hf_cod/70b49c5d",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hf_cod/70b49c5d/",
+      "downloaded_at": "2024-12-31 14:51:37.437063Z",
+      "sha": "c682301df15a68467f95a94abeb93e572b65e06d"
+    },
+    "nhsd-primary-care-domain-refsets-hflvsd_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/hflvsd_cod/44634425",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hflvsd_cod/44634425/",
+      "downloaded_at": "2024-12-31 14:51:37.569318Z",
+      "sha": "4b02e302dc12137b6c1b54cb846748eb1b66192c"
+    },
+    "nhsd-primary-care-domain-refsets-hfres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/hfres_cod/627991fd",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hfres_cod/627991fd/",
+      "downloaded_at": "2024-12-31 14:51:37.702388Z",
+      "sha": "31f7b48569d24259d4da0e6cb77d0468638804b3"
+    },
+    "user-markdrussell-heart-failure-secondary-care.csv": {
+      "id": "user/markdrussell/heart-failure-secondary-care/5ef6b57b",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/heart-failure-secondary-care/5ef6b57b/",
+      "downloaded_at": "2024-12-31 14:51:37.819087Z",
+      "sha": "8aff21b4034021f0bc4dcf434c2881387d95c3dc"
     },
     "nhsd-primary-care-domain-refsets-dem_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/dem_cod/271b70a4",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dem_cod/271b70a4/",
-      "downloaded_at": "2024-12-11 20:29:13.164635Z",
-      "sha": "96defdd5b5345aaed6c6e2e71188c966288e4731"
+      "id": "nhsd-primary-care-domain-refsets/dem_cod/21b792ed",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dem_cod/21b792ed/",
+      "downloaded_at": "2024-12-31 14:51:37.969962Z",
+      "sha": "88a1a9cd2b73f2825f3e735c03efbba4adbcfc65"
     },
-    "bristol-multiple-sclerosis-icd10-v13.csv": {
-      "id": "bristol/multiple-sclerosis-icd10-v13/31e7874a",
-      "url": "https://www.opencodelists.org/codelist/bristol/multiple-sclerosis-icd10-v13/31e7874a/",
-      "downloaded_at": "2024-08-21 12:42:59.424646Z",
-      "sha": "7a14f783d25f63d5928adc223e0338dc6d20f54e"
+    "user-markdrussell-dementia-secondary-care.csv": {
+      "id": "user/markdrussell/dementia-secondary-care/45e74246",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/dementia-secondary-care/45e74246/",
+      "downloaded_at": "2024-12-31 14:51:38.089781Z",
+      "sha": "9eadd40d3b253c9ff48053f9643826aee7d57d42"
     },
-    "opensafely-multiple-sclerosis-v2.csv": {
-      "id": "opensafely/multiple-sclerosis-v2/063627df",
-      "url": "https://www.opencodelists.org/codelist/opensafely/multiple-sclerosis-v2/063627df/",
-      "downloaded_at": "2024-08-21 13:44:40.380299Z",
-      "sha": "e89c12f28e67e5c8dedd322f936a279cc837c564"
+    "nhsd-primary-care-domain-refsets-multiple-sclerosis-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/multiple-sclerosis-codes/5ac96061",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/multiple-sclerosis-codes/5ac96061/",
+      "downloaded_at": "2024-12-31 14:51:38.221298Z",
+      "sha": "d911f851314b6497938133bb4620664edd3374df"
+    },
+    "user-markdrussell-multiple-sclerosis-secondary-care.csv": {
+      "id": "user/markdrussell/multiple-sclerosis-secondary-care/2cd7cf11",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/multiple-sclerosis-secondary-care/2cd7cf11/",
+      "downloaded_at": "2024-12-31 14:51:38.353515Z",
+      "sha": "21337d95b5e8f3cb4c43401c776bea106c3ad511"
     },
     "nhsd-primary-care-domain-refsets-epil_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/epil_cod/16243d51",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/epil_cod/16243d51/",
-      "downloaded_at": "2024-12-11 20:29:13.574353Z",
-      "sha": "569fb7772727ccd3a09d6d8c981af5e663619e98"
+      "id": "nhsd-primary-care-domain-refsets/epil_cod/28ffb643",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/epil_cod/28ffb643/",
+      "downloaded_at": "2024-12-31 14:51:38.487458Z",
+      "sha": "b04755c4b54a9e52d770db814938c907f2c18573"
     },
-    "opensafely-crohns-disease.csv": {
-      "id": "opensafely/crohns-disease/223a39f5",
-      "url": "https://www.opencodelists.org/codelist/opensafely/crohns-disease/223a39f5/",
-      "downloaded_at": "2024-08-19 09:51:01.066316Z",
-      "sha": "63230a0cc37cc199ffd4920cfcbe6d3188c602bf"
+    "nhsd-primary-care-domain-refsets-epilres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/epilres_cod/26b50493",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/epilres_cod/26b50493/",
+      "downloaded_at": "2024-12-31 14:51:38.609903Z",
+      "sha": "4d2e5120cf6fe6a1d88ca08b4f05b91eefab9325"
     },
-    "opensafely-ulcerative-colitis.csv": {
-      "id": "opensafely/ulcerative-colitis/3b49ad2a",
-      "url": "https://www.opencodelists.org/codelist/opensafely/ulcerative-colitis/3b49ad2a/",
-      "downloaded_at": "2024-12-11 20:29:13.900080Z",
-      "sha": "9add66e0b6b15665c772806314c2f481ed56c468"
+    "user-markdrussell-epilepsy-secondary-care.csv": {
+      "id": "user/markdrussell/epilepsy-secondary-care/13c85bdc",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/epilepsy-secondary-care/13c85bdc/",
+      "downloaded_at": "2024-12-31 14:51:38.713668Z",
+      "sha": "702d799ec28251e513b31bc5ef9f0f61cf70988f"
     },
-    "nhsd-primary-care-domain-refsets-dmtype2_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/dmtype2_cod/5e4a9aae",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmtype2_cod/5e4a9aae/",
-      "downloaded_at": "2024-12-11 20:29:14.040435Z",
-      "sha": "387e64c3c30326515da4db1302a0bd9515f75e67"
+    "nhsd-primary-care-domain-refsets-crohns-disease-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/crohns-disease-codes/3f6f3b7c",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/crohns-disease-codes/3f6f3b7c/",
+      "downloaded_at": "2024-12-31 14:51:38.831461Z",
+      "sha": "fbff9bedcc9de95a7757bdf1a39d811bb74404b4"
     },
-    "nhsd-primary-care-domain-refsets-dmtype1_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/dmtype1_cod/2c80f090",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmtype1_cod/2c80f090/",
-      "downloaded_at": "2024-12-11 20:29:14.204949Z",
-      "sha": "23e6cb9c5555fb756c9a68295bd701b6ddb34ebd"
+    "user-markdrussell-crohns-disease-secondary-care.csv": {
+      "id": "user/markdrussell/crohns-disease-secondary-care/7ab8e8a6",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/crohns-disease-secondary-care/7ab8e8a6/",
+      "downloaded_at": "2024-12-31 14:51:38.975946Z",
+      "sha": "d363ce084a468277671de07d2657db1954e47dac"
     },
-    "nhsd-primary-care-domain-refsets-ckd_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/ckd_cod/5fd801cc",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ckd_cod/5fd801cc/",
-      "downloaded_at": "2024-12-11 20:29:14.324037Z",
-      "sha": "3a32f20ef7b33b9cdda2128754d3f394f28f0165"
+    "nhsd-primary-care-domain-refsets-ulcerative-colitis-uc-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ulcerative-colitis-uc-codes/518bc7a7",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ulcerative-colitis-uc-codes/518bc7a7/",
+      "downloaded_at": "2024-12-31 14:51:39.105492Z",
+      "sha": "fd7d7466540a24580a33005950cb0b0f8db7bbc1"
     },
-    "opensafely-psoriasis.csv": {
-      "id": "opensafely/psoriasis/01091de1",
-      "url": "https://www.opencodelists.org/codelist/opensafely/psoriasis/01091de1/",
-      "downloaded_at": "2024-12-11 20:29:14.497788Z",
-      "sha": "9bcaf40cef8b3624037e8b4ed318cefa62f8cc8c"
+    "user-markdrussell-ulcerative-colitis-secondary-care.csv": {
+      "id": "user/markdrussell/ulcerative-colitis-secondary-care/61a97571",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/ulcerative-colitis-secondary-care/61a97571/",
+      "downloaded_at": "2024-12-31 14:51:39.258931Z",
+      "sha": "de08ea970b2457381180236610dd50c9842441f3"
     },
-    "opensafely-atopic-dermatitis.csv": {
-      "id": "opensafely/atopic-dermatitis/2ce98a3d",
-      "url": "https://www.opencodelists.org/codelist/opensafely/atopic-dermatitis/2ce98a3d/",
-      "downloaded_at": "2024-12-11 20:29:14.663035Z",
-      "sha": "753280d5ed2069133a1142dc2eb22fc1aa078e12"
+    "nhsd-primary-care-domain-refsets-dmtype2audit_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dmtype2audit_cod/130b114a",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmtype2audit_cod/130b114a/",
+      "downloaded_at": "2024-12-31 14:51:39.451219Z",
+      "sha": "90702cc519225b73281e54c2c0de067e6c71b5ef"
+    },
+    "user-markdrussell-type-2-diabetes-secondary-care.csv": {
+      "id": "user/markdrussell/type-2-diabetes-secondary-care/2f8a8f07",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/type-2-diabetes-secondary-care/2f8a8f07/",
+      "downloaded_at": "2024-12-31 14:51:39.620488Z",
+      "sha": "44b8f1f210c8af12a54d56a5ad2399849090e7af"
+    },
+    "nhsd-primary-care-domain-refsets-dmtype1audit_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dmtype1audit_cod/48a36b39",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmtype1audit_cod/48a36b39/",
+      "downloaded_at": "2024-12-31 14:51:39.735495Z",
+      "sha": "88b43e738acca33613b8e1324b8165d63151c798"
+    },
+    "user-markdrussell-type-1-diabetes-secondary-care.csv": {
+      "id": "user/markdrussell/type-1-diabetes-secondary-care/489a023c",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/type-1-diabetes-secondary-care/489a023c/",
+      "downloaded_at": "2024-12-31 14:51:39.881378Z",
+      "sha": "e0d47b5cbf9ace24aae5a63a8acbc583de46e120"
+    },
+    "nhsd-primary-care-domain-refsets-dmres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dmres_cod/62d83746",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/dmres_cod/62d83746/",
+      "downloaded_at": "2024-12-31 14:51:40.009608Z",
+      "sha": "57682a6345da78472609f01f1ca065ace27fcb43"
+    },
+    "nhsd-primary-care-domain-refsets-ckdatrisk2_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ckdatrisk2_cod/4529f7b4",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ckdatrisk2_cod/4529f7b4/",
+      "downloaded_at": "2024-12-31 14:51:40.134181Z",
+      "sha": "a12dbc4f6c0a2ad1c5e77554389a2f8cdcf5cb26"
+    },
+    "nhsd-primary-care-domain-refsets-ckdres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ckdres_cod/305aab93",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ckdres_cod/305aab93/",
+      "downloaded_at": "2024-12-31 14:51:40.253781Z",
+      "sha": "906aa0513f26af3e97e0563362a84636d21f6d5a"
+    },
+    "user-markdrussell-chronic-kidney-disease-secondary-care.csv": {
+      "id": "user/markdrussell/chronic-kidney-disease-secondary-care/167b1bd2",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/chronic-kidney-disease-secondary-care/167b1bd2/",
+      "downloaded_at": "2024-12-31 14:51:40.387021Z",
+      "sha": "c29621d4ce2fc33640c6f93416449d12ac06689d"
+    },
+    "nhsd-primary-care-domain-refsets-adult-and-child-psoriasis-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/adult-and-child-psoriasis-codes/325020f7",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/adult-and-child-psoriasis-codes/325020f7/",
+      "downloaded_at": "2024-12-31 14:51:40.503982Z",
+      "sha": "cb0342e740058376c40f191c9286d4f71a616941"
+    },
+    "user-markdrussell-psoriasis-secondary-care.csv": {
+      "id": "user/markdrussell/psoriasis-secondary-care/7d6ba89c",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/psoriasis-secondary-care/7d6ba89c/",
+      "downloaded_at": "2024-12-31 14:51:40.618797Z",
+      "sha": "3667bdbf34843bfa98a17ae9bbd9b87b9f76b1df"
+    },
+    "nhsd-primary-care-domain-refsets-atopic-dermatitis-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/atopic-dermatitis-codes/5816a06b",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/atopic-dermatitis-codes/5816a06b/",
+      "downloaded_at": "2024-12-31 14:51:40.734712Z",
+      "sha": "174881d25d69b593c4877092c5b0b88c626144cf"
+    },
+    "user-markdrussell-atopic-dermatitis-secondary-care.csv": {
+      "id": "user/markdrussell/atopic-dermatitis-secondary-care/645c3567",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/atopic-dermatitis-secondary-care/645c3567/",
+      "downloaded_at": "2024-12-31 14:51:40.880822Z",
+      "sha": "e483b3b160d56590627bbab417bb78a8ce04d447"
     },
     "nhsd-primary-care-domain-refsets-osteo_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/osteo_cod/5d1bd8d9",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/osteo_cod/5d1bd8d9/",
-      "downloaded_at": "2024-12-11 20:29:14.829755Z",
-      "sha": "bc7e135ca0ce304a7c611f137c4c9ece2ca146be"
+      "id": "nhsd-primary-care-domain-refsets/osteo_cod/1dd61122",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/osteo_cod/1dd61122/",
+      "downloaded_at": "2024-12-31 14:51:40.986502Z",
+      "sha": "80a09e7d0e5aca8068a8dcb029c92d264851ef4d"
     },
-    "opensafely-hiv-aids.csv": {
-      "id": "opensafely/hiv-aids/1efade93",
-      "url": "https://www.opencodelists.org/codelist/opensafely/hiv-aids/1efade93/",
-      "downloaded_at": "2024-12-11 20:29:15.073853Z",
-      "sha": "6c26564c2cc6973d77950da7a771f986701df133"
+    "user-markdrussell-osteoporosis-secondary-care.csv": {
+      "id": "user/markdrussell/osteoporosis-secondary-care/4b4cc232",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/osteoporosis-secondary-care/4b4cc232/",
+      "downloaded_at": "2024-12-31 14:51:41.126850Z",
+      "sha": "59c0f94efafd3ca5a136b9586995262a3d74d508"
+    },
+    "user-markdrussell-osteoporosis-resolved.csv": {
+      "id": "user/markdrussell/osteoporosis-resolved/02d12889",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/osteoporosis-resolved/02d12889/",
+      "downloaded_at": "2024-12-31 19:40:22.492698Z",
+      "sha": "5f175b5e1d2f66cadbc3a7510f313e36850917e8"
+    },
+    "nhsd-primary-care-domain-refsets-human-immunodeficiency-virus-hiv-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/human-immunodeficiency-virus-hiv-codes/3f072d36",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/human-immunodeficiency-virus-hiv-codes/3f072d36/",
+      "downloaded_at": "2024-12-31 14:51:41.252527Z",
+      "sha": "ca29216861d55ee66794d813e5663509f219a356"
+    },
+    "user-markdrussell-hiv-secondary-care.csv": {
+      "id": "user/markdrussell/hiv-secondary-care/323d4efd",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/hiv-secondary-care/323d4efd/",
+      "downloaded_at": "2024-12-31 14:51:41.379910Z",
+      "sha": "21d94629044c24655245e080ed4edef6c5eb5d30"
     },
     "nhsd-primary-care-domain-refsets-depr_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/depr_cod/0e0bfd6f",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/depr_cod/0e0bfd6f/",
-      "downloaded_at": "2024-12-11 20:29:15.253991Z",
-      "sha": "fe8bce134ed68b81aee0a15f8f258bfb31fc0c1c"
+      "id": "nhsd-primary-care-domain-refsets/depr_cod/477e1261",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/depr_cod/477e1261/",
+      "downloaded_at": "2024-12-31 14:51:41.486568Z",
+      "sha": "95686e18f893e004b9fe46284c758a928386f233"
     },
-    "opensafely-ethnicity-snomed-0removed.csv": {
-      "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
-      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
-      "downloaded_at": "2024-09-06 13:28:04.244676Z",
-      "sha": "8b849b5b785d80306e488d0109640c8c1d2da01b"
+    "nhsd-primary-care-domain-refsets-depres_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/depres_cod/1369b693",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/depres_cod/1369b693/",
+      "downloaded_at": "2024-12-31 14:51:41.586464Z",
+      "sha": "f76c7ec24e3149b2b8836269c01be415573c6b52"
     },
-    "opensafely-smoking-clear.csv": {
-      "id": "opensafely/smoking-clear/2020-04-29",
-      "url": "https://www.opencodelists.org/codelist/opensafely/smoking-clear/2020-04-29/",
-      "downloaded_at": "2024-08-19 09:51:02.366612Z",
-      "sha": "0b5f3afe1db96dcce5141220e893a42ba2e5a8f7"
+    "nhsd-primary-care-domain-refsets-depsupp_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/depsupp_cod/74fe2c6e",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/depsupp_cod/74fe2c6e/",
+      "downloaded_at": "2024-12-31 14:51:41.683995Z",
+      "sha": "54f62cb08fea161bc189769f819d4b5853bac667"
     },
-    "opensafely-smoking-unclear.csv": {
-      "id": "opensafely/smoking-unclear/2020-04-29",
-      "url": "https://www.opencodelists.org/codelist/opensafely/smoking-unclear/2020-04-29/",
-      "downloaded_at": "2024-08-19 09:51:02.495736Z",
-      "sha": "d9dad3e9d9491f765863b2617114c521957b6db1"
+    "user-markdrussell-depression-secondary-care.csv": {
+      "id": "user/markdrussell/depression-secondary-care/192ddbc8",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/depression-secondary-care/192ddbc8/",
+      "downloaded_at": "2024-12-31 14:51:41.828185Z",
+      "sha": "2fb0506a67f53ac437ee957054ae7d65f8b1314b"
+    },
+    "nhsd-primary-care-domain-refsets-coeliac-disease-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/coeliac-disease-codes/22e654c2",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/coeliac-disease-codes/22e654c2/",
+      "downloaded_at": "2024-12-31 14:51:41.955514Z",
+      "sha": "a3475e0f789a66f008992a7b6471c731a6c7d824"
+    },
+    "user-markdrussell-coeliac-secondary-care.csv": {
+      "id": "user/markdrussell/coeliac-secondary-care/001e6893",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/coeliac-secondary-care/001e6893/",
+      "downloaded_at": "2024-12-31 14:51:42.070642Z",
+      "sha": "43e25b402959623e5bf5de99583b1deb14d366ea"
+    },
+    "nhsd-primary-care-domain-refsets-polymyalgia-rheumatica-pmr-codes.csv": {
+      "id": "nhsd-primary-care-domain-refsets/polymyalgia-rheumatica-pmr-codes/5563e075",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/polymyalgia-rheumatica-pmr-codes/5563e075/",
+      "downloaded_at": "2024-12-31 14:51:42.178983Z",
+      "sha": "70dbce1055e7cb460151e19ad6bbd21810cd9b84"
+    },
+    "user-markdrussell-polymyalgia-rheumatica-pmr-secondary-care.csv": {
+      "id": "user/markdrussell/polymyalgia-rheumatica-pmr-secondary-care/670ef55d",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/polymyalgia-rheumatica-pmr-secondary-care/670ef55d/",
+      "downloaded_at": "2024-12-31 14:51:42.297668Z",
+      "sha": "e90f6c2bb6a1fdf02bc0b068dfaa94c13d737954"
+    },
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/746e4c98",
+      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity/746e4c98/",
+      "downloaded_at": "2024-12-31 14:53:28.794428Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
     }
   }
 }

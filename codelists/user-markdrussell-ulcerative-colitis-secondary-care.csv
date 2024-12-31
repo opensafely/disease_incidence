@@ -1,0 +1,11 @@
+code,term
+K51,Ulcerative colitis
+K510,Ulcerative (chronic) pancolitis
+K512,Ulcerative (chronic) proctitis
+K513,Ulcerative (chronic) rectosigmoiditis
+K514,Inflammatory polyps
+K515,Left sided colitis
+K518,Other ulcerative colitis
+K519,"Ulcerative colitis, unspecified"
+M075,Arthropathy in ulcerative colitis K51.-
+M092,Juvenile arthritis in ulcerative colitis K51.-

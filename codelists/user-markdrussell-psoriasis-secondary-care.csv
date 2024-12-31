@@ -1,0 +1,16 @@
+code,term
+L40,Psoriasis
+L400,Psoriasis vulgaris
+L401,Generalized pustular psoriasis
+L402,Acrodermatitis continua
+L403,Pustulosis palmaris et plantaris
+L404,Guttate psoriasis
+L405,Arthropathic psoriasis M07.0-M07.3 M09.0
+L408,Other psoriasis
+L409,"Psoriasis, unspecified"
+M07,Psoriatic and enteropathic arthropathies
+M070,Distal interphalangeal psoriatic arthropathy L40.5
+M071,Arthritis mutilans L40.5
+M072,Psoriatic spondylitis L40.5
+M073,Other psoriatic arthropathies L40.5
+M090,Juvenile arthritis in psoriasis L40.5

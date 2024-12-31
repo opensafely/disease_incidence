@@ -2,6 +2,7 @@ code,term
 1064811000000103,Moderate acute exacerbation of asthma
 1064821000000109,Life threatening acute exacerbation of asthma
 10674711000119105,Acute severe exacerbation of asthma co-occurrent with allergic rhinitis
+10674791000119101,Acute exacerbation of intermittent allergic asthma
 10674991000119104,Intermittent allergic asthma
 10675391000119101,Severe controlled persistent asthma
 10675431000119106,Severe persistent allergic asthma
@@ -21,6 +22,7 @@ code,term
 10676151000119101,Mild persistent allergic asthma uncontrolled
 10676191000119106,Mild persistent asthma uncontrolled
 10676231000119102,Mild persistent asthma uncontrolled co-occurrent with allergic rhinitis
+10676271000119104,Acute exacerbation of moderate persistent allergic asthma
 10676351000119103,Moderate persistent asthma controlled
 10676391000119108,Moderate persistent allergic asthma
 10676431000119103,Acute severe exacerbation of moderate persistent allergic asthma
@@ -48,7 +50,7 @@ code,term
 135181000119109,Acute exacerbation of mild persistent asthma
 16584951000119101,Oral steroid-dependent asthma
 1741000119102,Intermittent asthma uncontrolled
-1751000119100,Acute exacerbation of chronic obstructive airways disease with asthma
+1751000119100,Acute exacerbation of chronic obstructive pulmonary disease with asthma
 18041002,Printers' asthma
 195949008,Chronic asthmatic bronchitis
 195967001,Asthma

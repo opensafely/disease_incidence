@@ -1,0 +1,8 @@
+code,term
+K50,Crohn disease [regional enteritis]
+K500,Crohn disease of small intestine
+K501,Crohn disease of large intestine
+K508,Other Crohn disease
+K509,"Crohn disease, unspecified"
+M074,Arthropathy in Crohn disease [regional enteritis] K50.-
+M091,Juvenile arthritis in Crohn disease [regional enteritis] K50.-

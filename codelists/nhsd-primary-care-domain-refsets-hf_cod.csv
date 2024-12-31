@@ -2,6 +2,16 @@ code,term
 10335000,Chronic right-sided heart failure
 10633002,Acute congestive heart failure
 111283005,Chronic left-sided heart failure
+1204200007,Left ventricular failure with normal ejection fraction due to valvular heart disease
+1204203009,Left ventricular failure with normal ejection fraction due to coronary arteriosclerosis
+1204204003,Left ventricular failure with normal ejection fraction due to myocarditis
+1204206001,Left ventricular failure with normal ejection fraction due to cardiomyopathy
+1204462004,Left ventricular failure with sepsis
+1204468000,Right ventricular failure with sepsis
+1208843003,Right ventricular failure due to heart valve disorder
+1208846006,Right ventricular failure due to disorder of lung
+1208848007,Right ventricular failure due to disorder of pulmonary circulation
+1208850004,Right ventricular failure due to right ventricular infarction
 128404006,Right heart failure
 153941000119100,Chronic combined systolic and diastolic heart failure
 16838951000119100,Acute on chronic right-sided congestive heart failure
@@ -11,10 +21,6 @@ code,term
 233924009,Heart failure as a complication of care
 314206003,Refractory heart failure
 367363000,Right ventricular failure
-420300004,New York Heart Association Classification - Class I
-420913000,New York Heart Association Classification - Class III
-421704003,New York Heart Association Classification - Class II
-422293003,New York Heart Association Classification - Class IV
 42343007,Congestive heart failure
 426611007,Congestive heart failure due to valvular disease
 43736008,Rheumatic left ventricular failure
@@ -27,8 +33,10 @@ code,term
 66989003,Chronic right-sided congestive heart failure
 703272007,Heart failure with reduced ejection fraction
 788950000,Heart failure with mid range ejection fraction
+82523003,Congestive rheumatic heart failure
 84114007,Heart failure
 85232009,Left heart failure
 871617000,Low output heart failure due to and following Fontan operation
 88805009,Chronic congestive heart failure
+898208007,Heart failure due to thyrotoxicosis
 92506005,Biventricular congestive heart failure

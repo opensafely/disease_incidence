@@ -1,0 +1,76 @@
+code,term
+I120,Hypertensive renal disease with renal failure
+I131,Hypertensive heart and renal disease with renal failure
+I132,Hypertensive heart and renal disease with both (congestive) heart failure and renal failure
+N01,Rapidly progressive nephritic syndrome
+N010,Rapidly progressive nephritic syndrome : Minor glomerular abnormality
+N011,Rapidly progressive nephritic syndrome : Focal and segmental glomerular lesions
+N012,Rapidly progressive nephritic syndrome : Diffuse membranous glomerulonephritis
+N013,Rapidly progressive nephritic syndrome : Diffuse mesangial proliferative glomerulonephritis
+N014,Rapidly progressive nephritic syndrome : Diffuse endocapillary proliferative glomerulonephritis
+N015,Rapidly progressive nephritic syndrome : Diffuse mesangiocapillary glomerulonephritis
+N016,Rapidly progressive nephritic syndrome : Dense deposit disease
+N017,Rapidly progressive nephritic syndrome : Diffuse crescentic glomerulonephritis
+N018,Rapidly progressive nephritic syndrome : Other
+N019,Rapidly progressive nephritic syndrome : Unspecified
+N022,Recurrent and persistent haematuria : Diffuse membranous glomerulonephritis
+N023,Recurrent and persistent haematuria : Diffuse mesangial proliferative glomerulonephritis
+N024,Recurrent and persistent haematuria : Diffuse endocapillary proliferative glomerulonephritis
+N025,Recurrent and persistent haematuria : Diffuse mesangiocapillary glomerulonephritis
+N027,Recurrent and persistent haematuria : Diffuse crescentic glomerulonephritis
+N03,Chronic nephritic syndrome
+N030,Chronic nephritic syndrome : Minor glomerular abnormality
+N031,Chronic nephritic syndrome : Focal and segmental glomerular lesions
+N032,Chronic nephritic syndrome : Diffuse membranous glomerulonephritis
+N033,Chronic nephritic syndrome : Diffuse mesangial proliferative glomerulonephritis
+N034,Chronic nephritic syndrome : Diffuse endocapillary proliferative glomerulonephritis
+N035,Chronic nephritic syndrome : Diffuse mesangiocapillary glomerulonephritis
+N036,Chronic nephritic syndrome : Dense deposit disease
+N037,Chronic nephritic syndrome : Diffuse crescentic glomerulonephritis
+N038,Chronic nephritic syndrome : Other
+N039,Chronic nephritic syndrome : Unspecified
+N04,Nephrotic syndrome
+N040,Nephrotic syndrome : Minor glomerular abnormality
+N041,Nephrotic syndrome : Focal and segmental glomerular lesions
+N042,Nephrotic syndrome : Diffuse membranous glomerulonephritis
+N043,Nephrotic syndrome : Diffuse mesangial proliferative glomerulonephritis
+N044,Nephrotic syndrome : Diffuse endocapillary proliferative glomerulonephritis
+N045,Nephrotic syndrome : Diffuse mesangiocapillary glomerulonephritis
+N046,Nephrotic syndrome : Dense deposit disease
+N047,Nephrotic syndrome : Diffuse crescentic glomerulonephritis
+N048,Nephrotic syndrome : Other
+N049,Nephrotic syndrome : Unspecified
+N05,Unspecified nephritic syndrome
+N050,Unspecified nephritic syndrome : Minor glomerular abnormality
+N051,Unspecified nephritic syndrome : Focal and segmental glomerular lesions
+N052,Unspecified nephritic syndrome : Diffuse membranous glomerulonephritis
+N053,Unspecified nephritic syndrome : Diffuse mesangial proliferative glomerulonephritis
+N054,Unspecified nephritic syndrome : Diffuse endocapillary proliferative glomerulonephritis
+N055,Unspecified nephritic syndrome : Diffuse mesangiocapillary glomerulonephritis
+N056,Unspecified nephritic syndrome : Dense deposit disease
+N057,Unspecified nephritic syndrome : Diffuse crescentic glomerulonephritis
+N058,Unspecified nephritic syndrome : Other
+N059,Unspecified nephritic syndrome : Unspecified
+N11,Chronic tubulo-interstitial nephritis
+N110,Nonobstructive reflux-associated chronic pyelonephritis
+N111,Chronic obstructive pyelonephritis
+N118,Other chronic tubulo-interstitial nephritis
+N119,"Chronic tubulo-interstitial nephritis, unspecified"
+N165,Renal tubulo-interstitial disorders in transplant rejection T86.-
+N18,Chronic kidney disease
+N183,"Chronic kidney disease, stage 3"
+N184,"Chronic kidney disease, stage 4"
+N185,"Chronic kidney disease, stage 5"
+N19,Unspecified kidney failure
+T824,Mechanical complication of vascular dialysis catheter
+T861,Kidney transplant failure and rejection
+Y602,During kidney dialysis or other perfusion
+Y612,During kidney dialysis or other perfusion
+Y622,During kidney dialysis or other perfusion
+Y841,Kidney dialysis
+Z49,Care involving dialysis
+Z490,Preparatory care for dialysis
+Z491,Extracorporeal dialysis
+Z492,Other dialysis
+Z940,Kidney transplant status
+Z992,Dependence on renal dialysis

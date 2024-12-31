@@ -5,6 +5,9 @@ code,term
 1089511000000100,Recurrent depression with current severe episode and psychotic features
 1089631000000109,Recurrent depression with current severe episode without psychotic features
 1089641000000100,Recurrent depression with current moderate episode
+1153570009,Treatment resistant depression
+1153575004,Persistent depressive disorder
+1260298008,Depression following menopause
 14183003,"Chronic major depressive disorder, single episode"
 15639000,"Moderate major depression, single episode"
 16238181000119101,Depressive disorder caused by amphetamine
@@ -41,6 +44,7 @@ code,term
 231499006,Endogenous depression first episode
 231500002,Masked depression
 231504006,Mixed anxiety and depressive disorder
+237349002,Mild postnatal depression
 247803002,Seasonal affective disorder
 251000119105,"Severe major depression, single episode"
 25922000,"Major depressive disorder, single episode with postpartum onset"

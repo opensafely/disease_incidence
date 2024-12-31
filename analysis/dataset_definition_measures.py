@@ -77,8 +77,8 @@ dataset.age_band2 = case(
 )
 
 measures = create_measures()
-measures.configure_dummy_data(population_size=10000)
-measures.configure_disclosure_control(enabled=False) #Consider changing this in final output
+measures.configure_dummy_data(population_size=3000)
+measures.configure_disclosure_control(enabled=False) # Consider changing this in final output
 measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
 prev_numerators = {}  # Dictionary to store the numerators
@@ -91,7 +91,10 @@ for disease in diseases:
     # Prevalent diagnosis (at interval start)
     dataset.add_column(f"{disease}_prev", 
         case(
-            when(getattr(dataset, f"{disease}_inc_date") < index_date).then(True),
+            when(
+                (getattr(dataset, f"{disease}_inc_date") < index_date)
+                & ((getattr(dataset, f"{disease}_resolved") == False) | ((getattr(dataset, f"{disease}_resolved") == True) & (getattr(dataset, f"{disease}_resolved_date") > index_date)))
+                ).then(True),
             otherwise=False,
         )
     )

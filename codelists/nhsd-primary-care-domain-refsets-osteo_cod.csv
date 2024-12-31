@@ -1,7 +1,10 @@
 code,term
 102447009,Postmenopausal osteoporosis
-11874341000119106,Pathological fracture of left rib due to osteoporosis
-11874381000119101,Pathological fracture of right rib due to osteoporosis
+1162305009,Scoliosis due to osteoporosis of vertebra
+1162315003,Lordosis deformity of spine due to osteoporosis of vertebra
+1169364005,Low density lipoprotein receptor-related protein 5 related primary osteoporosis
+11874341000119106,Osteoporotic fracture of left rib
+11874381000119101,Osteoporotic fracture of right rib
 14651005,Drug-induced osteoporosis
 18040001,Senile osteoporosis
 203429007,Idiopathic generalized osteoporosis
@@ -9,13 +12,13 @@ code,term
 203434006,Post-surgical malabsorption osteoporosis
 203437004,Osteoporosis in endocrine disorders
 203438009,Vertebral osteoporosis
-203444008,Postoophorectomy osteoporosis with pathological fracture
+203444008,Osteoporotic fracture due to postoophorectomy osteoporosis
 203445009,Osteoporosis of disuse with pathological fracture
-203447001,Pathological fracture co-occurrent and due to drug-induced osteoporosis
+203447001,Osteoporotic fracture due to drug-induced osteoporosis
 203448006,Idiopathic osteoporosis with pathological fracture
-203450003,Osteoporosis with pathological fracture of lumbar vertebrae
-203451004,Osteoporosis with pathological fracture of thoracic vertebrae
-203452006,Osteoporosis with pathological fracture of cervical vertebrae
+203450003,Osteoporotic fracture of lumbar vertebra
+203451004,Osteoporotic fracture of thoracic vertebra
+203452006,Osteoporotic fracture of cervical vertebra
 203453001,Postmenopausal osteoporosis with pathological fracture
 203657009,Osteoporotic kyphosis
 240154002,Idiopathic osteoporosis in pregnancy

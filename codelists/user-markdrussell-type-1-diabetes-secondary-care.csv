@@ -1,0 +1,12 @@
+code,term
+E10,Type 1 diabetes mellitus
+E100,Type 1 diabetes mellitus : With coma
+E101,Type 1 diabetes mellitus : With ketoacidosis
+E102,Type 1 diabetes mellitus : With renal complications
+E103,Type 1 diabetes mellitus : With ophthalmic complications
+E104,Type 1 diabetes mellitus : With neurological complications
+E105,Type 1 diabetes mellitus : With peripheral circulatory complications
+E106,Type 1 diabetes mellitus : With other specified complications
+E107,Type 1 diabetes mellitus : With multiple complications
+E108,Type 1 diabetes mellitus : With unspecified complications
+E109,Type 1 diabetes mellitus : Without complications

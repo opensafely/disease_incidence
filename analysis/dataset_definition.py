@@ -5,7 +5,7 @@ from datetime import date, datetime
 import codelists_ehrQL as codelists
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=10000)
+dataset.configure_dummy_data(population_size=3000)
 
 index_date = "2016-04-01"
 end_date = "2024-09-30"
@@ -20,44 +20,35 @@ def first_code_in_period_snomed(dx_codelist):
         clinical_events.date
     ).first_for_patient()
 
-# Incident diagnostic code in primary care record (CTV3) (assuming before study end date)
-def first_code_in_period_ctv3(dx_codelist):
-    return clinical_events.where(
-        clinical_events.ctv3_code.is_in(dx_codelist)
-    ).where(
-        clinical_events.date.is_on_or_before(end_date)
-    ).sort_by(
-        clinical_events.date
-    ).first_for_patient()
-
-# https://github.com/opensafely/comparative-booster-spring2023/blob/e714dcca0ddeed12853b272e374027efd237a17c/analysis/dataset_definition.py#L219
-import operator
-from functools import reduce
-def any_of(conditions):
-    return reduce(operator.or_, conditions)
-
-def admission_diagnosis_matches(dx_codelist):  
-    code_strings = set()
-    if dx_codelist:
-        for code in dx_codelist:
-            code_string = ICD10Code(code.replace(".", ""))._to_primitive_type()
-            code_strings.add(code_string)
-            conditions = [apcs.all_diagnoses.contains(code_str) 
-            for code_str in code_strings]
-        return apcs.where(any_of(conditions))
-    else:
-        return apcs.where(apcs.primary_diagnosis.is_in([])
-)
-
 # Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
 def first_code_in_period_icd(dx_codelist):
-    return (
-        admission_diagnosis_matches(dx_codelist)
+    return apcs.where(
+        apcs.all_diagnoses.contains_any_of(dx_codelist)
     ).where(
         apcs.admission_date.is_on_or_before(end_date)
     ).sort_by(
         apcs.admission_date
     ).first_for_patient()
+
+# Last diagnostic code in primary care record (SNOMED) (assuming before study end date)
+def last_code_in_period_snomed(dx_codelist):
+    return clinical_events.where(
+        clinical_events.snomedct_code.is_in(dx_codelist)
+    ).where(
+        clinical_events.date.is_on_or_before(end_date)
+    ).sort_by(
+        clinical_events.date
+    ).last_for_patient()
+
+# Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
+def last_code_in_period_icd(dx_codelist):
+    return apcs.where(
+        apcs.all_diagnoses.contains_any_of(dx_codelist)
+    ).where(
+        apcs.admission_date.is_on_or_before(end_date)
+    ).sort_by(
+        apcs.admission_date
+    ).last_for_patient()
 
 # Registration (If registered with multiple practices, sort by most recent then longest duration then practice ID)
 def preceding_registration(dx_date):
@@ -77,11 +68,11 @@ dataset.date_of_death = patients.date_of_death
 
 # Define patient ethnicity
 latest_ethnicity_code = (
-    clinical_events.where(clinical_events.snomedct_code.is_in(codelists.ethnicity_codes))
+    clinical_events.where(clinical_events.ctv3_code.is_in(codelists.ethnicity_codes))
     .where(clinical_events.date.is_on_or_before(end_date))
     .sort_by(clinical_events.date)
     .last_for_patient()
-    .snomedct_code
+    .ctv3_code
 )
 
 latest_ethnicity = latest_ethnicity_code.to_category(codelists.ethnicity_codes)
@@ -91,7 +82,7 @@ dataset.ethnicity = case(
     when(latest_ethnicity == "2").then("Mixed"),
     when(latest_ethnicity == "3").then("Asian or Asian British"),
     when(latest_ethnicity == "4").then("Black or Black British"),
-    when(latest_ethnicity == "5").then("Chinese or Other Ethnic Groups"),
+    when(latest_ethnicity == "5").then("Other"),
     otherwise="missing",
 )
 
@@ -108,7 +99,6 @@ dataset.imd_quintile = case(
 )
 
 # Any practice registration before study end date
-# If registered with multiple practices, sort by most recent then longest duration then practice ID
 dataset.any_registration = practice_registrations.where(
             practice_registrations.start_date <= end_date
         ).except_where(
@@ -122,9 +112,9 @@ dataset.define_population(
 )  
 
 # List of diseases and codelists to cycle through
-diseases = ["dementia", "psoriasis"]
-# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression"]
-codelist_types = ["snomed", "ctv", "icd"]
+diseases = ["copd"]
+#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
+codelist_types = ["snomed", "icd", "resolved"]
 
 for disease in diseases:
 
@@ -134,20 +124,24 @@ for disease in diseases:
             if hasattr(codelists, f"{disease}_snomed"):
                 disease_codelist = getattr(codelists, f"{disease}_snomed")
                 dataset.add_column(f"{disease}_snomed_inc_date", first_code_in_period_snomed(disease_codelist).date)
+                dataset.add_column(f"{disease}_snomed_last_date", last_code_in_period_snomed(disease_codelist).date)
             else:
                 dataset.add_column(f"{disease}_snomed_inc_date", first_code_in_period_snomed([]).date)
-        elif (f"{codelist_type}" == "ctv"):
-            if hasattr(codelists, f"{disease}_ctv"):
-                disease_codelist = getattr(codelists, f"{disease}_ctv")
-                dataset.add_column(f"{disease}_ctv_inc_date", first_code_in_period_ctv3(disease_codelist).date)
-            else:
-                dataset.add_column(f"{disease}_ctv_inc_date", first_code_in_period_ctv3([]).date)
+                dataset.add_column(f"{disease}_snomed_last_date", last_code_in_period_snomed([]).date)
         elif (f"{codelist_type}" == "icd"):
             if hasattr(codelists, f"{disease}_icd"):
                 disease_codelist = getattr(codelists, f"{disease}_icd")    
                 dataset.add_column(f"{disease}_icd_inc_date", first_code_in_period_icd(disease_codelist).admission_date)
+                dataset.add_column(f"{disease}_icd_last_date", last_code_in_period_icd(disease_codelist).admission_date)
             else:
-                dataset.add_column(f"{disease}_icd_inc_date", first_code_in_period_icd([]).admission_date)                
+                dataset.add_column(f"{disease}_icd_inc_date", first_code_in_period_icd([]).admission_date) 
+                dataset.add_column(f"{disease}_icd_last_date", last_code_in_period_icd([]).admission_date)                
+        elif (f"{codelist_type}" == "resolved"):
+            if hasattr(codelists, f"{disease}_resolved"):
+                disease_codelist = getattr(codelists, f"{disease}_resolved")    
+                dataset.add_column(f"{disease}_resolved_date", last_code_in_period_snomed(disease_codelist).date)
+            else:
+                dataset.add_column(f"{disease}_resolved_date", last_code_in_period_snomed([]).date)  
         else:
             dataset.add_column(f"{disease}_{codelist_type}_inc_date", None)
 
@@ -155,7 +149,6 @@ for disease in diseases:
     dataset.add_column(f"{disease}_inc_date",
         minimum_of(*[date for date in [
             (getattr(dataset, f"{disease}_snomed_inc_date", None)),
-            (getattr(dataset, f"{disease}_ctv_inc_date", None)),
             (getattr(dataset, f"{disease}_icd_inc_date", None))
             ] if date is not None]),
     )
@@ -170,6 +163,24 @@ for disease in diseases:
     dataset.add_column(f"{disease}_alive_inc",
         case(                     
             when((dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) | (dataset.date_of_death.is_null())).then(True),
+            otherwise=False,
+        )
+    )
+
+    # Last diagnosis date for each disease
+    dataset.add_column(f"{disease}_last_date",
+        maximum_of(*[date for date in [
+            (getattr(dataset, f"{disease}_snomed_last_date", None)),
+            (getattr(dataset, f"{disease}_icd_last_date", None))
+            ] if date is not None]),
+    )
+
+    # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
+    dataset.add_column(f"{disease}_resolved", 
+        case(
+            when(
+                (getattr(dataset, f"{disease}_resolved_date", None)) > (getattr(dataset, f"{disease}_last_date"))
+                ).then(True),
             otherwise=False,
         )
     )

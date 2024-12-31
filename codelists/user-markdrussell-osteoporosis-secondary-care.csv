@@ -1,0 +1,24 @@
+code,term
+M80,Osteoporosis with pathological fracture
+M800,Postmenopausal osteoporosis with pathological fracture
+M801,Postoophorectomy osteoporosis with pathological fracture
+M802,Osteoporosis of disuse with pathological fracture
+M803,Postsurgical malabsorption osteoporosis with pathological fracture
+M804,Drug-induced osteoporosis with pathological fracture
+M805,Idiopathic osteoporosis with pathological fracture
+M808,Other osteoporosis with pathological fracture
+M809,Unspecified osteoporosis with pathological fracture
+M81,Osteoporosis without pathological fracture
+M810,Postmenopausal osteoporosis
+M811,Postoophorectomy osteoporosis
+M812,Osteoporosis of disuse
+M813,Postsurgical malabsorption osteoporosis
+M814,Drug-induced osteoporosis
+M815,Idiopathic osteoporosis
+M816,Localized osteoporosis [Lequesne]
+M818,Other osteoporosis
+M819,"Osteoporosis, unspecified"
+M82,Osteoporosis in diseases classified elsewhere
+M820,Osteoporosis in multiple myelomatosis C90.0
+M821,Osteoporosis in endocrine disorders E00-E34
+M828,Osteoporosis in other diseases classified elsewhere

@@ -1,0 +1,19 @@
+code,term
+F803,Acquired aphasia with epilepsy [Landau-Kleffner]
+G40,Epilepsy
+G400,Localization-related (focal)(partial) idiopathic epilepsy and epileptic syndromes with seizures of localized onset
+G401,Localization-related (focal)(partial) symptomatic epilepsy and epileptic syndromes with simple partial seizures
+G402,Localization-related (focal)(partial) symptomatic epilepsy and epileptic syndromes with complex partial seizures
+G403,Generalized idiopathic epilepsy and epileptic syndromes
+G404,Other generalized epilepsy and epileptic syndromes
+G405,Special epileptic syndromes
+G406,"Grand mal seizures, unspecified (with or without petit mal)"
+G407,"Petit mal, unspecified, without grand mal seizures"
+G408,Other epilepsy
+G409,"Epilepsy, unspecified"
+G41,Status epilepticus
+G410,Grand mal status epilepticus
+G411,Petit mal status epilepticus
+G412,Complex partial status epilepticus
+G418,Other status epilepticus
+G419,"Status epilepticus, unspecified"

@@ -6,7 +6,6 @@ code,term
 1003683009,Human immunodeficiency virus Centers for Disease Control and Prevention stage 2
 1003684003,Human immunodeficiency virus Centers for Disease Control and Prevention stage 3
 1003685002,Human immunodeficiency virus Centers for Disease Control and Prevention stage unknown
-1004006009,World Health Organization human immunodeficiency virus infection clinical stage
 103406000,Human immunodeficiency virus Centers for Disease Control and Prevention category A1
 103407009,Human immunodeficiency virus Centers for Disease Control and Prevention category A2
 103408004,Human immunodeficiency virus Centers for Disease Control and Prevention category A3 (acquired immunodeficiency syndrome)
@@ -19,12 +18,11 @@ code,term
 1052325005,Exacerbation of psoriasis due to human immunodeficiency virus infection
 1053901000000104,Extrapulmonary tuberculosis co-occurrent with human immunodeficiency virus infection
 1054001000000101,Invasive carcinoma of uterine cervix co-occurrent with human immunodeficiency virus infection
-10746341000119109,Acquired immune deficiency syndrome complicating childbirth
 10755671000119100,Human immunodeficiency virus in mother complicating childbirth
 111880001,Acute human immunodeficiency virus infection
 1142045004,Primary human immunodeficiency virus infection
 1142046003,Pityriasis rubra pilaris due to human immunodeficiency virus infection
-1142049005,Disease caused by parasite due to human immunodeficiency virus infection
+1142049005,Parasitic disease due to human immunodeficiency virus infection
 1142055000,Human immunodeficiency virus modified skin disease
 1148863007,Disorder of skin due to human immunodeficiency virus infection
 1153348007,Primary effusion lymphoma due to human immune deficiency virus infection
@@ -34,11 +32,12 @@ code,term
 1193751008,Inflammation of small intestine due to human immunodeficiency virus disease
 1193752001,Inflammation of intestine due to human immunodeficiency virus disease
 1259057001,Disorder of autonomic nervous system due to human immunodeficiency virus infection
-1260096003,Wasting syndrome due to acquired immunodeficiency syndrome
+1263535005,Motor neuron disease due to human immunodeficiency virus infection
+1284934003,Human immunodeficiency virus management program
 129261000119106,Lipoatrophy due to Human immunodeficiency virus infection and treatment
 143224002,HIV positive
 15928141000119107,Cognitive impairment co-occurrent and due to human immunodeficiency virus infection
-165816005,Human immunodeficiency virus positive
+165816005,Human immunodeficiency virus detected
 179235008,HIV infection with acute lymphadenitis
 186706006,Human immunodeficiency virus infection constitutional disease
 186707002,Human immunodeficiency virus infection with neurological disease
@@ -78,7 +77,6 @@ code,term
 207297000,[D]Laboratory evidence of human immunodefiency virus [HIV]
 230180003,Human immunodeficiency virus leukoencephalopathy
 230201009,Human immunodeficiency virus myelitis
-230202002,Vacuolar myelopathy
 230598008,Neuropathy caused by human immunodeficiency virus
 235009000,Human immunodeficiency virus-associated periodontitis
 235726002,Human immunodeficiency virus enteropathy
@@ -87,7 +85,7 @@ code,term
 276666007,Congenital human immunodeficiency virus positive status syndrome
 281388009,Human immunodeficiency virus-related sclerosing cholangitis
 281390005,Human immunodeficiency virus-related gut disease - cause unknown
-315019000,Human immunodeficiency virus infection with aseptic meningitis
+315019000,Aseptic meningitis due to human immunodeficiency virus infection
 397763006,Human immunodeficiency virus encephalopathy
 398329009,Human immunodeficiency virus encephalitis
 400401000000101,[X]Hiv disease resulting in unspecified infectious and parasitic disease
@@ -97,7 +95,7 @@ code,term
 402915006,Human immunodeficiency virus seroconversion exanthem
 402916007,Human immunodeficiency virus seropositivity
 405631006,Pediatric human immunodeficiency virus infection
-406109008,Human immunodeficiency virus enzyme-linked immunosorbent assay test positive
+406109008,Human immunodeficiency virus detected by enzyme-linked immunosorbent assay
 40780007,Human immunodeficiency virus I infection
 411831000000102,[X]HIV disease resulting in other bacterial infections
 413311000000103,[X]HIV disease resulting in unspecified malignant neoplasm
@@ -107,76 +105,8 @@ code,term
 414604009,Leukoplakia of tongue associated with human immunodeficiency virus disease
 414701000000104,"[X]Hiv disease resulting in haematological and immunological abnormalities, not elsewhere classified"
 416656004,Human immunodeficiency virus (HIV) contact
-416729007,Neutropenia with acquired immunodeficiency syndrome
 418661000000104,[X]Hiv disease resulting in other infectious and parasitic diseases
 419441000000105,"[X]Hiv disease resulting in other malignant neoplasms of lymphoid, haematopoietic and related tissue"
-420244003,Encephalitis with acquired immunodeficiency syndrome
-420281004,Skin rash with acquired immunodeficiency syndrome
-420302007,Reticulosarcoma with acquired immunodeficiency syndrome
-420308006,Retinal vascular changes with acquired immunodeficiency syndrome
-420321004,Intestinal malabsorption with acquired immunodeficiency syndrome
-420384005,Hematopoietic system disease with acquired immunodeficiency syndrome
-420395004,Acute endocarditis with acquired immunodeficiency syndrome
-420403001,Pneumocystosis with acquired immunodeficiency syndrome
-420452002,Myelopathy with acquired immunodeficiency syndrome
-420524008,Kaposi's sarcoma with acquired immunodeficiency syndrome
-420544002,Bacterial pneumonia with acquired immunodeficiency syndrome
-420549007,Salivary gland disease with acquired immunodeficiency syndrome
-420554003,Progressive multifocal leukoencephalopathy with acquired immunodeficiency syndrome
-420614009,Organic dementia with acquired immunodeficiency syndrome
-420658009,Radiculitis with acquired immunodeficiency syndrome
-420691000,Nutritional deficiency with acquired immunodeficiency syndrome
-420718004,Central nervous system demyelinating disease with acquired immunodeficiency syndrome
-420721002,Acquired immunodeficiency syndrome-associated disorder
-420764009,Salmonella infection with acquired immunodeficiency syndrome
-420774007,Organic brain syndrome with acquired immunodeficiency syndrome
-420787001,Pneumococcal pneumonia with acquired immunodeficiency syndrome
-420801006,Malaise with acquired immunodeficiency syndrome
-420818005,Mycobacteriosis with acquired immunodeficiency syndrome
-420877009,Dermatomycosis with acquired immunodeficiency syndrome
-420900006,Fatigue with acquired immunodeficiency syndrome
-420938005,Subacute endocarditis with acquired immunodeficiency syndrome
-420945005,Histoplasmosis with acquired immunodeficiency syndrome
-421023003,Presenile dementia with acquired immunodeficiency syndrome
-421047005,Candidiasis of lung with acquired immunodeficiency syndrome
-421077004,Disseminated candidiasis with acquired immunodeficiency syndrome
-421102007,Aplastic anemia with acquired immunodeficiency syndrome
-421230000,Hepatomegaly with acquired immunodeficiency syndrome
-421272004,Subacute myocarditis with acquired immunodeficiency syndrome
-421283008,Primary lymphoma of brain with acquired immunodeficiency syndrome
-421312009,Agranulocytosis with acquired immunodeficiency syndrome
-421315006,Myelitis with acquired immunodeficiency syndrome
-421394009,Skin disorder with acquired immunodeficiency syndrome
-421403008,Cryptococcosis with acquired immunodeficiency syndrome
-421415007,Subacute adenoviral encephalitis with acquired immunodeficiency syndrome
-421431004,Nocardiosis with acquired immunodeficiency syndrome
-421454008,Infectious gastroenteritis with acquired immunodeficiency syndrome
-421460008,Retinopathy with acquired immunodeficiency syndrome
-421508002,Viral pneumonia with acquired immunodeficiency syndrome
-421529006,Dementia with acquired immunodeficiency syndrome
-421571007,Tuberculosis with acquired immunodeficiency syndrome
-421597001,Polyneuropathy with acquired immunodeficiency syndrome
-421660003,Failure to thrive in infant with acquired immunodeficiency syndrome
-421671002,Pneumonia with acquired immunodeficiency syndrome
-421706001,Blindness with acquired immunodeficiency syndrome
-421708000,Infective arthritis with acquired immunodeficiency syndrome
-421710003,Candidiasis of mouth with acquired immunodeficiency syndrome
-421766003,Thrombocytopenia with acquired immunodeficiency syndrome
-421827003,Encephalopathy with acquired immunodeficiency syndrome
-421874007,Respiratory disorder with acquired immunodeficiency syndrome
-421883002,Strongyloidiasis with acquired immunodeficiency syndrome
-421929001,Myocarditis with acquired immunodeficiency syndrome
-421983003,Noninfectious gastroenteritis with acquired immunodeficiency syndrome
-421998001,Central nervous disorder with acquired immunodeficiency syndrome
-422012004,Neuritis with acquired immunodeficiency syndrome
-422089004,Encephalomyelitis with acquired immunodeficiency syndrome
-422127002,Herpes zoster with acquired immunodeficiency syndrome
-422136003,Neuralgia with acquired immunodeficiency syndrome
-422177004,Dyspnea with acquired immunodeficiency syndrome
-422189002,Low vision with acquired immunodeficiency syndrome
-422194002,Hyperhidrosis with acquired immunodeficiency syndrome
-422282000,Malignant neoplasm with acquired immunodeficiency syndrome
-422337001,Coccidioidomycosis with acquired immunodeficiency syndrome
 427921000000108,[V]Asymptomatic human immunodeficiency virus infection status
 428061000000103,[X]HIV disease resulting in other specified conditions
 432411000000106,[X]HIV disease resulting in unspecified malignant neoplasm
@@ -185,7 +115,6 @@ code,term
 442351000000104,[X]HIV disease resulting in other non-Hodgkin's lymphoma
 442662004,Copies of human immunodeficiency virus ribonucleic acid above reference range
 444811000000101,[X]HIV disease resulting in multiple diseases classified elsewhere
-445945000,Infectious disease with acquired immune deficiency syndrome
 455571000000106,[X]HIV disease resulting in other malignant neoplasms
 466811000000104,[X]Hiv disease resulting in unspecified infectious and parasitic disease
 468931000000102,[X]Human immunodeficiency virus disease
@@ -195,12 +124,9 @@ code,term
 550891000000106,Human immunodeficiency virus resulting in other disease
 5810003,Human immunodeficiency virus infection with infection caused by another virus
 615541000000109,Human immunodeficiency virus (HIV) disease resulting in other types of non-Hodgkin's lymphoma
-62479008,Acquired immune deficiency syndrome
 664701000000103,Human immunodeficiency virus with other clinical findings
 697904001,Pulmonary arterial hypertension associated with human immunodeficiency virus infection
-697965002,Cholangitis with acquired immunodeficiency syndrome
 699433000,Human immunodeficiency virus carrier
-700053002,Sepsis with acquired immunodeficiency syndrome
 705149003,Lipodystrophy due to Human immunodeficiency virus infection and antiretroviral therapy
 713260006,Subacute adenoviral encephalitis co-occurrent with human immunodeficiency virus infection
 713275003,Splenomegaly co-occurrent with human immunodeficiency virus infection
@@ -272,7 +198,7 @@ code,term
 714083007,Recurrent salmonella sepsis co-occurrent with human immunodeficiency virus infection
 714464009,Immune reconstitution inflammatory syndrome caused by human immunodeficiency virus infection
 719522009,Infection of upper respiratory tract caused by Candida co-occurrent with human immunodeficiency virus infection
-719789000,Human immunodeficiency virus 2 antibody positive and Human immunodeficiency virus 1 antibody cross-reactivity
+719789000,Human immunodeficiency virus 2 antibody detected and Human immunodeficiency virus 1 antibody cross-reactivity
 721166000,Human immunodeficiency virus complicating pregnancy childbirth and the puerperium
 722557007,Parkinsonism due to human immunodeficiency virus infection
 72621000119104,Human immunodeficiency virus (HIV) II infection category B1
@@ -285,9 +211,12 @@ code,term
 735524009,Human immunodeficiency virus World Health Organization 2007 stage 2 co-occurrent with malaria
 735525005,Human immunodeficiency virus World Health Organization 2007 stage 3 co-occurrent with tuberculosis
 735526006,Human immunodeficiency virus World Health Organization 2007 stage 3 co-occurrent with malaria
+735527002,Human immunodeficiency virus World Health Organization 2007 stage 4 co-occurrent with tuberculosis
+735528007,Human immunodeficiency virus World Health Organization 2007 stage 4 co-occurrent with malaria
 737378009,World Health Organization 2007 Human immunodeficiency virus infection clinical stage 1
 737379001,World Health Organization 2007 Human immunodeficiency virus infection clinical stage 2
 737380003,World Health Organization 2007 Human immunodeficiency virus infection clinical stage 3
+737381004,World Health Organization 2007 Human immunodeficiency virus infection clinical stage 4
 76981000119106,Human immunodeficiency virus (HIV) infection category B1
 76991000119109,Human immunodeficiency virus (HIV) infection category B2
 78466009,Positive serological AND/OR viral culture findings for human immunodeficiency virus

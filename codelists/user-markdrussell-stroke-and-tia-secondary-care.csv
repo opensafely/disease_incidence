@@ -1,0 +1,75 @@
+code,term
+G45,Transient cerebral ischaemic attacks and related syndromes
+G450,Vertebro-basilar artery syndrome
+G451,Carotid artery syndrome (hemispheric)
+G452,Multiple and bilateral precerebral artery syndromes
+G453,Amaurosis fugax
+G458,Other transient cerebral ischaemic attacks and related syndromes
+G459,"Transient cerebral ischaemic attack, unspecified"
+G46,Vascular syndromes of brain in cerebrovascular diseases I60-I67
+G460,Middle cerebral artery syndrome I66.0
+G461,Anterior cerebral artery syndrome I66.1
+G462,Posterior cerebral artery syndrome I66.2
+G463,Brain stem stroke syndrome I60-I67
+G464,Cerebellar stroke syndrome I60-I67
+G465,Pure motor lacunar syndrome I60-I67
+G466,Pure sensory lacunar syndrome I60-I67
+G467,Other lacunar syndromes I60-I67
+G468,Other vascular syndromes of brain in cerebrovascular diseases I60-I67
+I60,Subarachnoid haemorrhage
+I600,Subarachnoid haemorrhage from carotid siphon and bifurcation
+I601,Subarachnoid haemorrhage from middle cerebral artery
+I602,Subarachnoid haemorrhage from anterior communicating artery
+I603,Subarachnoid haemorrhage from posterior communicating artery
+I604,Subarachnoid haemorrhage from basilar artery
+I605,Subarachnoid haemorrhage from vertebral artery
+I606,Subarachnoid haemorrhage from other intracranial arteries
+I607,"Subarachnoid haemorrhage from intracranial artery, unspecified"
+I608,Other subarachnoid haemorrhage
+I609,"Subarachnoid haemorrhage, unspecified"
+I61,Intracerebral haemorrhage
+I610,"Intracerebral haemorrhage in hemisphere, subcortical"
+I611,"Intracerebral haemorrhage in hemisphere, cortical"
+I612,"Intracerebral haemorrhage in hemisphere, unspecified"
+I613,Intracerebral haemorrhage in brain stem
+I614,Intracerebral haemorrhage in cerebellum
+I615,"Intracerebral haemorrhage, intraventricular"
+I616,"Intracerebral haemorrhage, multiple localized"
+I618,Other intracerebral haemorrhage
+I619,"Intracerebral haemorrhage, unspecified"
+I62,Other nontraumatic intracranial haemorrhage
+I620,Nontraumatic subdural haemorrhage
+I621,Nontraumatic extradural haemorrhage
+I629,"Intracranial haemorrhage (nontraumatic), unspecified"
+I63,Cerebral infarction
+I630,Cerebral infarction due to thrombosis of precerebral arteries
+I631,Cerebral infarction due to embolism of precerebral arteries
+I632,Cerebral infarction due to unspecified occlusion or stenosis of precerebral arteries
+I633,Cerebral infarction due to thrombosis of cerebral arteries
+I634,Cerebral infarction due to embolism of cerebral arteries
+I635,Cerebral infarction due to unspecified occlusion or stenosis of cerebral arteries
+I636,"Cerebral infarction due to cerebral venous thrombosis, nonpyogenic"
+I638,Other cerebral infarction
+I639,"Cerebral infarction, unspecified"
+I64,"Stroke, not specified as haemorrhage or infarction"
+I65,"Occlusion and stenosis of precerebral arteries, not resulting in cerebral infarction"
+I650,Occlusion and stenosis of vertebral artery
+I651,Occlusion and stenosis of basilar artery
+I652,Occlusion and stenosis of carotid artery
+I653,Occlusion and stenosis of multiple and bilateral precerebral arteries
+I658,Occlusion and stenosis of other precerebral artery
+I659,Occlusion and stenosis of unspecified precerebral artery
+I66,"Occlusion and stenosis of cerebral arteries, not resulting in cerebral infarction"
+I660,Occlusion and stenosis of middle cerebral artery
+I661,Occlusion and stenosis of anterior cerebral artery
+I662,Occlusion and stenosis of posterior cerebral artery
+I663,Occlusion and stenosis of cerebellar arteries
+I664,Occlusion and stenosis of multiple and bilateral cerebral arteries
+I668,Occlusion and stenosis of other cerebral artery
+I669,Occlusion and stenosis of unspecified cerebral artery
+I69,Sequelae of cerebrovascular disease
+I690,Sequelae of subarachnoid haemorrhage
+I691,Sequelae of intracerebral haemorrhage
+I692,Sequelae of other nontraumatic intracranial haemorrhage
+I693,Sequelae of cerebral infarction
+I694,"Sequelae of stroke, not specified as haemorrhage or infarction"
