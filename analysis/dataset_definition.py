@@ -5,7 +5,7 @@ from datetime import date, datetime
 import codelists_ehrQL as codelists
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=10000)
+dataset.configure_dummy_data(population_size=1000)
 
 index_date = "2016-04-01"
 end_date = "2024-09-30"
