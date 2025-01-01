@@ -182,12 +182,12 @@ for (j in 1:length(disease_list)) {
     c1<- 
       ggplot(data = df_new,aes(x = mo_year_diagn))+
       geom_point(aes(y = .data[[var]]), color="#ADD8E6", size=3)+
-      geom_line(aes(y = .data[[var]]), color="#ADD8E6")+
+      #geom_line(aes(y = .data[[var]]), color="#ADD8E6")+
       geom_line(aes(y = moving_average), color = "blue", linetype = "solid", size=0.7)+
       geom_point(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange", alpha = 0.7, size=3)+
-      geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange")+
+      #geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange")+
       geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean_ma), color = "red", linetype = "solid", size=0.7)+
-      geom_ribbon(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
+      #geom_ribbon(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
       geom_vline(xintercept = as.Date("2020-03-01"), linetype = "dashed", color = "grey")+
       scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "1 year"),
       date_labels = "%Y")+
