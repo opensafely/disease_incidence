@@ -162,7 +162,7 @@ for disease in diseases:
 
     # Prevalence
     measures.define_measure(
-        name=disease + "_prevalence",
+        name=f"{disease}_prevalence",
         numerator=prev_numerators[f"{disease}_prev_num"],
         denominator=prev_denominators[f"{disease}_prev_denom"],
         intervals=years(intervals_years).starting_on(start_date),
@@ -174,7 +174,7 @@ for disease in diseases:
     
     # Incidence by age and sex
     measures.define_measure(
-        name=disease + "_incidence",
+        name=f"{disease}_incidence",
         numerator=incidence_numerators[f"{disease}_inc_num"],
         denominator=incidence_denominators[f"{disease}_inc_denom"],
         group_by={
