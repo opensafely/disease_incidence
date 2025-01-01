@@ -129,6 +129,7 @@ actions:
         figure10: output/figures/adj_ma_sex_*.svg
         figure11: output/figures/adj_ma_sex2_*.svg
         figure12: output/figures/adj_ma_age_*.svg
+        figure13: output/figures/adj_ma_age2_*.svg
         data1: output/data/arima_nonstandardised.csv
 
   run_sarima:
