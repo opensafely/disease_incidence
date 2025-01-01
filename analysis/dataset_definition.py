@@ -5,7 +5,7 @@ from datetime import date, datetime
 import codelists_ehrQL as codelists
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=3000)
+dataset.configure_dummy_data(population_size=50000)
 
 index_date = "2016-04-01"
 end_date = "2024-09-30"
@@ -112,8 +112,8 @@ dataset.define_population(
 )  
 
 # List of diseases and codelists to cycle through
-#diseases = ["copd"]
-diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
+diseases = ["asthma", "copd", "stroke", "chd", "dementia"]
+#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 for disease in diseases:
