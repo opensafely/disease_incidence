@@ -84,7 +84,7 @@ measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
 for disease in diseases:
 
-    # Dictionary to store the numerators
+    # Dictionary to store the values
     prev = {}
     inc_case = {}
     inc_case_12m_alive = {}

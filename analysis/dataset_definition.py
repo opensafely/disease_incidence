@@ -139,7 +139,6 @@ for disease in diseases:
                 disease_codelist = getattr(codelists, f"{disease}_icd")    
                 icd_inc_date[f"{disease}_icd_inc_date"] = (first_code_in_period_icd(disease_codelist).admission_date)
                 icd_last_date[f"{disease}_icd_last_date"] = (last_code_in_period_icd(disease_codelist).admission_date)
-
             else:
                 icd_inc_date[f"{disease}_icd_inc_date"] = (first_code_in_period_icd([]).admission_date)
                 icd_last_date[f"{disease}_icd_last_date"] = (last_code_in_period_icd([]).admission_date)
