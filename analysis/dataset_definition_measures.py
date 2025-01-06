@@ -82,6 +82,13 @@ measures.configure_dummy_data(population_size=1000, legacy=True)
 measures.configure_disclosure_control(enabled=False) # Consider changing this in final output
 measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
+## Prevalence denominator - people currently registered on index date (Nb. sex already selected for in dataset definition)
+prev_denominator = (
+        ((age >= 0) & (age < 110))
+        & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
+        & (currently_registered == True)
+        )
+
 for disease in diseases:
 
     # Dictionary to store the values
@@ -89,7 +96,6 @@ for disease in diseases:
     inc_case = {}
     inc_case_12m_alive = {}
     prev_numerators = {}  
-    prev_denominators = {}
     incidence_numerators = {}
     incidence_denominators = {}
     
@@ -108,19 +114,8 @@ for disease in diseases:
     prev_numerators[f"{disease}_prev_num"] = (
             ((prev[f"{disease}_prev"]) == True)
             & ((age >= 0) & (age < 110))
-            & (age_band2.is_not_null())
             & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
             & (currently_registered == True)
-            & (dataset.sex.is_in(["male","female"]))
-        )
-
-    ## Prevalence denominator - people currently registered on index date
-    prev_denominators[f"{disease}_prev_denom"] = (
-            ((age >= 0) & (age < 110))
-            & (age_band2.is_not_null())
-            & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
-            & (currently_registered == True)
-            & (dataset.sex.is_in(["male","female"]))
         )
 
     # Incident case (i.e. incident date within interval window)
@@ -146,8 +141,6 @@ for disease in diseases:
     incidence_numerators[f"{disease}_inc_num"] = (
             ((inc_case_12m_alive[f"{disease}_inc_case_12m_alive"]) == True)
             & ((age >= 0) & (age < 110))
-            & (age_band2.is_not_null())
-            & (dataset.sex.is_in(["male","female"]))
         )
 
     ## Incidence denominator - people with 12m+ registration prior to index date who do not have a Dx code on or before index date
@@ -156,15 +149,13 @@ for disease in diseases:
             & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
             & (preceding_reg_index == True)
             & ((age >= 0) & (age < 110))
-            & (age_band2.is_not_null())
-            & (dataset.sex.is_in(["male","female"]))
         )
 
     # Prevalence
     measures.define_measure(
         name=f"{disease}_prevalence",
         numerator=prev_numerators[f"{disease}_prev_num"],
-        denominator=prev_denominators[f"{disease}_prev_denom"],
+        denominator=prev_denominator,
         intervals=years(intervals_years).starting_on(start_date),
         group_by={
             "sex": dataset.sex,
