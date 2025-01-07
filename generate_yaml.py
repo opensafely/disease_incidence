@@ -1,4 +1,7 @@
+#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
+diseases = ["copd", "chd"]
 
+yaml_header = """
 version: '3.0'
 
 expectations:
@@ -14,37 +17,33 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_definition.csv
+"""
 
-  measures_dataset_copd:
+# Add diseases list to the header dynamically
+#formatted_yaml_header = yaml_header.format(diseases=", ".join(diseases))
+
+yaml_template = """
+  measures_dataset_{disease}:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_copd.csv
+      --output output/measures/measures_dataset_{disease}.csv
       --
       --start-date "2016-04-01"
       --intervals 102
       --intervals_years 8
-      --disease "copd"
+      --disease "{disease}"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_copd.csv
+        measure_csv: output/measures/measures_dataset_{disease}.csv
+"""
 
+# Generate disease list for incidence_graphs function
+needs_list = ", ".join([f"measures_dataset_{disease}" for disease in diseases])
 
-  measures_dataset_chd:
-    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_chd.csv
-      --
-      --start-date "2016-04-01"
-      --intervals 102
-      --intervals_years 8
-      --disease "chd"
-    needs: [generate_dataset]
-    outputs:
-      highly_sensitive:
-        measure_csv: output/measures/measures_dataset_chd.csv
-
+yaml_footer = f"""
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
-    needs: [generate_dataset, measures_dataset_copd, measures_dataset_chd]
+    needs: [generate_dataset, {needs_list}]
     outputs:
       moderately_sensitive:
         log1: logs/descriptive_tables.log   
@@ -80,3 +79,11 @@ actions:
         figure9: output/figures/obs_pred_*.svg
         table1: output/tables/change_incidence_byyear.csv
         table2: output/tables/values_*.csv   
+"""
+
+#generated_yaml = formatted_yaml_header + "\n".join([yaml_template.format(disease=disease) for disease in diseases]) + yaml_footer
+generated_yaml = yaml_header + "\n".join([yaml_template.format(disease=disease) for disease in diseases]) + yaml_footer
+
+# Save to a file or print
+with open("project.yaml", "w") as file:
+    file.write(generated_yaml)

@@ -1,0 +1,151 @@
+version: '3.0'
+
+expectations:
+  population_size: 1000
+
+actions:
+             
+  generate_dataset:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition.py
+      --output output/dataset_definition.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_definition.csv 
+
+  measures_dataset_2016:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2016.csv
+      --
+      --start-date "2016-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2016.csv
+
+  measures_dataset_2017:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2017.csv
+      --
+      --start-date "2017-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2017.csv
+
+  measures_dataset_2018:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2018.csv
+      --
+      --start-date "2018-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2018.csv
+
+  measures_dataset_2019:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2019.csv
+      --
+      --start-date "2019-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2019.csv
+
+  measures_dataset_2020:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2020.csv
+      --
+      --start-date "2020-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2020.csv
+
+  measures_dataset_2021:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2021.csv
+      --
+      --start-date "2021-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2021.csv
+
+  measures_dataset_2022:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2022.csv
+      --
+      --start-date "2022-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2022.csv
+
+  measures_dataset_2023:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2023.csv
+      --
+      --start-date "2023-04-01"
+      --intervals 12
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2023.csv
+   
+  measures_dataset_2024:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_2024.csv
+      --
+      --start-date "2024-04-01"
+      --intervals 6
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_2024.csv
+
+  run_incidence_graphs:
+    run: stata-mp:latest analysis/100_incidence_graphs.do
+    needs: [generate_dataset, measures_dataset_2016, measures_dataset_2017, measures_dataset_2018, measures_dataset_2019, measures_dataset_2020, measures_dataset_2021, measures_dataset_2022, measures_dataset_2023, measures_dataset_2024]
+    outputs:
+      moderately_sensitive:
+        log1: logs/descriptive_tables.log   
+        figure1: output/figures/incidence_*.svg
+        figure2: output/figures/prevalence_*.svg
+        figure3: output/figures/inc_comp_*.svg
+        figure4: output/figures/prev_comp_*.svg
+        figure5: output/figures/inc_adj_*.svg
+        figure6: output/figures/inc_ma_sex_*.svg
+        figure7: output/figures/prev_adj_*.svg
+        figure8: output/figures/inc_adj_ma_*.svg
+        figure9: output/figures/inc_adj_ma2_*.svg
+        figure10: output/figures/adj_ma_sex_*.svg
+        figure11: output/figures/adj_ma_sex2_*.svg
+        figure12: output/figures/adj_ma_age_*.svg
+        figure13: output/figures/adj_ma_age2_*.svg
+        data1: output/data/arima_nonstandardised.csv
+
+  run_sarima:
+    run: r:latest analysis/200_sarima.R
+    needs: [run_incidence_graphs]
+    outputs:
+      moderately_sensitive:
+        log1: logs/sarima_log.txt   
+        figure1: output/figures/observed_*.svg
+        figure2: output/figures/raw_pre_covid_*.svg
+        figure3: output/figures/differenced_pre_covid_*.svg
+        figure4: output/figures/seasonal_pre_covid_*.svg
+        figure5: output/figures/raw_acf_*.svg
+        figure6: output/figures/differenced_acf_*.svg
+        figure7: output/figures/seasonal_acf_*.svg
+        figure8: output/figures/auto_residuals_*.svg
+        figure9: output/figures/obs_pred_*.svg
+        table1: output/tables/change_incidence_byyear.csv
+        table2: output/tables/values_*.csv   

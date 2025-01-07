@@ -32,17 +32,12 @@ log using "$logdir/descriptive_tables.log", replace
 **Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
-**Import and append measures datasets for diseases
-*local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 dm_type1 ckd psoriasis atopic_dermatitis osteoporosis hiv depression coeliac pmr"
-local diseases "copd chd"
-local first_disease: word 1 of `diseases'
-
-import delimited "$projectdir/output/measures/measures_dataset_`first_disease'.csv", clear
+**Import and append measures datasets - could local this
+import delimited "$projectdir/output/measures/measures_dataset_2016.csv", clear
 save "$projectdir/output/data/measures_appended.dta", replace
 
-foreach disease in `diseases' {
-    if "`disease'" != "`first_disease'" {
-	import delimited "$projectdir/output/measures/measures_dataset_`disease'.csv", clear
+forval year = 2017(1)2024{
+	import delimited "$projectdir/output/measures/measures_dataset_`year'.csv", clear
 	append using "$projectdir/output/data/measures_appended.dta"
 	save "$projectdir/output/data/measures_appended.dta", replace 
 }
@@ -77,22 +72,18 @@ gen measure_inc = 1 if substr(measure,-10,.) == "_incidence"
 recode measure_inc .=0
 gen measure_prev = 1 if substr(measure,-11,.) == "_prevalence"
 recode measure_prev .=0
-
-/*
 gen measure_imd = 1 if substr(measure,-4,.) == "_imd"
 recode measure_imd .=0
 gen measure_ethnicity = 1 if substr(measure,-10,.) == "_ethnicity"
 recode measure_ethnicity .=0
-*/
 
-gen measure_inc_any = 1 if measure_inc ==1
-*gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
+gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
 recode measure_inc_any .=0
 
 gen diseases_ = substr(measure, 1, strlen(measure) - 10) if measure_inc==1
 replace diseases_ = substr(measure, 1, strlen(measure) - 11) if measure_prev==1
-*replace diseases_ = substr(measure, 1, strlen(measure) - 14) if measure_imd==1
-*replace diseases_ = substr(measure, 1, strlen(measure) - 20) if measure_ethnicity==1
+replace diseases_ = substr(measure, 1, strlen(measure) - 14) if measure_imd==1
+replace diseases_ = substr(measure, 1, strlen(measure) - 20) if measure_ethnicity==1
 gen disease = strproper(subinstr(diseases_, "_", " ",.)) 
 
 *Generate incidence and prevalence by months across ages, sexes, IMD and ethnicity
@@ -369,10 +360,7 @@ foreach disease_ of local levels {
 	twoway line asr_0_9_ma mo_year_diagn, lcolor(yellow) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line asr_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line asr_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line asr_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line asr_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line asr_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line asr_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line asr_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line asr_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_adj_ma_age2, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_age2.gph", replace)
 		graph export "$projectdir/output/figures/adj_ma_age2_`disease_'.svg", replace
 	restore		
-
-}
-
-log close	
+	
 *******Also need by IMD quintile +/- ethnicity**************	
 		
 /*	

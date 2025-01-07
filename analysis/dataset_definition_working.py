@@ -4,18 +4,6 @@ from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
-# # Arguments (from project.yaml)
-# from argparse import ArgumentParser
-
-# parser = ArgumentParser()
-# parser.add_argument("--diseases", type=str)
-# args = parser.parse_args()
-# diseases = args.diseases.split(", ")
-
-# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
-diseases = ["copd", "chd"]
-codelist_types = ["snomed", "icd", "resolved"]
-
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
 
@@ -78,6 +66,38 @@ def preceding_registration(dx_date):
 dataset.sex = patients.sex
 dataset.date_of_death = patients.date_of_death
 
+# # Define patient ethnicity
+# latest_ethnicity_code = (
+#     clinical_events.where(clinical_events.ctv3_code.is_in(codelists.ethnicity_codes))
+#     .where(clinical_events.date.is_on_or_before(end_date))
+#     .sort_by(clinical_events.date)
+#     .last_for_patient()
+#     .ctv3_code
+# )
+
+# latest_ethnicity = latest_ethnicity_code.to_category(codelists.ethnicity_codes)
+
+# dataset.ethnicity = case(
+#     when(latest_ethnicity == "1").then("White"),
+#     when(latest_ethnicity == "2").then("Mixed"),
+#     when(latest_ethnicity == "3").then("Asian or Asian British"),
+#     when(latest_ethnicity == "4").then("Black or Black British"),
+#     when(latest_ethnicity == "5").then("Other"),
+#     otherwise="missing",
+# )
+
+# # Define patient IMD, using latest data for each patient
+# latest_address_per_patient = addresses.sort_by(addresses.start_date).last_for_patient()
+# imd_rounded = latest_address_per_patient.imd_rounded
+# dataset.imd_quintile = case(
+#     when((imd_rounded >= 0) & (imd_rounded < int(32844 * 1 / 5))).then("1"),
+#     when(imd_rounded < int(32844 * 2 / 5)).then("2"),
+#     when(imd_rounded < int(32844 * 3 / 5)).then("3"),
+#     when(imd_rounded < int(32844 * 4 / 5)).then("4"),
+#     when(imd_rounded < int(32844 * 5 / 5)).then("5"),
+#     otherwise="Missing",
+# )
+
 # Any practice registration before study end date
 any_registration = practice_registrations.where(
             practice_registrations.start_date <= end_date
@@ -91,13 +111,18 @@ dataset.define_population(
     & ((dataset.sex == "male") | (dataset.sex == "female"))
 )  
 
+# List of diseases and codelists to cycle through
+# diseases = ["copd", "chd", "stroke", "heart_failure", "dementia"]
+diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
+codelist_types = ["snomed", "icd", "resolved"]
+
 for disease in diseases:
 
     snomed_inc_date = {}  # Dictionary to store dates
     snomed_last_date = {}
     icd_inc_date = {}
     icd_last_date = {}
-    last_date = {} 
+    last_date = {}  # Dictionary to store dates
 
     for codelist_type in codelist_types:
 

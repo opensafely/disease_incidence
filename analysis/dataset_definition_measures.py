@@ -2,7 +2,7 @@ from ehrql import create_dataset, days, months, years, case, when, create_measur
 from ehrql.tables.tpp import patients, medications, practice_registrations, clinical_events, apcs, addresses, ons_deaths, appointments
 from datetime import date, datetime
 import codelists_ehrQL as codelists
-from analysis.dataset_definition import dataset, diseases
+from analysis.dataset_definition import dataset
 import sys
 
 # Arguments (from project.yaml)
@@ -11,11 +11,14 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument("--start-date", type=str)
 parser.add_argument("--intervals", type=int)
+parser.add_argument("--intervals_years", type=int)
+parser.add_argument("--disease", type=str)
 args = parser.parse_args()
 
 start_date = args.start_date
 intervals = args.intervals
-intervals_years = int(intervals/12)
+intervals_years = args.intervals_years
+disease = args.disease
 
 index_date = INTERVAL.start_date
 end_date = INTERVAL.end_date
@@ -37,35 +40,10 @@ def preceding_registration(dx_date):
 # 12m preceding registration exist at interval start
 preceding_reg_index = preceding_registration(index_date).exists_for_patient()
 
-# Currently registered at interval start
-currently_registered = practice_registrations.for_patient_on(index_date).exists_for_patient()
-
 # Age at interval start
 age = patients.age_on(index_date)
 
-# age_band = case(  
-#     when((age >= 0) & (age < 4)).then("age_0_4"),
-#     when((age >= 5) & (age < 9)).then("age_5_9"),
-#     when((age >= 10) & (age < 14)).then("age_10_14"),
-#     when((age >= 15) & (age < 19)).then("age_15_19"),
-#     when((age >= 20) & (age < 24)).then("age_20_24"),
-#     when((age >= 25) & (age < 29)).then("age_25_29"),
-#     when((age >= 30) & (age < 34)).then("age_30_34"),
-#     when((age >= 35) & (age < 39)).then("age_35_39"),
-#     when((age >= 40) & (age < 44)).then("age_40_44"),
-#     when((age >= 45) & (age < 49)).then("age_45_49"),
-#     when((age >= 50) & (age < 54)).then("age_50_54"),
-#     when((age >= 55) & (age < 59)).then("age_55_59"),
-#     when((age >= 60) & (age < 64)).then("age_60_64"),
-#     when((age >= 65) & (age < 69)).then("age_65_69"),
-#     when((age >= 70) & (age < 74)).then("age_70_74"),
-#     when((age >= 75) & (age < 79)).then("age_75_79"),
-#     when((age >= 80) & (age < 84)).then("age_80_84"),
-#     when((age >= 85) & (age < 89)).then("age_85_89"),
-#     when((age >= 90)).then("age_greater_equal_90"),
-# )
-
-age_band2 = case(  
+age_band = case(  
     when((age >= 0) & (age < 9)).then("age_0_9"),
     when((age >= 10) & (age < 19)).then("age_10_19"),
     when((age >= 20) & (age < 29)).then("age_20_29"),
@@ -79,117 +57,91 @@ age_band2 = case(
 
 measures = create_measures()
 measures.configure_dummy_data(population_size=1000, legacy=True)
-measures.configure_disclosure_control(enabled=False) # Consider changing this in final output
+measures.configure_disclosure_control(enabled=False)
 measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
-## Prevalence denominator - people currently registered on index date (Nb. sex already selected for in dataset definition)
+## Prevalence denominator - people registered for more than one year on index date (Nb. sex already selected for in dataset definition)
 prev_denominator = (
         ((age >= 0) & (age < 110))
         & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
-        & (currently_registered == True)
+        & (preceding_reg_index == True)
         )
 
-for disease in diseases:
+# Dictionaries to store the values
+prev = {}
+prev_numerators = {} 
+inc_case = {}
+inc_case_12m_alive = {} 
+incidence_numerators = {}
+incidence_denominators = {}
 
-    # Dictionary to store the values
-    prev = {}
-    inc_case = {}
-    inc_case_12m_alive = {}
-    prev_numerators = {}  
-    incidence_numerators = {}
-    incidence_denominators = {}
-    
-    # Prevalent diagnosis (at interval start)
-    prev[f"{disease}_prev"] = ( 
-        case(
-            when(
-                (getattr(dataset, f"{disease}_inc_date", None) < index_date)
-                & ((getattr(dataset, f"{disease}_resolved") == False) | ((getattr(dataset, f"{disease}_resolved") == True) & (getattr(dataset, f"{disease}_resolved_date", None) > index_date)))
-                ).then(True),
-            otherwise=False,
-        )
+# Prevalent diagnosis (at interval start)
+prev[disease + "_prev"] = ( 
+    case(
+        when(
+            (getattr(dataset, disease + "_inc_date", None) < index_date)
+            & ((getattr(dataset, disease + "_resolved") == False) | ((getattr(dataset, disease + "_resolved") == True) & (getattr(dataset, disease + "_resolved_date", None) > index_date)))
+            ).then(True),
+        otherwise=False,
     )
-    
-    ## Prevalence numerator - people currently registered on index date who have an Dx code on or before index date
-    prev_numerators[f"{disease}_prev_num"] = (
-            ((prev[f"{disease}_prev"]) == True)
-            & ((age >= 0) & (age < 110))
-            & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
-            & (currently_registered == True)
-        )
+)
 
-    # Incident case (i.e. incident date within interval window)
-    inc_case[f"{disease}_inc_case"] = ( 
-        case(
-            when(((getattr(dataset, f"{disease}_inc_date", None)) >= index_date) & ((getattr(dataset, f"{disease}_inc_date", None)) <= end_date)).then(True),
-            otherwise=False,
-        )
+## Prevalence numerator - people registered for more than one year on index date who have an Dx code on or before index date
+prev_numerators[disease + "_prev_num"] = (
+        ((prev[disease + "_prev"]) == True)
+        & (prev_denominator == True)
     )
 
-    # Preceding registration and alive at incident diagnosis date
-    inc_case_12m_alive[f"{disease}_inc_case_12m_alive"] = ( 
-        case(
-            when(((inc_case[f"{disease}_inc_case"]) == True)
-                & ((getattr(dataset, f"{disease}_preceding_reg_inc") == True))
-                & ((getattr(dataset, f"{disease}_alive_inc") == True))                
-                ).then(True),
-            otherwise=False,
-        )
+# Incident case (i.e. incident date within interval window)
+inc_case[disease + "_inc_case"] = ( 
+    case(
+        when(((getattr(dataset, disease + "_inc_date", None)) >= index_date) & ((getattr(dataset, disease + "_inc_date", None)) <= end_date)).then(True),
+        otherwise=False,
     )
-    
-    ## Incidence numerator - people with new diagnostic codes in the 1 month after index date who have 12m+ prior registration and alive 
-    incidence_numerators[f"{disease}_inc_num"] = (
-            ((inc_case_12m_alive[f"{disease}_inc_case_12m_alive"]) == True)
-            & ((age >= 0) & (age < 110))
-        )
+)
 
-    ## Incidence denominator - people with 12m+ registration prior to index date who do not have a Dx code on or before index date
-    incidence_denominators[f"{disease}_inc_denom"] = (
-            ((prev[f"{disease}_prev"]) == False)
-            & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
-            & (preceding_reg_index == True)
-            & ((age >= 0) & (age < 110))
-        )
+# Preceding registration and alive at incident diagnosis date
+inc_case_12m_alive[disease + "_inc_case_12m_alive"] = ( 
+    case(
+        when(((inc_case[disease + "_inc_case"]) == True)
+            & ((getattr(dataset, disease + "_preceding_reg_inc") == True))
+            & ((getattr(dataset, disease + "_alive_inc") == True))                
+            ).then(True),
+        otherwise=False,
+    )
+)
 
-    # Prevalence
-    measures.define_measure(
-        name=f"{disease}_prevalence",
-        numerator=prev_numerators[f"{disease}_prev_num"],
-        denominator=prev_denominator,
-        intervals=years(intervals_years).starting_on(start_date),
-        group_by={
-            "sex": dataset.sex,
-            "age": age_band2,  
-        },
-        )
-    
-    # Incidence by age and sex
-    measures.define_measure(
-        name=f"{disease}_incidence",
-        numerator=incidence_numerators[f"{disease}_inc_num"],
-        denominator=incidence_denominators[f"{disease}_inc_denom"],
-        group_by={
-            "sex": dataset.sex,
-            "age": age_band2,  
-        },
-        )  
-        
-    # # Incidence by ethnicity (Nb. not age and sex)
-    # measures.define_measure(
-    #     name=disease + "_incidence_ethnicity",
-    #     numerator=incidence_numerators[f"{disease}_inc_num"],
-    #     denominator=incidence_denominators[f"{disease}_inc_denom"],
-    #     group_by={
-    #         "ethnicity": dataset.ethnicity,
-    #     },
-    #     )
+## Incidence numerator - people with new diagnostic codes in the 1 month after index date who have 12m+ prior registration and alive 
+incidence_numerators[disease + "_inc_num"] = (
+        ((inc_case_12m_alive[disease + "_inc_case_12m_alive"]) == True)
+        & ((age >= 0) & (age < 110))
+    )
 
-    # # Incidence by IMD quintile (Nb. not age and sex)
-    # measures.define_measure(
-    #     name=disease + "_incidence_imd",
-    #     numerator=incidence_numerators[f"{disease}_inc_num"],
-    #     denominator=incidence_denominators[f"{disease}_inc_denom"],
-    #     group_by={
-    #         "imd": dataset.imd_quintile,
-    #     },
-    #     )    
+## Incidence denominator - people with 12m+ registration prior to index date who do not have a Dx code on or before index date
+incidence_denominators[disease + "_inc_denom"] = (
+        ((prev[disease + "_prev"]) == False)
+        & (prev_denominator == True)
+    )
+
+# Prevalence by age and sex
+measures.define_measure(
+    name=disease + "_prevalence",
+    numerator=prev_numerators[disease + "_prev_num"],
+    denominator=prev_denominator,
+    intervals=years(intervals_years).starting_on(start_date),
+    group_by={
+        "sex": dataset.sex,
+        "age": age_band,  
+    },
+    )
+
+# Incidence by age and sex
+measures.define_measure(
+    name=disease + "_incidence",
+    numerator=incidence_numerators[disease + "_inc_num"],
+    denominator=incidence_denominators[disease + "_inc_denom"],
+    group_by={
+        "sex": dataset.sex,
+        "age": age_band,  
+    },
+    )
