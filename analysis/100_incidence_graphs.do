@@ -45,6 +45,7 @@ foreach disease in `diseases' {
 	import delimited "$projectdir/output/measures/measures_dataset_`disease'.csv", clear
 	append using "$projectdir/output/data/measures_appended.dta"
 	save "$projectdir/output/data/measures_appended.dta", replace 
+	}
 }
 
 sort measure interval_start sex age
@@ -393,9 +394,6 @@ log close
 	twoway connected ratio_all_100 year, ytitle("Prevalence (%)", size(med)) color(gold) || connected asr year, color(green) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(, nogrid)  title("`dis_title'", size(medium)) legend(region(fcolor(white%0)) order(1 "Unadjusted" 2 "Adjusted")) name(`disease_'_prevalence_as_95, replace) saving("$projectdir/output/figures/`disease_'_prevalence_as_95.gph", replace)
 		graph export "$projectdir/output/figures/`disease_'_prevalence_as_95.svg", replace
 	restore	
-	*/
-}
-/*	
 keep if measure_inc==1
 keep if measure == "***"
 keep if disease == "***"
@@ -689,6 +687,3 @@ import excel "$projectdir/output/tables/baseline_bydiagnosis.xls", clear
 outsheet * using "$projectdir/output/tables/baseline_bydiagnosis.csv" , comma nonames replace	
 
 */
-
-
-log close
