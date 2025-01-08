@@ -11,13 +11,12 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument("--start-date", type=str)
 parser.add_argument("--intervals", type=int)
-parser.add_argument("--intervals_years", type=int)
 parser.add_argument("--disease", type=str)
 args = parser.parse_args()
 
 start_date = args.start_date
 intervals = args.intervals
-intervals_years = args.intervals_years
+intervals_years = int(intervals/12)
 disease = args.disease
 
 index_date = INTERVAL.start_date

@@ -1,5 +1,5 @@
-#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
-diseases = ["copd", "chd"]
+diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
+# diseases = ["copd", "chd"]
 
 yaml_header = """
 version: '3.0'
@@ -23,24 +23,31 @@ actions:
 #formatted_yaml_header = yaml_header.format(diseases=", ".join(diseases))
 
 yaml_template = """
-  measures_dataset_{disease}:
+  measures_dataset_{disease}_{year}:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_{disease}.csv
+      --output output/measures/measures_dataset_{disease}_{year}.csv
       --
-      --start-date "2016-04-01"
-      --intervals 102
-      --intervals_years 8
+      --start-date "{year}-04-01"
+      --intervals {intervals}
       --disease "{disease}"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_{disease}.csv
+        measure_csv: output/measures/measures_dataset_{disease}_{year}.csv
 """
 
-# Generate disease list for incidence_graphs function
-needs_list = ", ".join([f"measures_dataset_{disease}" for disease in diseases])
+yaml_body = ""
+all_needs = []
 
-yaml_footer = f"""
+for year in range(2016, 2025):
+    intervals = 6 if year == 2024 else 12  # Set intervals conditionally
+    for disease in diseases:
+        yaml_body += yaml_template.format(disease=disease, year=year, intervals=intervals)
+        all_needs.append(f"measures_dataset_{disease}_{year}")
+
+needs_list = ", ".join(all_needs)
+
+yaml_footer_template = f"""
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
     needs: [generate_dataset, {needs_list}]
@@ -81,9 +88,11 @@ yaml_footer = f"""
         table2: output/tables/values_*.csv   
 """
 
-#generated_yaml = formatted_yaml_header + "\n".join([yaml_template.format(disease=disease) for disease in diseases]) + yaml_footer
-generated_yaml = yaml_header + "\n".join([yaml_template.format(disease=disease) for disease in diseases]) + yaml_footer
+yaml_footer = yaml_footer_template.format(needs_list=needs_list)
 
-# Save to a file or print
+# Combine header, body, and footer
+generated_yaml = yaml_header + yaml_body + yaml_footer
+
+# Save to a file
 with open("project.yaml", "w") as file:
     file.write(generated_yaml)

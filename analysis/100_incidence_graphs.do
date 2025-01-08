@@ -12,7 +12,7 @@ USER-INSTALLED ADO:
   (place .ado file(s) in analysis folder)						
 ==============================================================================*/
 
-**Set filepaths
+*Set filepaths
 *global projectdir "C:\Users\Mark\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 *global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 global projectdir `c(pwd)'
@@ -25,26 +25,32 @@ capture mkdir "$projectdir/output/figures"
 global logdir "$projectdir/logs"
 di "$logdir"
 
-**Open a log file
+*Open a log file
 cap log close
 log using "$logdir/descriptive_tables.log", replace
 
-**Set Ado file path
+*Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
-**Import and append measures datasets for diseases
-*local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 dm_type1 ckd psoriasis atopic_dermatitis osteoporosis hiv depression coeliac pmr"
-local diseases "copd chd"
+*Import and append measures datasets for diseases
+local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 dm_type1 ckd psoriasis atopic_dermatitis osteoporosis hiv depression coeliac pmr"
+*local diseases "copd chd"
+local years "2016 2017 2018 2019 2020 2021 2022 2023 2024"
 local first_disease: word 1 of `diseases'
+local first_year: word 1 of `years'
 
-import delimited "$projectdir/output/measures/measures_dataset_`first_disease'.csv", clear
+**Import first file as base dataset
+import delimited "$projectdir/output/measures/measures_dataset_`first_disease'_`first_year'.csv", clear
 save "$projectdir/output/data/measures_appended.dta", replace
 
+**Loop over diseases and years
 foreach disease in `diseases' {
-    if "`disease'" != "`first_disease'" {
-	import delimited "$projectdir/output/measures/measures_dataset_`disease'.csv", clear
-	append using "$projectdir/output/data/measures_appended.dta"
-	save "$projectdir/output/data/measures_appended.dta", replace 
+	foreach year in `years' {
+		if (("`disease'" != "`first_disease'") | ("`year'" != "`first_year'"))  {
+		import delimited "$projectdir/output/measures/measures_dataset_`disease'_`year'.csv", clear
+		append using "$projectdir/output/data/measures_appended.dta"
+		save "$projectdir/output/data/measures_appended.dta", replace 
+		}
 	}
 }
 
