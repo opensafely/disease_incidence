@@ -123,6 +123,22 @@ gen ratio_female_100000 = ratio_female*100000
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_female_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_female_100000): replace ratio_female_100000 = ratio_female_100000[_n-1] if missing(ratio_female_100000)
 
+foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 {
+bys disease mo_year_diagn measure: egen numerator_`var' = sum(numerator) if age=="age_`var'"
+bys disease mo_year_diagn measure: egen denominator_`var' = sum(denominator) if age=="age_`var'"
+gen ratio_`var' = numerator_`var'/denominator_`var'
+gen ratio_`var'_100000 = ratio_`var'*100000
+sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
+by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
+}
+
+bys disease mo_year_diagn measure: egen numerator_80 = sum(numerator) if age=="age_greater_equal_80"
+bys disease mo_year_diagn measure: egen denominator_80 = sum(denominator) if age=="age_greater_equal_80"
+gen ratio_80 = numerator_80/denominator_80
+gen ratio_80_100000 = ratio_80*100000
+sort disease mo_year_diagn measure_prev measure_inc_any ratio_80_100000 
+by disease mo_year_diagn measure_prev measure_inc_any (ratio_80_100000): replace ratio_80_100000 = ratio_80_100000[_n-1] if missing(ratio_80_100000)
+
 **DO the same for IMD and ethnicity, then add moving average
 
 save "$projectdir/output/data/processed_nonstandardised.dta", replace
@@ -375,6 +391,15 @@ foreach disease_ of local levels {
 
 	twoway line asr_0_9_ma mo_year_diagn, lcolor(yellow) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line asr_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line asr_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line asr_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line asr_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line asr_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line asr_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line asr_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line asr_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_adj_ma_age2, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_age2.gph", replace)
 		graph export "$projectdir/output/figures/adj_ma_age2_`disease_'.svg", replace
+	restore	
+	
+*Unadjusted incidence, by age group (lines only)
+	preserve
+	keep if measure_inc==1
+	keep if diseases_ == "`disease_'"
+
+	twoway line ratio_0_9_100000 mo_year_diagn, lcolor(yellow) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_100000 mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_100000 mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_100000 mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_100000 mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_100000 mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_100000 mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_100000 mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_100000 mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_un_age2, replace) saving("$projectdir/output/figures/`disease_'_un_age2.gph", replace)
+		graph export "$projectdir/output/figures/un_age2_`disease_'.svg", replace
 	restore		
 
 }
