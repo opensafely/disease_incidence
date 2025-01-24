@@ -149,7 +149,7 @@ by disease mo_year_diagn measure_prev measure_inc_any (ratio_80_100000): replace
 
 save "$projectdir/output/data/processed_nonstandardised.dta", replace
 
-*Export a CSV for import into ARIMA R file
+*Export a CSV for import into ARIMA R file - unadjusted incidence ratios
 keep if measure_inc==1
 sort disease mo_year_diagn age sex
 bys measure interval_start: gen n=_n
@@ -285,6 +285,22 @@ gen asir_uci = asir+1.96*standerror
 
 save "$projectdir/output/data/processed_standardised.dta", replace
 
+*Export a CSV for import into ARIMA R file - adjusted incidence rates
+use "$projectdir/output/data/processed_standardised.dta", clear
+
+keep if measure_inc==1
+
+rename year_diag year
+rename asr_all incidence //use age and sex-standardised IR
+replace sex = "All"
+keep disease sex mo_year_diagn year numerator_all denominator_all incidence
+rename numerator_all numerator //unadjusted counts
+rename denominator_all denominator //unadjusted counts
+
+save "$projectdir/output/data/arima_standardised.dta", replace
+outsheet * using "$projectdir/output/data/arima_standardised.csv" , comma replace
+
+**Produce graphs
 use "$projectdir/output/data/processed_standardised.dta", clear
 
 levelsof diseases_, local(levels)
@@ -429,6 +445,7 @@ foreach disease_ of local levels {
 }
 
 log close	
+
 *******Also need by IMD quintile +/- ethnicity**************	
 		
 /*	

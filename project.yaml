@@ -2197,6 +2197,7 @@ actions:
         figure14: output/figures/un_age2_*.svg
         figure15: output/figures/un_age2_ma_*.svg
         data1: output/data/arima_nonstandardised.csv
+        data2: output/data/arima_standardised.csv
 
   run_sarima:
     run: r:latest analysis/200_sarima.R

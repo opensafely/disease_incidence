@@ -35,8 +35,9 @@ dir_create(here::here("output/tables"), showWarnings = FALSE, recurse = TRUE)
 sink("logs/sarima_log.txt")
 #pdf("output/figures/sarima_plots.pdf", width = 8, height = 6)
 
-# Incidence data
-df <-read.csv("output/data/arima_nonstandardised.csv")
+# Incidence data - use age and sex-standardised rates for incidence rates and unadjusted for counts
+df <-read.csv("output/data/arima_standardised.csv")
+#df <-read.csv("output/data/arima_nonstandardised.csv")
 #df <-read.csv("output/data/arima_nonstandardised - Copy.csv")
 
 #Rename variables in the datafile 
