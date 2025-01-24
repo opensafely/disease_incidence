@@ -78,6 +78,12 @@ generate str16 mo_year_diagn_s = strofreal(mo_year_diagn,"%tmCCYY!mNN")
 lab var mo_year_diagn "Month/Year of Diagnosis"
 lab var mo_year_diagn_s "Month/Year of Diagnosis"
 
+codebook sex
+keep if sex == "female" | sex == "male" //should already be accounted for in dataset definition
+
+codebook age
+keep if age != "" //should already be accounted for in dataset definition
+
 gen ratio_100000 = ratio*100000
 
 gen measure_inc = 1 if substr(measure,-10,.) == "_incidence"
@@ -239,7 +245,7 @@ bys measure interval_start: gen n=_n
 keep if n==1
 drop n
 
-*Generate 3-monthly moving averages of asr
+*Generate 3-monthly moving averages
 bysort measure (interval_start): gen asr_all_ma =(asr_all[_n-1]+asr_all[_n]+asr_all[_n+1])/3
 bysort measure (interval_start): gen asr_male_ma =(asr_male[_n-1]+asr_male[_n]+asr_male[_n+1])/3
 bysort measure (interval_start): gen asr_female_ma =(asr_female[_n-1]+asr_female[_n]+asr_female[_n+1])/3
@@ -252,6 +258,16 @@ bysort measure (interval_start): gen asr_50_59_ma =(asr_50_59[_n-1]+asr_50_59[_n
 bysort measure (interval_start): gen asr_60_69_ma =(asr_60_69[_n-1]+asr_60_69[_n]+asr_60_69[_n+1])/3
 bysort measure (interval_start): gen asr_70_79_ma =(asr_70_79[_n-1]+asr_70_79[_n]+asr_70_79[_n+1])/3
 bysort measure (interval_start): gen asr_80_ma =(asr_80[_n-1]+asr_80[_n]+asr_80[_n+1])/3
+
+bysort measure (interval_start): gen ratio_0_9_ma =(ratio_0_9_100000[_n-1]+ratio_0_9_100000[_n]+ratio_0_9_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_10_19_ma =(ratio_10_19_100000[_n-1]+ratio_10_19_100000[_n]+ratio_10_19_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_20_29_ma =(ratio_20_29_100000[_n-1]+ratio_20_29_100000[_n]+ratio_20_29_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_30_39_ma =(ratio_30_39_100000[_n-1]+ratio_30_39_100000[_n]+ratio_30_39_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_40_49_ma =(ratio_40_49_100000[_n-1]+ratio_40_49_100000[_n]+ratio_40_49_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_50_59_ma =(ratio_50_59_100000[_n-1]+ratio_50_59_100000[_n]+ratio_50_59_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_60_69_ma =(ratio_60_69_100000[_n-1]+ratio_60_69_100000[_n]+ratio_60_69_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_70_79_ma =(ratio_70_79_100000[_n-1]+ratio_70_79_100000[_n]+ratio_70_79_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_80_ma =(ratio_80_100000[_n-1]+ratio_80_100000[_n]+ratio_80_100000[_n+1])/3
 
 /*gen asr_lci = asr-1.96*(asr/sqrt(denominator_all))
 gen asr_uci = asr+1.96*(asr/sqrt(denominator_all))
@@ -401,7 +417,15 @@ foreach disease_ of local levels {
 	twoway line ratio_0_9_100000 mo_year_diagn, lcolor(yellow) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_100000 mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_100000 mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_100000 mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_100000 mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_100000 mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_100000 mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_100000 mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_100000 mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_un_age2, replace) saving("$projectdir/output/figures/`disease_'_un_age2.gph", replace)
 		graph export "$projectdir/output/figures/un_age2_`disease_'.svg", replace
 	restore		
+	
+*Unadjusted incidence moving average, by age group (lines only)
+	preserve
+	keep if measure_inc==1
+	keep if diseases_ == "`disease_'"
 
+	twoway line ratio_0_9_ma mo_year_diagn, lcolor(yellow) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_un_age2_ma, replace) saving("$projectdir/output/figures/`disease_'_un_age2_ma.gph", replace)
+		graph export "$projectdir/output/figures/un_age2_ma_`disease_'.svg", replace
+	restore		
 }
 
 log close	

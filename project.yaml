@@ -2195,6 +2195,7 @@ actions:
         figure12: output/figures/adj_ma_age_*.svg
         figure13: output/figures/adj_ma_age2_*.svg
         figure14: output/figures/un_age2_*.svg
+        figure15: output/figures/un_age2_ma_*.svg
         data1: output/data/arima_nonstandardised.csv
 
   run_sarima:
