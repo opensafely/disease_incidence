@@ -40,9 +40,6 @@ df <-read.csv("output/data/arima_standardised.csv")
 #df <-read.csv("output/data/arima_nonstandardised.csv")
 #df <-read.csv("output/data/arima_nonstandardised - Copy.csv")
 
-# Drop April 2016 month for SARIMA
-df <- df[df$mo_year_diagn != "Apr-2016", ]
-
 #Rename variables in the datafile 
 names(df)[names(df) == "numerator"] <- "count" #standardise to common variable name - can remove this eventually
 df<- df %>% filter(sex=="All") %>% select(disease, year, mo_year_diagn, incidence, count) 
@@ -75,7 +72,7 @@ for (j in 1:length(disease_list)) {
   max_index <- max(df_dis$index)
   
   #Keep only data from before March 2020 and save to separate df
-  df_obs <- df_dis[which(df_dis$index<47),]
+  df_obs <- df_dis[which(df_dis$index<48),]
   
   # Loop through incidence and count
   for (i in 1:length(variables)) {
@@ -109,7 +106,7 @@ for (j in 1:length(disease_list)) {
     print(p1)
 
     #Convert to time series object 
-    df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,5))
+    df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,4))
     assign(paste0("ts_", var), df_obs_rate)
   
     #Plot time series - 1) raw data; 2) 1st order difference (yt- yt-1); 3) 1st order seasonal difference (yt-yt-1)-(yt-12-yt-12-1); checking for stationarity (i.e. remove trends over time by differencing)
@@ -125,17 +122,17 @@ for (j in 1:length(disease_list)) {
     
     #View ACF/PACF plots of undifferenced data (noting the extent of autocorrelation between time points)
     svg(filename = paste0("output/figures/raw_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(df_obs_rate, max.lag=45) 
+    acf2(df_obs_rate, max.lag=46) 
     dev.off()
     
     #View ACF/PACF plots of differenced data (checking for autocorrelation after differencing)
     svg(filename = paste0("output/figures/differenced_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(diff(df_obs_rate), max.lag=32)
+    acf2(diff(df_obs_rate), max.lag=33)
     dev.off()
     
     #View ACF/PACF plots of differenced/seasonally differenced data (checking for autocorrelation after differencing)
     svg(filename = paste0("output/figures/seasonal_acf_", var, "_", dis, ".svg"), width = 8, height = 6)
-    acf2(diff(diff(df_obs_rate,12)), max.lag=32)
+    acf2(diff(diff(df_obs_rate,12)), max.lag=33)
     dev.off()
     
     #Use auto.arima to fit SARIMA model - will identify p/q parameters that optimise AIC, but we need to double check residuals 
@@ -149,7 +146,7 @@ for (j in 1:length(disease_list)) {
     svg(filename = paste0("output/figures/auto_residuals_", var, "_", dis, ".svg"), width = 8, height = 6)
     checkresiduals(suggested.rate)
     dev.off()
-    Box.test(suggested.rate$residuals, lag = 57, type = "Ljung-Box")
+    Box.test(suggested.rate$residuals, lag = 58, type = "Ljung-Box")
   
     #Forecast 24 months from March 2020 and convert to time series object - could change h to max_index - pre-March 2020
     fc.rate  <- forecast(m1.rate, h=55)
@@ -218,8 +215,8 @@ for (j in 1:length(disease_list)) {
   
     #Calculate percentage difference between observed and predicted
     #i.e. months 48-59 =2020, 60-71=2021, 72-83=2022, 84-max_index=2023/24, 48-max=2020+2021+2022+2023+2024)
-    a<- c(46, 58, 70, 82, 46)
-    b<- c(58, 70, 82, max_index, max_index)
+    a<- c(47, 59, 71, 83, 47)
+    b<- c(59, 71, 83, max_index, max_index)
     
     results_list <- list()
     
