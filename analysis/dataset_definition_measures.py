@@ -122,7 +122,7 @@ incidence_denominators[disease + "_inc_denom"] = (
         & (prev_denominator == True)
     )
 
-# Prevalence by age and sex
+# Prevalence by age and sex - change start date to July
 measures.define_measure(
     name=disease + "_prevalence",
     numerator=prev_numerators[disease + "_prev_num"],

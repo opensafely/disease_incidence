@@ -1,5 +1,5 @@
 diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
-# diseases = ["asthma", "heart_failure", "chd", "multiple_sclerosis"]
+# diseases = ["asthma"]
 
 yaml_header = """
 version: '3.0'
@@ -75,8 +75,8 @@ yaml_footer_template = f"""
         figure11: output/figures/adj_ma_sex2_*.svg
         figure12: output/figures/adj_ma_age_*.svg
         figure13: output/figures/adj_ma_age2_*.svg
-        data1: output/data/arima_nonstandardised.csv
-        data2: output/data/arima_standardised.csv
+        table1: output/tables/arima_nonstandardised.csv
+        table2: output/tables/arima_standardised.csv
 
   run_sarima:
     run: r:latest analysis/200_sarima.R

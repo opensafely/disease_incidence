@@ -63,6 +63,7 @@ set scheme plotplainblind
 
 use "$projectdir/output/data/measures_appended.dta", clear 
 
+**Format dates
 rename interval_start interval_start_s
 gen interval_start = date(interval_start_s, "YMD") 
 format interval_start %td
@@ -78,14 +79,14 @@ generate str16 mo_year_diagn_s = strofreal(mo_year_diagn,"%tmCCYY!mNN")
 lab var mo_year_diagn "Month/Year of Diagnosis"
 lab var mo_year_diagn_s "Month/Year of Diagnosis"
 
+**Check age and sex categories
 codebook sex
 keep if sex == "female" | sex == "male" //should already be accounted for in dataset definition
 
 codebook age
 keep if age != "" //should already be accounted for in dataset definition
 
-gen ratio_100000 = ratio*100000
-
+**Code incidence and prevalence
 gen measure_inc = 1 if substr(measure,-10,.) == "_incidence"
 recode measure_inc .=0
 gen measure_prev = 1 if substr(measure,-11,.) == "_prevalence"
@@ -102,9 +103,10 @@ gen measure_inc_any = 1 if measure_inc ==1
 *gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
 recode measure_inc_any .=0
 
-*Drop April/May/June 2016 data - remove this after dataset definition and measures re-run
+**Drop April/May/June 2016 data - remove this after dataset definition and measures re-run
 drop if measure_inc_any == 1 & (mo_year_diagn_s == "2016m04" | mo_year_diagn_s == "2016m05" | mo_year_diagn_s == "2016m06")
 
+**Label diseases
 gen diseases_ = substr(measure, 1, strlen(measure) - 10) if measure_inc==1
 replace diseases_ = substr(measure, 1, strlen(measure) - 11) if measure_prev==1
 *replace diseases_ = substr(measure, 1, strlen(measure) - 14) if measure_imd==1
@@ -115,36 +117,84 @@ gen disease = strproper(subinstr(diseases_, "_", " ",.))
 sort disease mo_year_diagn measure
 bys disease mo_year_diagn measure: egen numerator_all = sum(numerator)
 bys disease mo_year_diagn measure: egen denominator_all = sum(denominator)
-gen ratio_all = numerator_all/denominator_all
+
+*Redact and round
+replace numerator_all =. if numerator_all<=7 | denominator_all<=7
+replace denominator_all =. if numerator_all<=7 | numerator_all==. | denominator_all<=7
+replace numerator_all = round(numerator_all, 5)
+replace denominator_all = round(denominator_all, 5)
+
+gen ratio_all = (numerator_all/denominator_all) if (numerator_all!=. & denominator_all!=.)
+replace ratio_all =. if (numerator_all==. | denominator_all==.)
 gen ratio_all_100000 = ratio_all*100000
 
+*For males
 bys disease mo_year_diagn measure: egen numerator_male = sum(numerator) if sex=="male"
 bys disease mo_year_diagn measure: egen denominator_male = sum(denominator) if sex=="male"
-gen ratio_male = numerator_male/denominator_male
+
+*Redact and round
+replace numerator_male =. if numerator_male<=7 | denominator_male<=7
+replace denominator_male =. if numerator_male<=7 | numerator_male==. | denominator_male<=7
+replace numerator_male = round(numerator_male, 5)
+replace denominator_male = round(denominator_male, 5)
+
+gen ratio_male = (numerator_male/denominator_male) if (numerator_male!=. & denominator_male!=.)
+replace ratio_male =. if (numerator_male==. | denominator_male==.)
 gen ratio_male_100000 = ratio_male*100000
+
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_male_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_male_100000): replace ratio_male_100000 = ratio_male_100000[_n-1] if missing(ratio_male_100000)
 
+*For females
 bys disease mo_year_diagn measure: egen numerator_female = sum(numerator) if sex=="female"
 bys disease mo_year_diagn measure: egen denominator_female = sum(denominator) if sex=="female"
-gen ratio_female = numerator_female/denominator_female
+
+*Redact and round
+replace numerator_female =. if numerator_female<=7 | denominator_female<=7
+replace denominator_female =. if numerator_female<=7 | numerator_female==. | denominator_female<=7
+replace numerator_female = round(numerator_female, 5)
+replace denominator_female = round(denominator_female, 5)
+
+gen ratio_female = (numerator_female/denominator_female) if (numerator_female!=. & denominator_female!=.)
+replace ratio_female =. if (numerator_female==. | denominator_female==.)
 gen ratio_female_100000 = ratio_female*100000
+
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_female_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_female_100000): replace ratio_female_100000 = ratio_female_100000[_n-1] if missing(ratio_female_100000)
 
+*For age groups
 foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 {
 bys disease mo_year_diagn measure: egen numerator_`var' = sum(numerator) if age=="age_`var'"
 bys disease mo_year_diagn measure: egen denominator_`var' = sum(denominator) if age=="age_`var'"
-gen ratio_`var' = numerator_`var'/denominator_`var'
+
+*Redact and round
+replace numerator_`var' =. if numerator_`var'<=7 | denominator_`var'<=7
+replace denominator_`var' =. if numerator_`var'<=7 | numerator_`var'==. | denominator_`var'<=7
+replace numerator_`var' = round(numerator_`var', 5)
+replace denominator_`var' = round(denominator_`var', 5)
+
+gen ratio_`var' = (numerator_`var'/denominator_`var') if (numerator_`var'!=. & denominator_`var'!=.)
+replace ratio_`var' =. if (numerator_`var'==. | denominator_`var'==.)
 gen ratio_`var'_100000 = ratio_`var'*100000
+
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
 }
 
+*For 80+ age group
 bys disease mo_year_diagn measure: egen numerator_80 = sum(numerator) if age=="age_greater_equal_80"
 bys disease mo_year_diagn measure: egen denominator_80 = sum(denominator) if age=="age_greater_equal_80"
-gen ratio_80 = numerator_80/denominator_80
+
+*Redact and round
+replace numerator_80 =. if numerator_80<=7 | denominator_80<=7
+replace denominator_80 =. if numerator_80<=7 | numerator_80==. | denominator_80<=7
+replace numerator_80 = round(numerator_80, 5)
+replace denominator_80 = round(denominator_80, 5)
+
+gen ratio_80 = (numerator_80/denominator_80) if (numerator_80!=. & denominator_80!=.)
+replace ratio_80 =. if (numerator_80==. | denominator_80==.)
 gen ratio_80_100000 = ratio_80*100000
+
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_80_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_80_100000): replace ratio_80_100000 = ratio_80_100000[_n-1] if missing(ratio_80_100000)
 
@@ -160,14 +210,14 @@ keep if n==1
 drop n
 
 rename year_diag year
-rename ratio_all_100000 incidence
+rename ratio_all_100000 incidence //(rounded and redacted)
 replace sex = "All"
 keep disease sex mo_year_diagn year numerator_all denominator_all incidence
-rename numerator_all numerator
-rename denominator_all denominator
+rename numerator_all numerator //(rounded and redacted)
+rename denominator_all denominator //(rounded and redacted)
 
-save "$projectdir/output/data/arima_nonstandardised.dta", replace
-outsheet * using "$projectdir/output/data/arima_nonstandardised.csv" , comma replace
+save "$projectdir/output/tables/arima_nonstandardised.dta", replace
+outsheet * using "$projectdir/output/tables/arima_nonstandardised.csv" , comma replace
 
 *Calculate the age-standardized incidence rate (ASIR): use age specific incidence data - European Standard Population 2013
 use "$projectdir/output/data/processed_nonstandardised.dta", clear
@@ -184,6 +234,17 @@ replace prop=9000 if age=="age_70_79"
 replace prop=5000 if age=="age_greater_equal_80"
 
 *Apply the Standard Population Weights: multiply crude age-specific incidence rates by corresponding standard population weights
+
+*Redact and round, then recalculate ratio - can I do this later?
+replace numerator =. if numerator<=7 | denominator<=7
+replace denominator =. if numerator<=7 | numerator==. | denominator<=7
+replace numerator = round(numerator, 5)
+replace denominator = round(denominator, 5)
+
+replace ratio = (numerator/denominator) if (numerator!=. & denominator!=.)
+replace ratio =. if (numerator==. | denominator==.)
+gen ratio_100000 = ratio*100000
+
 *Generate standardised incidence and prevalence, overall and by sex
 gen new_value = prop*ratio_100000
 bys disease mo_year_diagn measure: egen sum_new_value_male=sum(new_value) if sex=="male" 
@@ -197,7 +258,7 @@ by disease mo_year_diagn measure (asr_female): replace asr_female = asr_female[_
 bys disease mo_year_diagn measure: egen sum_new_value_all=sum(new_value)
 gen asr_all = sum_new_value_all/200000
 
-*Generate standardised incidence and prevalence, by age group - need to double check this
+*Generate standardised incidence and prevalence, by age group
 bys disease mo_year_diagn measure: egen sum_new_value_0_9=sum(new_value) if age=="age_0_9"
 gen asr_0_9 = sum_new_value_0_9/21000
 sort disease mo_year_diagn measure asr_0_9 
@@ -294,14 +355,15 @@ use "$projectdir/output/data/processed_standardised.dta", clear
 keep if measure_inc==1
 
 rename year_diag year
-rename asr_all incidence //use age and sex-standardised IR
+rename asr_all incidence //use age and sex-standardised IR (rounded and redacted)
 replace sex = "All"
 keep disease sex mo_year_diagn year numerator_all denominator_all incidence
-rename numerator_all numerator //unadjusted counts
-rename denominator_all denominator //unadjusted counts
+rename numerator_all numerator //unadjusted counts (rounded and redacted)
+rename denominator_all denominator //unadjusted counts (rounded and redacted)
+order disease, before(sex)
 
-save "$projectdir/output/data/arima_standardised.dta", replace
-outsheet * using "$projectdir/output/data/arima_standardised.csv" , comma replace
+save "$projectdir/output/tables/arima_standardised.dta", replace
+outsheet * using "$projectdir/output/tables/arima_standardised.csv" , comma replace
 
 **Produce graphs
 use "$projectdir/output/data/processed_standardised.dta", clear

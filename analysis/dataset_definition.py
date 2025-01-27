@@ -13,7 +13,7 @@ import codelists_ehrQL as codelists
 # diseases = args.diseases.split(", ")
 
 diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
-# diseases = ["asthma", "heart_failure", "chd", "multiple_sclerosis"]
+# diseases = ["asthma"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 dataset = create_dataset()
