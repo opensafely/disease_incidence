@@ -76,6 +76,7 @@ yaml_footer_template = f"""
         figure12: output/figures/adj_ma_age_*.svg
         figure13: output/figures/adj_ma_age2_*.svg
         data1: output/data/arima_nonstandardised.csv
+        data2: output/data/arima_standardised.csv
 
   run_sarima:
     run: r:latest analysis/200_sarima.R
