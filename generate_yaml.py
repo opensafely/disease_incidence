@@ -1,5 +1,5 @@
-diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
-# diseases = ["copd", "chd"]
+# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
+diseases = ["asthma", "heart_failure", "chd", "multiple_sclerosis"]
 
 yaml_header = """
 version: '3.0'
@@ -48,6 +48,14 @@ for year in range(2016, 2025):
 needs_list = ", ".join(all_needs)
 
 yaml_footer_template = f"""
+  run_data_avail:
+    run: stata-mp:latest analysis/101_data_availability.do
+    needs: [generate_dataset]
+    outputs:
+      moderately_sensitive:
+        log1: logs/data_avail_tables.log   
+        data1: output/data/data_check_*.csv
+  
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
     needs: [generate_dataset, {needs_list}]
