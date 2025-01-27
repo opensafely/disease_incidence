@@ -36,11 +36,10 @@ sink("logs/sarima_log.txt")
 #pdf("output/figures/sarima_plots.pdf", width = 8, height = 6)
 
 # Incidence data - use age and sex-standardised rates for incidence rates and unadjusted for counts
-df <-read.csv("output/data/arima_standardised.csv")
-#df <-read.csv("output/data/arima_nonstandardised.csv")
-#df <-read.csv("output/data/arima_nonstandardised - Copy.csv")
+df <-read.csv("output/tables/arima_standardised.csv")
+#df <-read.csv("output/tables/arima_nonstandardised.csv")
 
-# Drop April 2016 month for SARIMA
+# Drop April/May/June 2016 months for SARIMA
 df <- df[!df$mo_year_diagn %in% c("Apr-2016", "May-2016", "Jun-2016"), ]
 
 #Rename variables in the datafile 
@@ -53,14 +52,7 @@ df$mon_year <- df$mo_year_diagn
 df$mo_year_diagn <- as.Date(paste0("01 ", df$mo_year_diagn), format = "%d %b %Y")
 month_lab <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
 
-#For gout, incidence rates are per 1,000 population - change to per 100,000 population - can remove this eventually
-#df$incidence[df$disease == "Gout"] <- df$incidence[df$disease == "Gout"] * 100
-
-#For RA (real data), incidence rates are per 10,000 population - change to per 100,000 population - can remove this eventually
-#df$incidence[df$disease == "RA"] <- df$incidence[df$disease == "RA"] * 10
-
 disease_list <- unique(df$disease)
-# disease_list <- as.list(unique(df$disease))
 
 # Define the variables to loop over
 variables <- c("incidence", "count")
