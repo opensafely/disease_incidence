@@ -64,6 +64,31 @@ for (j in 1:length(disease_list)) {
   dis <- disease_list[j]
   df_dis <- df[df$disease == dis, ]
   df_dis <- df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
+  
+  # Manually set titles based on the disease
+  if (dis == "Rheumatoid") {
+    dis_title <- "Rheumatoid Arthritis"
+  } else if (dis == "Copd") {
+    dis_title <- "COPD"
+  } else if (dis == "Crohns Disease") {
+    dis_title <- "Crohn's Disease"
+  } else if (dis == "Dm Type2") {
+    dis_title <- "Type 2 Diabetes Mellitus"
+  } else if (dis == "Ckd") {
+    dis_title <- "Chronic Kidney Disease"
+  } else if (dis == "Coeliac") {
+    dis_title <- "Coeliac Disease"
+  } else if (dis == "Pmr") {
+    dis_title <- "Polymyalgia Rheumatica"
+  } else {
+    dis_title <- dis  # Default to the disease name if no specific title is provided
+  }
+  
+  # Skip diseases with incidence = 0 for all rows - for the purposes of dummy data
+  if (all(df_dis$incidence == 0)) {
+    next
+  }
+  
   max_index <- max(df_dis$index)
   
   #Keep only data from before March 2020 and save to separate df
@@ -95,7 +120,7 @@ for (j in 1:length(disease_list)) {
         axis.title.y = element_text(size = 14, margin = margin(r = 10)), 
         plot.title = element_text(size = 16, hjust = 0.5) 
       ) +
-      ggtitle(dis)
+      ggtitle(dis_title)
     
     ggsave(filename = paste0("output/figures/observed_", var, "_", dis, ".svg"), plot = p1, width = 8, height = 6, device = "svg")
     print(p1)
@@ -202,7 +227,7 @@ for (j in 1:length(disease_list)) {
         axis.title.y = element_text(size = 14, margin = margin(r = 10)), 
         plot.title = element_text(size = 16, hjust = 0.5) 
       ) +
-      ggtitle(dis)
+      ggtitle(dis_title)
     
     ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, ".svg"), plot = c1, width = 8, height = 6, device = "svg")
     
@@ -284,7 +309,7 @@ for (j in 1:length(disease_list)) {
     }
     
     rates.summary <- rates.summary %>%
-      mutate(disease = dis) %>% 
+      mutate(disease = dis_title) %>% 
       mutate(measure = var) %>% 
       select(measure, everything()) %>% 
       select(disease, everything()) 
@@ -307,7 +332,9 @@ for (j in 1:length(disease_list)) {
   }
 }
 
-dev.off()
+if (!is.null(dev.list())) {
+  dev.off()
+}
 
 graphics.off()
 sink()

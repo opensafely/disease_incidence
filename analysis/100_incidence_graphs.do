@@ -113,6 +113,24 @@ replace diseases_ = substr(measure, 1, strlen(measure) - 11) if measure_prev==1
 *replace diseases_ = substr(measure, 1, strlen(measure) - 20) if measure_ethnicity==1
 gen disease = strproper(subinstr(diseases_, "_", " ",.)) 
 
+gen dis_full = disease
+replace dis_full = "Rheumatoid Arthritis" if dis_full == "Rheumatoid"
+replace dis_full = "COPD" if dis_full == "Copd"
+replace dis_full = "Crohn's Disease" if dis_full == "Crohns Disease"
+replace dis_full = "Type 2 Diabetes Mellitus" if dis_full == "Dm Type2"
+replace dis_full = "Chronic Kidney Disease" if dis_full == "Ckd"
+replace dis_full = "Coeliac Disease" if dis_full == "Coeliac"
+replace dis_full = "Polymyalgia Rheumatica" if dis_full == "Pmr"
+
+gen dis_title = disease
+replace dis_title = "Rheumatoid_Arthritis" if dis_title == "Rheumatoid"
+replace dis_title = "COPD" if dis_title == "Copd"
+replace dis_title = "Crohn's_Disease" if dis_title == "Crohns Disease"
+replace dis_title = "Type_2_Diabetes_Mellitus" if dis_title == "Dm Type2"
+replace dis_title = "Chronic_Kidney_Disease" if dis_title == "Ckd"
+replace dis_title = "Coeliac_Disease" if dis_title == "Coeliac"
+replace dis_title = "Polymyalgia_Rheumatica" if dis_title == "Pmr"
+
 *Generate incidence and prevalence by months across ages, sexes, IMD and ethnicity
 sort disease mo_year_diagn measure
 bys disease mo_year_diagn measure: egen numerator_all = sum(numerator)
@@ -368,143 +386,144 @@ outsheet * using "$projectdir/output/tables/arima_standardised.csv" , comma repl
 **Produce graphs
 use "$projectdir/output/data/processed_standardised.dta", clear
 
-levelsof diseases_, local(levels)
+levelsof dis_title, local(levels)
 foreach disease_ of local levels {
-	di "`disease_'"
-	local dis_title = strproper(subinstr("`disease_'", "_", " ",.)) 
 	
+	di "`disease_'"
+	local disease_title = strproper(subinstr("`disease_'", "_", " ",.)) 
+
 	*Unadjusted incidence overall/male/female
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
-
-	twoway connected ratio_all_100000 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold) || connected ratio_male_100000 mo_year_diagn, color(ebblue) msymbol(circle) lstyle(solid) lcolor(ebblue) || connected ratio_female_100000 mo_year_diagn, color(red) lcolor(red) msymbol(circle) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(`disease_'_incidence, replace) saving("$projectdir/output/figures/`disease_'_incidence.gph", replace)
+	keep if dis_title == "`disease_'"
+	
+	twoway connected ratio_all_100000 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold) || connected ratio_male_100000 mo_year_diagn, color(ebblue) msymbol(circle) lstyle(solid) lcolor(ebblue) || connected ratio_female_100000 mo_year_diagn, color(red) lcolor(red) msymbol(circle) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(incidence, replace) saving("$projectdir/output/figures/`disease_'_incidence.gph", replace)
 		graph export "$projectdir/output/figures/incidence_`disease_'.svg", replace
 	restore		
-		
+	
 	*Unadjusted prevalence overall/male/female
 	preserve
 	keep if measure_prev==1 
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected ratio_all_100000 year, ytitle("Prevalence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold)  || connected ratio_male_100000 year, color(ebblue) msymbol(circle) lstyle(solid) lcolor(ebblue)  || connected ratio_female_100000 year, color(red) lcolor(red) msymbol(circle) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid)  title("`dis_title'", size(medium)) xline(2020) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(`disease_'_prevalence, replace) saving("$projectdir/output/figures/`disease_'_prevalence.gph", replace)
+	twoway connected ratio_all_100000 year, ytitle("Prevalence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold)  || connected ratio_male_100000 year, color(ebblue) msymbol(circle) lstyle(solid) lcolor(ebblue)  || connected ratio_female_100000 year, color(red) lcolor(red) msymbol(circle) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid)  title("`disease_title'", size(medium)) xline(2020) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(prevalence, replace) saving("$projectdir/output/figures/`disease_'_prevalence.gph", replace)
 		graph export "$projectdir/output/figures/prevalence_`disease_'.svg", replace
 	restore	
 	
 	*Adjusted incidence comparison
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected ratio_all_100000 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold)  || connected asr_all mo_year_diagn, color(green) msymbol(circle) lstyle(solid) lcolor(green) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted")) name(`disease_'_inc_comp, replace) saving("$projectdir/output/figures/`disease_'_inc_comp.gph", replace)
+	twoway connected ratio_all_100000 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold)  || connected asr_all mo_year_diagn, color(green) msymbol(circle) lstyle(solid) lcolor(green) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted")) name(inc_comp, replace) saving("$projectdir/output/figures/`disease_'_inc_comp.gph", replace)
 		graph export "$projectdir/output/figures/inc_comp_`disease_'.svg", replace
 	restore		
 			
 	*Adjusted prevalence comparison
 	preserve
 	keep if measure_prev==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected ratio_all_100000 year, ytitle("Prevalence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold) || connected asr_all year, color(green) msymbol(circle) lstyle(solid) lcolor(green) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid)  title("`dis_title'", size(medium)) legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted")) name(`disease_'_prev_comp, replace) saving("$projectdir/output/figures/`disease_'_prev_comp.gph", replace)
+	twoway connected ratio_all_100000 year, ytitle("Prevalence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold) || connected asr_all year, color(green) msymbol(circle) lstyle(solid) lcolor(green) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid)  title("`disease_title'", size(medium)) legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted")) name(prev_comp, replace) saving("$projectdir/output/figures/`disease_'_prev_comp.gph", replace)
 		graph export "$projectdir/output/figures/prev_comp_`disease_'.svg", replace
 	restore		
 	
 	*Adjusted incidence overall/male/female
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold) || connected asr_male mo_year_diagn, color(ebblue) msymbol(circle) lstyle(solid) lcolor(ebblue) || connected asr_female mo_year_diagn, color(red) msymbol(circle) lstyle(solid) lcolor(red)  ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(`disease_'_inc_adj, replace) saving("$projectdir/output/figures/`disease_'_inc_adj.gph", replace)
+	twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold) msymbol(circle) lstyle(solid) lcolor(gold) || connected asr_male mo_year_diagn, color(ebblue) msymbol(circle) lstyle(solid) lcolor(ebblue) || connected asr_female mo_year_diagn, color(red) msymbol(circle) lstyle(solid) lcolor(red)  ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(inc_adj, replace) saving("$projectdir/output/figures/`disease_'_inc_adj.gph", replace)
 		graph export "$projectdir/output/figures/inc_adj_`disease_'.svg", replace
 	restore	
 	
 	*Adjusted incidence moving average overall/male/female
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway line asr_all_ma mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) lcolor(gold) lstyle(solid) || scatter asr_all mo_year_diagn, color(gold) msymbol(circle) || line asr_male_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || scatter asr_male mo_year_diagn, color(ebblue) msymbol(circle) || line asr_female_ma mo_year_diagn, lcolor(red) lstyle(solid) || scatter asr_female mo_year_diagn, color(red) msymbol(circle) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(2 "All" 4 "Male" 6 "Female")) name(`disease_'_inc_ma_sex, replace) saving("$projectdir/output/figures/`disease_'_inc_ma_sex.gph", replace)
+	twoway line asr_all_ma mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) lcolor(gold) lstyle(solid) || scatter asr_all mo_year_diagn, color(gold) msymbol(circle) || line asr_male_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || scatter asr_male mo_year_diagn, color(ebblue) msymbol(circle) || line asr_female_ma mo_year_diagn, lcolor(red) lstyle(solid) || scatter asr_female mo_year_diagn, color(red) msymbol(circle) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(2 "All" 4 "Male" 6 "Female")) name(inc_ma_sex, replace) saving("$projectdir/output/figures/`disease_'_inc_ma_sex.gph", replace)
 		graph export "$projectdir/output/figures/inc_ma_sex_`disease_'.svg", replace
 	restore		
 		
 	*Adjusted prevalence overall/male/female
 	preserve
 	keep if measure_prev==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected asr_all year, ytitle("Prevalence per 100,000 population", size(med)) color(gold) msymbol(circle) lcolor(gold) lstyle(solid) || connected asr_male year, color(ebblue) msymbol(circle) lcolor(ebblue) lstyle(solid) || connected asr_female year, color(red) msymbol(circle) lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid) title("`dis_title'", size(medium)) xline(2020) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(`disease_'_prev_adj, replace) saving("$projectdir/output/figures/`disease_'_prev_adj.gph", replace)
+	twoway connected asr_all year, ytitle("Prevalence per 100,000 population", size(med)) color(gold) msymbol(circle) lcolor(gold) lstyle(solid) || connected asr_male year, color(ebblue) msymbol(circle) lcolor(ebblue) lstyle(solid) || connected asr_female year, color(red) msymbol(circle) lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Year beginning", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid) title("`disease_title'", size(medium)) xline(2020) legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female")) name(prev_adj, replace) saving("$projectdir/output/figures/`disease_'_prev_adj.gph", replace)
 		graph export "$projectdir/output/figures/prev_adj_`disease_'.svg", replace
 	restore	
 */	
 	*Adjusted incidence overall with moving average (connected)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) lcolor(bluishgray) msymbol(circle) || line asr_all_ma mo_year_diagn, lcolor(midblue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(off) name(`disease_'_inc_adj_ma, replace) saving("$projectdir/output/figures/`disease_'_inc_adj_ma.gph", replace)
+	twoway connected asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) lcolor(bluishgray) msymbol(circle) || line asr_all_ma mo_year_diagn, lcolor(midblue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(off) name(inc_adj_ma, replace) saving("$projectdir/output/figures/`disease_'_inc_adj_ma.gph", replace)
 		graph export "$projectdir/output/figures/inc_adj_ma_`disease_'.svg", replace
 	restore	
 	
 	*Adjusted incidence overall with moving average (scatter)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway scatter asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) msymbol(circle) || line asr_all_ma mo_year_diagn, lcolor(midblue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(off) name(`disease_'_inc_adj_ma2, replace) saving("$projectdir/output/figures/`disease_'_inc_adj_ma2.gph", replace)
+	twoway scatter asr_all mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue) msymbol(circle) || line asr_all_ma mo_year_diagn, lcolor(midblue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(off) name(inc_adj_ma2, replace) saving("$projectdir/output/figures/`disease_'_inc_adj_ma2.gph", replace)
 		graph export "$projectdir/output/figures/inc_adj_ma2_`disease_'.svg", replace
 	restore	
 	
 	*Adjusted incidence overall with moving average, by sex (connected)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway connected asr_male mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue%35) mlcolor(eltblue%35) lstyle(solid) lcolor(bluishgray) msymbol(circle) || line asr_male_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || connected asr_female mo_year_diagn, color(orange%35) mlcolor(orange%35) lstyle(solid) lcolor(orange%35) msymbol(circle)  || line asr_female_ma mo_year_diagn, lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "Male" 3 "Female")) name(`disease_'_adj_ma_sex, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_sex.gph", replace)
+	twoway connected asr_male mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue%35) mlcolor(eltblue%35) lstyle(solid) lcolor(bluishgray) msymbol(circle) || line asr_male_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || connected asr_female mo_year_diagn, color(orange%35) mlcolor(orange%35) lstyle(solid) lcolor(orange%35) msymbol(circle)  || line asr_female_ma mo_year_diagn, lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "Male" 3 "Female")) name(adj_ma_sex, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_sex.gph", replace)
 		graph export "$projectdir/output/figures/adj_ma_sex_`disease_'.svg", replace
 	restore		
 	
 	*Adjusted incidence overall with moving average, by sex (scatter)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway scatter asr_male mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue%35) mlcolor(eltblue%35) msymbol(circle) || line asr_male_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || scatter asr_female mo_year_diagn, color(orange%35) mlcolor(orange%35) msymbol(circle)  || line asr_female_ma mo_year_diagn, lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "Male" 3 "Female")) name(`disease_'_adj_ma_sex2, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_sex2.gph", replace)
+	twoway scatter asr_male mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue%35) mlcolor(eltblue%35) msymbol(circle) || line asr_male_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || scatter asr_female mo_year_diagn, color(orange%35) mlcolor(orange%35) msymbol(circle)  || line asr_female_ma mo_year_diagn, lcolor(red) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "Male" 3 "Female")) name(adj_ma_sex2, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_sex2.gph", replace)
 		graph export "$projectdir/output/figures/adj_ma_sex2_`disease_'.svg", replace
 	restore		
 	
 	*Adjusted incidence overall with moving average, by age group (scatter)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway scatter asr_0_9 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold%35) mlcolor(gold%35) msymbol(circle) || line asr_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) || scatter asr_10_19 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(orange%35) mlcolor(orange%35) msymbol(circle) || line asr_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || scatter asr_20_29 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(red%35) mlcolor(red%35) msymbol(circle) || line asr_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || scatter asr_30_39 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(ltblue%35) mlcolor(ltblue%35) msymbol(circle) || line asr_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || scatter asr_40_49 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue%35) mlcolor(eltblue%35) msymbol(circle) || line asr_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || scatter asr_50_59 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(blue%35) mlcolor(blue%35) msymbol(circle) || line asr_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || scatter asr_60_69 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(purple%35) mlcolor(purple%35) msymbol(circle) || line asr_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || scatter asr_70_79 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(brown%35) mlcolor(brown%35) msymbol(circle) || line asr_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || scatter asr_80 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(black%35) mlcolor(black%35) msymbol(circle) || line asr_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 3 "10-19" 5 "20-29" 7 "30-39" 9 "40-49" 11 "50-59" 13 "60-69" 15 "70-79" 17 "80+")) name(`disease_'_adj_ma_age, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_age.gph", replace)
+	twoway scatter asr_0_9 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(gold%35) mlcolor(gold%35) msymbol(circle) || line asr_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) || scatter asr_10_19 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(orange%35) mlcolor(orange%35) msymbol(circle) || line asr_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || scatter asr_20_29 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(red%35) mlcolor(red%35) msymbol(circle) || line asr_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || scatter asr_30_39 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(ltblue%35) mlcolor(ltblue%35) msymbol(circle) || line asr_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || scatter asr_40_49 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(eltblue%35) mlcolor(eltblue%35) msymbol(circle) || line asr_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || scatter asr_50_59 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(blue%35) mlcolor(blue%35) msymbol(circle) || line asr_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || scatter asr_60_69 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(purple%35) mlcolor(purple%35) msymbol(circle) || line asr_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || scatter asr_70_79 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(brown%35) mlcolor(brown%35) msymbol(circle) || line asr_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || scatter asr_80 mo_year_diagn, ytitle("Monthly incidence per 100,000 population", size(med)) color(black%35) mlcolor(black%35) msymbol(circle) || line asr_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 3 "10-19" 5 "20-29" 7 "30-39" 9 "40-49" 11 "50-59" 13 "60-69" 15 "70-79" 17 "80+")) name(adj_ma_age, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_age.gph", replace)
 		graph export "$projectdir/output/figures/adj_ma_age_`disease_'.svg", replace
 	restore	
 	
 *Adjusted incidence overall with moving average, by age group (lines only)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway line asr_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line asr_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line asr_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line asr_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line asr_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line asr_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line asr_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line asr_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line asr_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_adj_ma_age2, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_age2.gph", replace)
+	twoway line asr_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line asr_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line asr_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line asr_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line asr_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line asr_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line asr_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line asr_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line asr_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(adj_ma_age2, replace) saving("$projectdir/output/figures/`disease_'_adj_ma_age2.gph", replace)
 		graph export "$projectdir/output/figures/adj_ma_age2_`disease_'.svg", replace
 	restore	
 	
 *Unadjusted incidence, by age group (lines only)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway line ratio_0_9_100000 mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_100000 mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_100000 mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_100000 mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_100000 mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_100000 mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_100000 mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_100000 mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_100000 mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_un_age2, replace) saving("$projectdir/output/figures/`disease_'_un_age2.gph", replace)
+	twoway line ratio_0_9_100000 mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_100000 mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_100000 mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_100000 mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_100000 mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_100000 mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_100000 mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_100000 mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_100000 mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(un_age2, replace) saving("$projectdir/output/figures/`disease_'_un_age2.gph", replace)
 		graph export "$projectdir/output/figures/un_age2_`disease_'.svg", replace
 	restore		
 	
 *Unadjusted incidence moving average, by age group (lines only)
 	preserve
 	keep if measure_inc==1
-	keep if diseases_ == "`disease_'"
+	keep if dis_title == "`disease_'"
 
-	twoway line ratio_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`dis_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(`disease_'_un_age2_ma, replace) saving("$projectdir/output/figures/`disease_'_un_age2_ma.gph", replace)
+	twoway line ratio_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_50_59_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line ratio_60_69_ma mo_year_diagn, lcolor(purple) lstyle(solid) || line ratio_70_79_ma mo_year_diagn, lcolor(brown) lstyle(solid) || line ratio_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(un_age2_ma, replace) saving("$projectdir/output/figures/`disease_'_un_age2_ma.gph", replace)
 		graph export "$projectdir/output/figures/un_age2_ma_`disease_'.svg", replace
 	restore		
 }
