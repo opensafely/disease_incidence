@@ -318,6 +318,18 @@
       "downloaded_at": "2024-12-31 14:51:42.297668Z",
       "sha": "e90f6c2bb6a1fdf02bc0b068dfaa94c13d737954"
     },
+    "nhsd-primary-care-domain-refsets-rheumatoid-arthritis-disorders.csv": {
+      "id": "nhsd-primary-care-domain-refsets/rheumatoid-arthritis-disorders/04d006ea",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/rheumatoid-arthritis-disorders/04d006ea/",
+      "downloaded_at": "2025-01-28 09:30:47.360179Z",
+      "sha": "84865b1a76362c6060789fcdac36d8e7b19f5aef"
+    },
+    "user-markdrussell-rheumatoid-arthritis-secondary-care.csv": {
+      "id": "user/markdrussell/rheumatoid-arthritis-secondary-care/245780e9",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/rheumatoid-arthritis-secondary-care/245780e9/",
+      "downloaded_at": "2025-01-28 09:30:47.481490Z",
+      "sha": "d074444b6ba473ff132e2b8e00ee3c9ec61dc138"
+    },
     "opensafely-ethnicity.csv": {
       "id": "opensafely/ethnicity/746e4c98",
       "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity/746e4c98/",

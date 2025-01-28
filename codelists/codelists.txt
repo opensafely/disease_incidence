@@ -51,4 +51,6 @@ nhsd-primary-care-domain-refsets/coeliac-disease-codes/22e654c2
 user/markdrussell/coeliac-secondary-care/001e6893
 nhsd-primary-care-domain-refsets/polymyalgia-rheumatica-pmr-codes/5563e075
 user/markdrussell/polymyalgia-rheumatica-pmr-secondary-care/670ef55d
+nhsd-primary-care-domain-refsets/rheumatoid-arthritis-disorders/04d006ea
+user/markdrussell/rheumatoid-arthritis-secondary-care/245780e9
 opensafely/ethnicity/746e4c98/

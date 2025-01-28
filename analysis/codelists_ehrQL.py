@@ -238,10 +238,19 @@ coeliac_snomed = codelist_from_csv(
 coeliac_icd = codelist_from_csv(
     "codelists/user-markdrussell-coeliac-secondary-care.csv", column="code",
 )
+
 pmr_snomed = codelist_from_csv(
     "codelists/nhsd-primary-care-domain-refsets-polymyalgia-rheumatica-pmr-codes.csv", column="code",
 )
 
 pmr_icd = codelist_from_csv(
     "codelists/user-markdrussell-polymyalgia-rheumatica-pmr-secondary-care.csv", column="code",
+)
+
+rheumatoid_snomed = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-rheumatoid-arthritis-disorders.csv", column="code",
+)
+
+rheumatoid_icd = codelist_from_csv(
+    "codelists/user-markdrussell-rheumatoid-arthritis-secondary-care.csv", column="code",
 )
