@@ -85,9 +85,9 @@ for (j in 1:length(disease_list)) {
   }
   
   # Skip diseases with incidence = 0 for all rows - for the purposes of dummy data
-  if (all(df_dis$incidence == 0)) {
-    next
-  }
+  # if (all(df_dis$incidence == 0)) {
+  #  next
+  #}
   
   max_index <- max(df_dis$index)
   
@@ -332,10 +332,10 @@ for (j in 1:length(disease_list)) {
   }
 }
 
-if (!is.null(dev.list())) {
-  dev.off()
-}
-
+#if (!is.null(dev.list())) {
+#  dev.off()
+#}
+dev.off()
 graphics.off()
 sink()
 

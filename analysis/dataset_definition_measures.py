@@ -76,11 +76,12 @@ incidence_numerators = {}
 incidence_denominators = {}
 
 # Prevalent diagnosis (at interval start)
+### CHANGE LINE TO != FALSE IF REMOVE CASES
 prev[disease + "_prev"] = ( 
     case(
         when(
             (getattr(dataset, disease + "_inc_date", None) < index_date)
-            & ((getattr(dataset, disease + "_resolved") != True) | ((getattr(dataset, disease + "_resolved") == True) & (getattr(dataset, disease + "_resolved_date", None) > index_date)))
+            & ((getattr(dataset, disease + "_resolved") == False) | ((getattr(dataset, disease + "_resolved") == True) & (getattr(dataset, disease + "_resolved_date", None) > index_date)))
             ).then(True),
         otherwise=False,
     )
