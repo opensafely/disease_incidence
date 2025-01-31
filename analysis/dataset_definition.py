@@ -12,8 +12,8 @@ import codelists_ehrQL as codelists
 # args = parser.parse_args()
 # diseases = args.diseases.split(", ")
 
-diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-# diseases = ["rheumatoid", "pmr"]
+# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+diseases = ["pmr"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 dataset = create_dataset()
@@ -139,23 +139,14 @@ for disease in diseases:
         ).exists_for_patient()
     )
 
-    # # Alive at incident diagnosis date
+    # Alive at incident diagnosis date
     dataset.add_column(
         f"{disease}_alive_inc",
         (
-            dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date")) |
+            (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) |
             dataset.date_of_death.is_null()
         )
     )
-
-
-    # Alive at incident diagnosis date
-    # dataset.add_column(f"{disease}_alive_inc",
-    #     case(
-    #         when((dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) | (dataset.date_of_death.is_null())).then(True),
-    #         otherwise=False,
-    #     )
-    # )
 
     # Last diagnosis date for each disease
     last_date[f"{disease}_last_date"] = maximum_of(
@@ -163,17 +154,7 @@ for disease in diseases:
         icd_last_date[f"{disease}_icd_last_date"]
     )
 
-    # # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
+    # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
     dataset.add_column(f"{disease}_resolved",
         getattr(dataset, f"{disease}_resolved_date") > (last_date[f"{disease}_last_date"])
     )
-
-    # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
-    # dataset.add_column(f"{disease}_resolved",
-    # case(
-    #     when(
-    #         (getattr(dataset, f"{disease}_resolved_date", None)) > (last_date[f"{disease}_last_date"])
-    #         ).then(True),
-    #     otherwise=False,
-    #     )
-    # )
