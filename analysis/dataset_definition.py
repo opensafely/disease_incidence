@@ -96,7 +96,6 @@ for disease in diseases:
     snomed_last_date = {}
     icd_inc_date = {}
     icd_last_date = {}
-    last_date = {} 
 
     for codelist_type in codelist_types:
 
@@ -149,12 +148,10 @@ for disease in diseases:
     )
 
     # Last diagnosis date for each disease
-    last_date[f"{disease}_last_date"] = maximum_of(
-        snomed_last_date[f"{disease}_snomed_last_date"],
-        icd_last_date[f"{disease}_icd_last_date"]
-    )
-
-    # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
-    dataset.add_column(f"{disease}_resolved",
-        getattr(dataset, f"{disease}_resolved_date") > (last_date[f"{disease}_last_date"])
+    dataset.add_column(
+        f"{disease}_last_date", 
+        maximum_of(
+            snomed_last_date[f"{disease}_snomed_last_date"],
+            icd_last_date[f"{disease}_icd_last_date"]
+        )
     )

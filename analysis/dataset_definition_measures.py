@@ -78,7 +78,8 @@ incidence_denominators = {}
 # Prevalent diagnosis (at interval start)
 prev[disease + "_prev"] = (
     (getattr(dataset, disease + "_inc_date") < index_date)
-    & ((~getattr(dataset, disease + "_resolved")) | (getattr(dataset, disease + "_resolved_date") > index_date))
+    #& ((~getattr(dataset, disease + "_resolved")) | (getattr(dataset, disease + "_resolved_date") > index_date))
+    & (getattr(dataset, disease + "_resolved_date").is_null() | ((getattr(dataset, f"{disease}_resolved_date") > getattr(dataset, f"{disease}_last_date")) & (getattr(dataset, disease + "_resolved_date") > index_date)))
 )
 
 # Prevalence numerator - people registered for more than one year on index date who have an Dx code on or before index date
