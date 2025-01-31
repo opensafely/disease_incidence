@@ -74,6 +74,8 @@ for (j in 1:length(disease_list)) {
     dis_title <- "Crohn's Disease"
   } else if (dis == "Dm Type2") {
     dis_title <- "Type 2 Diabetes Mellitus"
+  } else if (dis == "Chd") {
+    dis_title <- "Coronary Heart Disease"
   } else if (dis == "Ckd") {
     dis_title <- "Chronic Kidney Disease"
   } else if (dis == "Coeliac") {
@@ -99,31 +101,31 @@ for (j in 1:length(disease_list)) {
     var <- variables[i]
     y_label <- y_labels[i]
     
-    #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
-    p1 <- ggplot(data = df_dis,aes(x = mo_year_diagn, y = .data[[var]]))+geom_point()+geom_line()+
-      scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "1 year"),
-      date_labels = "%Y")+
-      theme_minimal()+
-      xlab("Year of diagnosis")+ 
-      ylab(y_label)+
-      scale_fill_viridis_d()+
-      scale_colour_viridis_d()+
-      theme_minimal()+
-      theme(
-        legend.title = element_blank(),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        axis.line = element_line(color = "grey"),
-        axis.ticks = element_line(color = "grey"),
-        axis.text = element_text(size = 12),
-        axis.title.x = element_text(size = 14, margin = margin(t = 10)),
-        axis.title.y = element_text(size = 14, margin = margin(r = 10)), 
-        plot.title = element_text(size = 16, hjust = 0.5) 
-      ) +
-      ggtitle(dis_title)
-    
-    ggsave(filename = paste0("output/figures/observed_", var, "_", dis, ".svg"), plot = p1, width = 8, height = 6, device = "svg")
-    print(p1)
+    # #Graphs of observed incidence data - visually check the data for consistency of trends and seasonal patterns
+    # p1 <- ggplot(data = df_dis,aes(x = mo_year_diagn, y = .data[[var]]))+geom_point()+geom_line()+
+    #   scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "1 year"),
+    #   date_labels = "%Y")+
+    #   theme_minimal()+
+    #   xlab("Year of diagnosis")+ 
+    #   ylab(y_label)+
+    #   scale_fill_viridis_d()+
+    #   scale_colour_viridis_d()+
+    #   theme_minimal()+
+    #   theme(
+    #     legend.title = element_blank(),
+    #     panel.grid.major = element_blank(), 
+    #     panel.grid.minor = element_blank(),
+    #     axis.line = element_line(color = "grey"),
+    #     axis.ticks = element_line(color = "grey"),
+    #     axis.text = element_text(size = 12),
+    #     axis.title.x = element_text(size = 14, margin = margin(t = 10)),
+    #     axis.title.y = element_text(size = 14, margin = margin(r = 10)), 
+    #     plot.title = element_text(size = 16, hjust = 0.5) 
+    #   ) +
+    #   ggtitle(dis_title)
+    # 
+    # ggsave(filename = paste0("output/figures/observed_", var, "_", dis, ".svg"), plot = p1, width = 8, height = 6, device = "svg")
+    # print(p1)
 
     #Convert to time series object 
     df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,7))

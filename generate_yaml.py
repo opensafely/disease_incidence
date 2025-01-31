@@ -1,5 +1,5 @@
-# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-diseases = ["rheumatoid", "pmr"]
+diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+# diseases = ["rheumatoid", "pmr"]
 
 yaml_header = """
 version: '3.0'
@@ -62,19 +62,12 @@ yaml_footer_template = f"""
     outputs:
       moderately_sensitive:
         log1: logs/descriptive_tables.log   
-        figure1: output/figures/incidence_*.svg
-        figure2: output/figures/prevalence_*.svg
-        figure3: output/figures/inc_comp_*.svg
-        figure4: output/figures/prev_comp_*.svg
-        figure5: output/figures/inc_adj_*.svg
-        figure6: output/figures/inc_ma_sex_*.svg
-        figure7: output/figures/prev_adj_*.svg
-        figure8: output/figures/inc_adj_ma_*.svg
-        figure9: output/figures/inc_adj_ma2_*.svg
-        figure10: output/figures/adj_ma_sex_*.svg
-        figure11: output/figures/adj_ma_sex2_*.svg
-        figure12: output/figures/adj_ma_age_*.svg
-        figure13: output/figures/adj_ma_age2_*.svg
+        figure1: output/figures/inc_comp_*.svg
+        figure2: output/figures/prev_comp_*.svg
+        figure3: output/figures/prev_adj_*.svg
+        figure4: output/figures/inc_adj_ma2_*.svg
+        figure5: output/figures/adj_ma_sex2_*.svg
+        figure6: output/figures/adj_ma_age2_*.svg
         table1: output/tables/arima_nonstandardised.csv
         table2: output/tables/arima_standardised.csv
 
@@ -84,15 +77,14 @@ yaml_footer_template = f"""
     outputs:
       moderately_sensitive:
         log1: logs/sarima_log.txt   
-        figure1: output/figures/observed_*.svg
-        figure2: output/figures/raw_pre_covid_*.svg
-        figure3: output/figures/differenced_pre_covid_*.svg
-        figure4: output/figures/seasonal_pre_covid_*.svg
-        figure5: output/figures/raw_acf_*.svg
-        figure6: output/figures/differenced_acf_*.svg
-        figure7: output/figures/seasonal_acf_*.svg
-        figure8: output/figures/auto_residuals_*.svg
-        figure9: output/figures/obs_pred_*.svg
+        figure1: output/figures/raw_pre_covid_*.svg
+        figure2: output/figures/differenced_pre_covid_*.svg
+        figure3: output/figures/seasonal_pre_covid_*.svg
+        figure4: output/figures/raw_acf_*.svg
+        figure5: output/figures/differenced_acf_*.svg
+        figure6: output/figures/seasonal_acf_*.svg
+        figure7: output/figures/auto_residuals_*.svg
+        figure8: output/figures/obs_pred_*.svg
         table1: output/tables/change_incidence_byyear.csv
         table2: output/tables/values_*.csv   
 """
