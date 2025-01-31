@@ -87,8 +87,7 @@ any_registration = practice_registrations.where(
 
 # Define population as any registered patient after index date - then apply further restrictions later
 dataset.define_population(
-    (any_registration == True)
-    & ((dataset.sex == "male") | (dataset.sex == "female"))
+    any_registration & dataset.sex.is_in(["male", "female"])
 )  
 
 for disease in diseases:
@@ -141,39 +140,40 @@ for disease in diseases:
     )
 
     # # Alive at incident diagnosis date
-    # dataset.add_column(f"{disease}_alive_inc",
-    #     (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) | (dataset.date_of_death.is_null()
-    #     ).when_null_then(False)
-    # )
-
-    # Alive at incident diagnosis date
-    dataset.add_column(f"{disease}_alive_inc",
-        case(                     
-            when((dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) | (dataset.date_of_death.is_null())).then(True),
-            otherwise=False,
+    dataset.add_column(
+        f"{disease}_alive_inc",
+        (
+            dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date")) |
+            dataset.date_of_death.is_null()
         )
     )
 
+
+    # Alive at incident diagnosis date
+    # dataset.add_column(f"{disease}_alive_inc",
+    #     case(
+    #         when((dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) | (dataset.date_of_death.is_null())).then(True),
+    #         otherwise=False,
+    #     )
+    # )
+
     # Last diagnosis date for each disease
-    last_date[f"{disease}_last_date"] = (
-        maximum_of(*[date for date in [
-            (snomed_last_date[f"{disease}_snomed_last_date"]),
-            (icd_last_date[f"{disease}_icd_last_date"])
-            ] if date is not None])
+    last_date[f"{disease}_last_date"] = maximum_of(
+        snomed_last_date[f"{disease}_snomed_last_date"],
+        icd_last_date[f"{disease}_icd_last_date"]
     )
 
     # # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
-    # dataset.add_column(f"{disease}_resolved", 
-    #     (getattr(dataset, f"{disease}_resolved_date") > (last_date[f"{disease}_last_date"])
-    #     ).when_null_then(False)
-    # )
+    dataset.add_column(f"{disease}_resolved",
+        getattr(dataset, f"{disease}_resolved_date") > (last_date[f"{disease}_last_date"])
+    )
 
     # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
-    dataset.add_column(f"{disease}_resolved", 
-    case(
-        when(
-            (getattr(dataset, f"{disease}_resolved_date", None)) > (last_date[f"{disease}_last_date"])
-            ).then(True),
-        otherwise=False,
-        )
-    )
+    # dataset.add_column(f"{disease}_resolved",
+    # case(
+    #     when(
+    #         (getattr(dataset, f"{disease}_resolved_date", None)) > (last_date[f"{disease}_last_date"])
+    #         ).then(True),
+    #     otherwise=False,
+    #     )
+    # )

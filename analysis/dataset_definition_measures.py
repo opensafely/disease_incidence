@@ -61,11 +61,11 @@ measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
 ## Prevalence denominator - people registered for more than one year on index date (Nb. sex already selected for in dataset definition)
 prev_denominator = (
-        (age_band.is_not_null())
-        & ((dataset.sex == "male") | (dataset.sex == "female"))
-        & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
-        & (preceding_reg_index == True)
-        )
+    age_band.is_not_null()
+    & dataset.sex.is_in(["male", "female"])
+    & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
+    & preceding_reg_index
+)
 
 # Dictionaries to store the values
 prev = {}
@@ -77,75 +77,68 @@ incidence_denominators = {}
 
 # Prevalent diagnosis (at interval start)
 ### CHANGE LINE TO != FALSE IF REMOVE CASES
-prev[disease + "_prev"] = ( 
-    case(
-        when(
-            (getattr(dataset, disease + "_inc_date", None) < index_date)
-            & ((getattr(dataset, disease + "_resolved") == False) | ((getattr(dataset, disease + "_resolved") == True) & (getattr(dataset, disease + "_resolved_date", None) > index_date)))
-            ).then(True),
-        otherwise=False,
-    )
-)
-
-# # Prevalent diagnosis (at interval start)
 # prev[disease + "_prev"] = ( 
-#     (getattr(dataset, disease + "_inc_date") < index_date)
-#     & ((getattr(dataset, disease + "_resolved") != True) | ((getattr(dataset, disease + "_resolved")) & (getattr(dataset, disease + "_resolved_date") > index_date))
-#     ).when_null_then(False)
+#     case(
+#         when(
+#             (getattr(dataset, disease + "_inc_date", None) < index_date)
+#             & ((getattr(dataset, disease + "_resolved") == False) | ((getattr(dataset, disease + "_resolved") == True) & (getattr(dataset, disease + "_resolved_date", None) > index_date)))
+#             ).then(True),
+#         otherwise=False,
+#     )
 # )
+
+# Prevalent diagnosis (at interval start)
+prev[disease + "_prev"] = (
+    (getattr(dataset, disease + "_inc_date") < index_date)
+    & (~getattr(dataset, disease + "_resolved") | ((getattr(dataset, disease + "_resolved_date") > index_date)))
+)
 
 ## Prevalence numerator - people registered for more than one year on index date who have an Dx code on or before index date
-prev_numerators[disease + "_prev_num"] = (
-        ((prev[disease + "_prev"]) == True)
-        & (prev_denominator == True)
-)
+prev_numerators[disease + "_prev_num"] = prev[disease + "_prev"] & prev_denominator
 
 # Incident case (i.e. incident date within interval window)
-inc_case[disease + "_inc_case"] = ( 
-    case(
-        when(((getattr(dataset, disease + "_inc_date", None)) >= index_date) & ((getattr(dataset, disease + "_inc_date", None)) <= end_date)).then(True),
-        otherwise=False,
-    )
-)
-
-# # Incident case (i.e. incident date within interval window)
 # inc_case[disease + "_inc_case"] = ( 
-#     (((getattr(dataset, disease + "_inc_date")) >= index_date) & ((getattr(dataset, disease + "_inc_date")) <= end_date)
-#     ).when_null_then(False)
+#     case(
+#         when(((getattr(dataset, disease + "_inc_date", None)) >= index_date) & ((getattr(dataset, disease + "_inc_date", None)) <= end_date)).then(True),
+#         otherwise=False,
+#     )
 # )
+
+# Incident case (i.e. incident date within interval window)
+inc_case[disease + "_inc_case"] = (
+    (getattr(dataset, disease + "_inc_date")).is_on_or_between(index_date, end_date)
+)
 
 # # Preceding registration and alive at incident diagnosis date
-# inc_case_12m_alive[disease + "_inc_case_12m_alive"] = ( 
-#     (((inc_case[disease + "_inc_case"]) == True)
-#     & ((getattr(dataset, disease + "_preceding_reg_inc") == True))
-#     & ((getattr(dataset, disease + "_alive_inc") == True)) 
-#     ).when_null_then(False)               
-# )
+inc_case_12m_alive[disease + "_inc_case_12m_alive"] = ( 
+    inc_case[disease + "_inc_case"]
+    & getattr(dataset, disease + "_preceding_reg_inc")
+    & getattr(dataset, disease + "_alive_inc")
+)
 
 # Preceding registration and alive at incident diagnosis date
-inc_case_12m_alive[disease + "_inc_case_12m_alive"] = ( 
-    case(
-        when(((inc_case[disease + "_inc_case"]) == True)
-            & ((getattr(dataset, disease + "_preceding_reg_inc") == True))
-            & ((getattr(dataset, disease + "_alive_inc") == True))                
-            ).then(True),
-        otherwise=False,
-    )
-)
+# inc_case_12m_alive[disease + "_inc_case_12m_alive"] = ( 
+#     case(
+#         when(((inc_case[disease + "_inc_case"]) == True)
+#             & ((getattr(dataset, disease + "_preceding_reg_inc") == True))
+#             & ((getattr(dataset, disease + "_alive_inc") == True))                
+#             ).then(True),
+#         otherwise=False,
+#     )
+# )
 
 ## Incidence numerator - people with new diagnostic codes in the 1 month after index date who have 12m+ prior registration and alive 
 incidence_numerators[disease + "_inc_num"] = (
-        ((inc_case_12m_alive[disease + "_inc_case_12m_alive"]) == True)
-        & (age_band.is_not_null())
-        & ((dataset.sex == "male") | (dataset.sex == "female"))
-    )
+    inc_case_12m_alive[disease + "_inc_case_12m_alive"]
+    & age_band.is_not_null()
+    & dataset.sex.is_in(["male", "female"])
+)
 
 ## Incidence denominator - people with 12m+ registration prior to index date who do not have a Dx code on or before index date
 ### CHANGE LINE TO != FALSE IF REMOVE CASES
 incidence_denominators[disease + "_inc_denom"] = (
-        ((prev[disease + "_prev"]) == False)
-        & (prev_denominator == True)
-    )
+    ~prev[disease + "_prev"] & prev_denominator
+)
 
 # Prevalence by age and sex - change start date to July
 measures.define_measure(
