@@ -145,6 +145,8 @@ actions:
         figure6: output/figures/adj_ma_age2_*.svg
         table1: output/tables/arima_nonstandardised.csv
         table2: output/tables/arima_standardised.csv
+        table3: output/tables/arima_standardised_s.csv
+
 
   run_sarima:
     run: r:latest analysis/200_sarima.R
