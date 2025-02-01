@@ -22,22 +22,28 @@ disease = args.disease
 index_date = INTERVAL.start_date
 end_date = INTERVAL.end_date
 
-print((f"{end_date}"), file=sys.stderr)
+# Registration for at least 12 months before index date
+# def preceding_registration(dx_date):
+#     return practice_registrations.where(
+#             practice_registrations.start_date <= (dx_date - months(12))
+#         ).except_where(
+#             practice_registrations.end_date < dx_date
+#         ).sort_by(
+#             practice_registrations.start_date,
+#             practice_registrations.end_date,
+#             practice_registrations.practice_pseudo_id,
+#         ).last_for_patient()
 
-# Registration (If registered with multiple practices, sort by most recent then longest duration then practice ID)
-def preceding_registration(dx_date):
-    return practice_registrations.where(
-            practice_registrations.start_date <= (dx_date - months(12))
-        ).except_where(
-            practice_registrations.end_date < dx_date
-        ).sort_by(
-            practice_registrations.start_date,
-            practice_registrations.end_date,
-            practice_registrations.practice_pseudo_id,
-        ).last_for_patient()
+registrations = (
+    practice_registrations.where(
+        practice_registrations.start_date.is_on_or_before(index_date - months(12))
+    ).except_where(
+        practice_registrations.end_date.is_on_or_before(index_date)
+    )
+)
 
 # 12m preceding registration exist at interval start
-preceding_reg_index = preceding_registration(index_date).exists_for_patient()
+preceding_reg_index = registrations.exists_for_patient()
 
 # Age at interval start
 age = patients.age_on(index_date)
@@ -78,8 +84,8 @@ incidence_denominators = {}
 # Prevalent diagnosis (at interval start)
 prev[disease + "_prev"] = (
     (getattr(dataset, disease + "_inc_date") < index_date)
-    #& ((~getattr(dataset, disease + "_resolved")) | (getattr(dataset, disease + "_resolved_date") > index_date))
-    & (getattr(dataset, disease + "_resolved_date").is_null() | ((getattr(dataset, f"{disease}_resolved_date") > getattr(dataset, f"{disease}_last_date")) & (getattr(dataset, disease + "_resolved_date") > index_date)))
+    & ((~getattr(dataset, disease + "_resolved")) | (getattr(dataset, disease + "_resolved") & (getattr(dataset, disease + "_resolved_date") > index_date)))
+    #& (getattr(dataset, disease + "_resolved_date").is_null() | (getattr(dataset, disease + "_resolved_date").is_not_null() & ((getattr(dataset, f"{disease}_resolved_date") > getattr(dataset, f"{disease}_last_date")) & (getattr(dataset, disease + "_resolved_date") > index_date))))
 )
 
 # Prevalence numerator - people registered for more than one year on index date who have an Dx code on or before index date
@@ -106,7 +112,7 @@ incidence_numerators[disease + "_inc_num"] = (
 
 # Incidence denominator - people with 12m+ registration prior to index date who do not have a Dx code on or before index date
 incidence_denominators[disease + "_inc_denom"] = (
-    ~prev[disease + "_prev"] & prev_denominator
+    (~prev[disease + "_prev"]) & prev_denominator
 )
 
 # Prevalence by age and sex - change start date to July

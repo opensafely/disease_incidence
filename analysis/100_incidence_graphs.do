@@ -388,18 +388,16 @@ outsheet * using "$projectdir/output/tables/arima_standardised.csv" , comma repl
 *Output string version of table to stop conversion for big numbers
 use "$projectdir/output/data/processed_standardised.dta", clear
 
-keep if measure_inc==1
-
-rename asr_all incidence_n //use age and sex-standardised IR (rounded and redacted)
+rename asr_all rate_n //use age and sex-standardised IR (rounded and redacted)
 replace sex = "All"
 rename numerator numerator_n //unadjusted counts (rounded and redacted)
 rename denominator denominator_n //unadjusted counts (rounded and redacted)
 gen numerator = string(numerator_all)
 gen denominator = string(denominator_all)
-gen incidence = string(incidence_n)
+gen rate = string(rate_n)
 
-keep dis_full sex mo_year_diagn numerator denominator incidence
-order dis_full, before(sex)
+keep dis_full measure sex mo_year_diagn numerator denominator rate
+order dis_full, before(measure)
 
 save "$projectdir/output/tables/arima_standardised_s.dta", replace
 outsheet * using "$projectdir/output/tables/arima_standardised_s.csv" , comma replace
