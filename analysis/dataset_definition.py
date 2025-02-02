@@ -63,17 +63,6 @@ def last_code_in_period_icd(dx_codelist):
     ).last_for_patient()
 
 # Registration for 12 months prior to incident diagnosis date
-# def preceding_registration(dx_date):
-#     return practice_registrations.where(
-#             practice_registrations.start_date <= (dx_date - months(12))
-#         ).except_where(
-#             practice_registrations.end_date < dx_date
-#         ).sort_by(
-#             practice_registrations.start_date,
-#             practice_registrations.end_date,
-#             practice_registrations.practice_pseudo_id,
-#         ).last_for_patient()
-
 def preceding_registration(dx_date):
     return practice_registrations.where(
         practice_registrations.start_date.is_on_or_before(dx_date - months(12))
@@ -103,7 +92,7 @@ for disease in diseases:
     snomed_last_date = {}
     icd_inc_date = {}
     icd_last_date = {}
-    #last_date = {}
+    last_date = {}
 
     for codelist_type in codelist_types:
 
@@ -147,33 +136,21 @@ for disease in diseases:
     )
 
     # Alive at incident diagnosis date
-    dataset.add_column(
-        f"{disease}_alive_inc",
+    dataset.add_column(f"{disease}_alive_inc",
         (
             (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) |
             dataset.date_of_death.is_null()
-        )
+        ).when_null_then(False)
     )
-
+    
     # Last diagnosis date for each disease
-    # last_date[f"{disease}_last_date"] = maximum_of(
-    #     snomed_last_date[f"{disease}_snomed_last_date"],
-    #     icd_last_date[f"{disease}_icd_last_date"]
-    # )
-
-    dataset.add_column(f"{disease}_last_date",
-        maximum_of(
-            snomed_last_date[f"{disease}_snomed_last_date"],
-            icd_last_date[f"{disease}_icd_last_date"]
-        )
+    last_date[f"{disease}_last_date"] = maximum_of(
+        snomed_last_date[f"{disease}_snomed_last_date"],
+        icd_last_date[f"{disease}_icd_last_date"]
     )
 
     # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
-    # dataset.add_column(f"{disease}_resolved",
-    #     getattr(dataset, f"{disease}_resolved_date").is_not_null()
-    #     getattr(dataset, f"{disease}_resolved_date") > (last_date[f"{disease}_last_date"])
-    # )
-
-    dataset.add_column(f"{disease}_resolved",
-        getattr(dataset, f"{disease}_resolved_date") > getattr(dataset, f"{disease}_last_date")
+    dataset.add_column(f"{disease}_resolved", 
+        (getattr(dataset, f"{disease}_resolved_date") > (last_date[f"{disease}_last_date"])
+        ).when_null_then(False)
     )
