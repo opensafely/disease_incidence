@@ -12,8 +12,8 @@ import codelists_ehrQL as codelists
 # args = parser.parse_args()
 # diseases = args.diseases.split(", ")
 
-# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "dm_type1", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "hiv", "depression", "coeliac", "pmr"]
-diseases = ["asthma", "heart_failure", "chd", "multiple_sclerosis"]
+# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+diseases = ["rheumatoid", "copd", "stroke", "heart_failure"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 dataset = create_dataset()
@@ -62,17 +62,13 @@ def last_code_in_period_icd(dx_codelist):
         apcs.admission_date
     ).last_for_patient()
 
-# Registration (If registered with multiple practices, sort by most recent then longest duration then practice ID)
+# Registration for 12 months prior to incident diagnosis date
 def preceding_registration(dx_date):
     return practice_registrations.where(
-            practice_registrations.start_date <= (dx_date - months(12))
-        ).except_where(
-            practice_registrations.end_date < dx_date
-        ).sort_by(
-            practice_registrations.start_date,
-            practice_registrations.end_date,
-            practice_registrations.practice_pseudo_id,
-        ).last_for_patient()
+        practice_registrations.start_date.is_on_or_before(dx_date - months(12))
+    ).except_where(
+        practice_registrations.end_date.is_on_or_before(dx_date)
+    )
 
 # Define sex, date of death (only need to capture once) 
 dataset.sex = patients.sex
@@ -87,9 +83,8 @@ any_registration = practice_registrations.where(
 
 # Define population as any registered patient after index date - then apply further restrictions later
 dataset.define_population(
-    (any_registration == True)
-    & ((dataset.sex == "male") | (dataset.sex == "female"))
-)  
+    any_registration & dataset.sex.is_in(["male", "female"])
+)
 
 for disease in diseases:
 
@@ -142,26 +137,22 @@ for disease in diseases:
 
     # Alive at incident diagnosis date
     dataset.add_column(f"{disease}_alive_inc",
-        case(                     
-            when((dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_d"))) | (dataset.date_of_death.is_null())).then(True),
-            otherwise=False,
-        )
+        (
+            (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_d"))) |
+            dataset.date_of_death.is_null()
+        ).when_null_then(False)
     )
 
     # Last diagnosis date for each disease
     dataset.add_column(f"{disease}_last_d",
-        maximum_of(*[date for date in [
-            (getattr(dataset, f"{disease}_sno_last_d", None)),
-            (getattr(dataset, f"{disease}_icd_last_d", None))
-            ] if date is not None])
+        maximum_of(
+            (getattr(dataset, f"{disease}_sno_last_d")),
+            (getattr(dataset, f"{disease}_icd_last_d"))
+        )
     )
 
     # Did the patient have resolved diagnosis code after the last appearance of a diagnostic code for that disease
     dataset.add_column(f"{disease}_res", 
-        case(
-            when(
-                (getattr(dataset, f"{disease}_res_d", None)) > (getattr(dataset, f"{disease}_last_d", None))
-                ).then(True),
-            otherwise=False,
-        )
+        (getattr(dataset, f"{disease}_res_d") > getattr(dataset, f"{disease}_last_d")
+        ).when_null_then(False)
     )

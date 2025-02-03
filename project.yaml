@@ -15,125 +15,459 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition.csv
 
-  measures_dataset_pmr_2016:
+  generate_dataset_data_avail:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
+      --output output/dataset_definition_data_avail.csv
+      #--
+      #--diseases "{diseases}"
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_definition_data_avail.csv
+
+  run_data_avail:
+    run: stata-mp:latest analysis/101_data_availability.do
+    needs: [generate_dataset_data_avail]
+    outputs:
+      moderately_sensitive:
+        log1: logs/data_avail_tables.log   
+        data1: output/data/data_check_*.csv
+
+  measures_dataset_rheumatoid_2016:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2016.csv
+      --output output/measures/measures_dataset_rheumatoid_2016.csv
       --
       --start-date "2016-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2016.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2016.csv
 
-  measures_dataset_pmr_2017:
+  measures_dataset_copd_2016:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2017.csv
+      --output output/measures/measures_dataset_copd_2016.csv
+      --
+      --start-date "2016-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2016.csv
+
+  measures_dataset_stroke_2016:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2016.csv
+      --
+      --start-date "2016-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2016.csv
+
+  measures_dataset_heart_failure_2016:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2016.csv
+      --
+      --start-date "2016-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2016.csv
+
+  measures_dataset_rheumatoid_2017:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2017.csv
       --
       --start-date "2017-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2017.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2017.csv
 
-  measures_dataset_pmr_2018:
+  measures_dataset_copd_2017:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2018.csv
+      --output output/measures/measures_dataset_copd_2017.csv
+      --
+      --start-date "2017-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2017.csv
+
+  measures_dataset_stroke_2017:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2017.csv
+      --
+      --start-date "2017-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2017.csv
+
+  measures_dataset_heart_failure_2017:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2017.csv
+      --
+      --start-date "2017-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2017.csv
+
+  measures_dataset_rheumatoid_2018:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2018.csv
       --
       --start-date "2018-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2018.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2018.csv
 
-  measures_dataset_pmr_2019:
+  measures_dataset_copd_2018:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2019.csv
+      --output output/measures/measures_dataset_copd_2018.csv
+      --
+      --start-date "2018-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2018.csv
+
+  measures_dataset_stroke_2018:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2018.csv
+      --
+      --start-date "2018-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2018.csv
+
+  measures_dataset_heart_failure_2018:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2018.csv
+      --
+      --start-date "2018-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2018.csv
+
+  measures_dataset_rheumatoid_2019:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2019.csv
       --
       --start-date "2019-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2019.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2019.csv
 
-  measures_dataset_pmr_2020:
+  measures_dataset_copd_2019:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2020.csv
+      --output output/measures/measures_dataset_copd_2019.csv
+      --
+      --start-date "2019-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2019.csv
+
+  measures_dataset_stroke_2019:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2019.csv
+      --
+      --start-date "2019-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2019.csv
+
+  measures_dataset_heart_failure_2019:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2019.csv
+      --
+      --start-date "2019-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2019.csv
+
+  measures_dataset_rheumatoid_2020:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2020.csv
       --
       --start-date "2020-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2020.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2020.csv
 
-  measures_dataset_pmr_2021:
+  measures_dataset_copd_2020:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2021.csv
+      --output output/measures/measures_dataset_copd_2020.csv
+      --
+      --start-date "2020-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2020.csv
+
+  measures_dataset_stroke_2020:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2020.csv
+      --
+      --start-date "2020-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2020.csv
+
+  measures_dataset_heart_failure_2020:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2020.csv
+      --
+      --start-date "2020-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2020.csv
+
+  measures_dataset_rheumatoid_2021:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2021.csv
       --
       --start-date "2021-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2021.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2021.csv
 
-  measures_dataset_pmr_2022:
+  measures_dataset_copd_2021:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2022.csv
+      --output output/measures/measures_dataset_copd_2021.csv
+      --
+      --start-date "2021-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2021.csv
+
+  measures_dataset_stroke_2021:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2021.csv
+      --
+      --start-date "2021-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2021.csv
+
+  measures_dataset_heart_failure_2021:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2021.csv
+      --
+      --start-date "2021-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2021.csv
+
+  measures_dataset_rheumatoid_2022:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2022.csv
       --
       --start-date "2022-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2022.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2022.csv
 
-  measures_dataset_pmr_2023:
+  measures_dataset_copd_2022:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2023.csv
+      --output output/measures/measures_dataset_copd_2022.csv
+      --
+      --start-date "2022-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2022.csv
+
+  measures_dataset_stroke_2022:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2022.csv
+      --
+      --start-date "2022-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2022.csv
+
+  measures_dataset_heart_failure_2022:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2022.csv
+      --
+      --start-date "2022-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2022.csv
+
+  measures_dataset_rheumatoid_2023:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2023.csv
       --
       --start-date "2023-04-01"
       --intervals 12
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2023.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2023.csv
 
-  measures_dataset_pmr_2024:
+  measures_dataset_copd_2023:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_pmr_2024.csv
+      --output output/measures/measures_dataset_copd_2023.csv
+      --
+      --start-date "2023-04-01"
+      --intervals 12
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2023.csv
+
+  measures_dataset_stroke_2023:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2023.csv
+      --
+      --start-date "2023-04-01"
+      --intervals 12
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2023.csv
+
+  measures_dataset_heart_failure_2023:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2023.csv
+      --
+      --start-date "2023-04-01"
+      --intervals 12
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2023.csv
+
+  measures_dataset_rheumatoid_2024:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_rheumatoid_2024.csv
       --
       --start-date "2024-04-01"
       --intervals 6
-      --disease "pmr"
+      --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_pmr_2024.csv
+        measure_csv: output/measures/measures_dataset_rheumatoid_2024.csv
 
-  # run_data_avail:
-  #   run: stata-mp:latest analysis/101_data_availability.do
-  #   needs: [generate_dataset]
-  #   outputs:
-  #     moderately_sensitive:
-  #       log1: logs/data_avail_tables.log   
-  #       data1: output/data/data_check_*.csv
+  measures_dataset_copd_2024:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_copd_2024.csv
+      --
+      --start-date "2024-04-01"
+      --intervals 6
+      --disease "copd"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_copd_2024.csv
+
+  measures_dataset_stroke_2024:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_stroke_2024.csv
+      --
+      --start-date "2024-04-01"
+      --intervals 6
+      --disease "stroke"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_stroke_2024.csv
+
+  measures_dataset_heart_failure_2024:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
+      --output output/measures/measures_dataset_heart_failure_2024.csv
+      --
+      --start-date "2024-04-01"
+      --intervals 6
+      --disease "heart_failure"
+    needs: [generate_dataset]
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_dataset_heart_failure_2024.csv
+
   
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do
-    needs: [generate_dataset, measures_dataset_pmr_2016, measures_dataset_pmr_2017, measures_dataset_pmr_2018, measures_dataset_pmr_2019, measures_dataset_pmr_2020, measures_dataset_pmr_2021, measures_dataset_pmr_2022, measures_dataset_pmr_2023, measures_dataset_pmr_2024]
+    needs: [generate_dataset, measures_dataset_rheumatoid_2016, measures_dataset_copd_2016, measures_dataset_stroke_2016, measures_dataset_heart_failure_2016, measures_dataset_rheumatoid_2017, measures_dataset_copd_2017, measures_dataset_stroke_2017, measures_dataset_heart_failure_2017, measures_dataset_rheumatoid_2018, measures_dataset_copd_2018, measures_dataset_stroke_2018, measures_dataset_heart_failure_2018, measures_dataset_rheumatoid_2019, measures_dataset_copd_2019, measures_dataset_stroke_2019, measures_dataset_heart_failure_2019, measures_dataset_rheumatoid_2020, measures_dataset_copd_2020, measures_dataset_stroke_2020, measures_dataset_heart_failure_2020, measures_dataset_rheumatoid_2021, measures_dataset_copd_2021, measures_dataset_stroke_2021, measures_dataset_heart_failure_2021, measures_dataset_rheumatoid_2022, measures_dataset_copd_2022, measures_dataset_stroke_2022, measures_dataset_heart_failure_2022, measures_dataset_rheumatoid_2023, measures_dataset_copd_2023, measures_dataset_stroke_2023, measures_dataset_heart_failure_2023, measures_dataset_rheumatoid_2024, measures_dataset_copd_2024, measures_dataset_stroke_2024, measures_dataset_heart_failure_2024]
     outputs:
       moderately_sensitive:
         log1: logs/descriptive_tables.log   

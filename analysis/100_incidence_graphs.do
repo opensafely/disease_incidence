@@ -34,7 +34,7 @@ adopath + "$projectdir/analysis/extra_ados"
 
 *Import and append measures datasets for diseases
 *local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-local diseases "pmr"
+local diseases "rheumatoid copd stroke heart_failure"
 local years "2016 2017 2018 2019 2020 2021 2022 2023 2024"
 local first_disease: word 1 of `diseases'
 local first_year: word 1 of `years'
@@ -388,15 +388,19 @@ outsheet * using "$projectdir/output/tables/arima_standardised.csv" , comma repl
 *Output string version of table to stop conversion for big numbers
 use "$projectdir/output/data/processed_standardised.dta", clear
 
-rename asr_all rate_n //use age and sex-standardised IR (rounded and redacted)
-replace sex = "All"
-rename numerator numerator_n //unadjusted counts (rounded and redacted)
-rename denominator denominator_n //unadjusted counts (rounded and redacted)
-gen numerator = string(numerator_all)
-gen denominator = string(denominator_all)
-gen rate = string(rate_n)
+foreach var in all male female 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 {
+	rename ratio_`var'_100000 rate_`var'_n
+	rename asr_`var' as_rate_`var'_n //use age and sex-standardised IR (rounded and redacted)
+	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
+	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
+	gen numerator_`var' = string(numerator_`var'_n)
+	gen denominator_`var' = string(denominator_`var'_n)
+	gen rate_`var' = string(rate_`var'_n)
+	gen as_rate_`var' = string(as_rate_`var'_n)
+	drop numerator_`var'_n denominator_`var'_n as_rate_`var'_n rate_`var'_n
+}
 
-keep dis_full measure sex mo_year_diagn numerator denominator rate
+keep dis_full measure mo_year_diagn numerator_* denominator_* rate_* as_rate_*
 order dis_full, before(measure)
 
 save "$projectdir/output/tables/arima_standardised_s.dta", replace
