@@ -13,7 +13,7 @@ import codelists_ehrQL as codelists
 # diseases = args.diseases.split(", ")
 
 # diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-diseases = ["rheumatoid", "copd", "stroke", "heart_failure"]
+diseases = ["rheumatoid"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 dataset = create_dataset()
@@ -32,15 +32,25 @@ def first_code_in_period_snomed(dx_codelist):
         clinical_events.date
     ).first_for_patient()
 
-# Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
+# Incident diagnostic code in secondary care record (ICD10 primary diagnoses) (assuming before study end date)
 def first_code_in_period_icd(dx_codelist):
     return apcs.where(
-        apcs.all_diagnoses.contains_any_of(dx_codelist)
+        apcs.primary_diagnosis.is_in(dx_codelist)
     ).where(
         apcs.admission_date.is_on_or_before(end_date)
     ).sort_by(
         apcs.admission_date
     ).first_for_patient()
+
+# # Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
+# def first_code_in_period_icd(dx_codelist):
+#     return apcs.where(
+#         apcs.all_diagnoses.contains_any_of(dx_codelist)
+#     ).where(
+#         apcs.admission_date.is_on_or_before(end_date)
+#     ).sort_by(
+#         apcs.admission_date
+#     ).first_for_patient()
 
 # Last diagnostic code in primary care record (SNOMED) (assuming before study end date)
 def last_code_in_period_snomed(dx_codelist):
@@ -52,15 +62,25 @@ def last_code_in_period_snomed(dx_codelist):
         clinical_events.date
     ).last_for_patient()
 
-# Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
+# Incident diagnostic code in secondary care record (ICD10 primary diagnoses) (assuming before study end date)
 def last_code_in_period_icd(dx_codelist):
     return apcs.where(
-        apcs.all_diagnoses.contains_any_of(dx_codelist)
+        apcs.primary_diagnosis.is_in(dx_codelist)
     ).where(
         apcs.admission_date.is_on_or_before(end_date)
     ).sort_by(
         apcs.admission_date
     ).last_for_patient()
+
+# # Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
+# def last_code_in_period_icd(dx_codelist):
+#     return apcs.where(
+#         apcs.all_diagnoses.contains_any_of(dx_codelist)
+#     ).where(
+#         apcs.admission_date.is_on_or_before(end_date)
+#     ).sort_by(
+#         apcs.admission_date
+#     ).last_for_patient()
 
 # Registration for 12 months prior to incident diagnosis date
 def preceding_registration(dx_date):

@@ -34,7 +34,7 @@ adopath + "$projectdir/analysis/extra_ados"
 
 *Import and append measures datasets for diseases
 *local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-local diseases "rheumatoid copd stroke heart_failure"
+local diseases "rheumatoid"
 local years "2016 2017 2018 2019 2020 2021 2022 2023 2024"
 local first_disease: word 1 of `diseases'
 local first_year: word 1 of `years'

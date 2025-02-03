@@ -1,5 +1,5 @@
 # diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-diseases = ["rheumatoid", "copd", "stroke", "heart_failure"]
+diseases = ["rheumatoid"]
 
 yaml_header = """
 version: '3.0'
@@ -18,22 +18,22 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition.csv
 
-  generate_dataset_data_avail:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
-      --output output/dataset_definition_data_avail.csv
-      #--
-      #--diseases "{diseases}"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_data_avail.csv
+  # generate_dataset_data_avail:
+  #   run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
+  #     --output output/dataset_definition_data_avail.csv
+  #     #--
+  #     #--diseases "{diseases}"
+  #   outputs:
+  #     highly_sensitive:
+  #       cohort: output/dataset_definition_data_avail.csv
 
-  run_data_avail:
-    run: stata-mp:latest analysis/101_data_availability.do
-    needs: [generate_dataset_data_avail]
-    outputs:
-      moderately_sensitive:
-        log1: logs/data_avail_tables.log   
-        data1: output/tables/data_check_*.csv
+  # run_data_avail:
+  #   run: stata-mp:latest analysis/101_data_availability.do
+  #   needs: [generate_dataset_data_avail]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/data_avail_tables.log   
+  #       data1: output/tables/data_check_*.csv
 """
 
 # Add diseases list to the header dynamically
