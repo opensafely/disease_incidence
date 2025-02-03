@@ -33,7 +33,7 @@ actions:
     outputs:
       moderately_sensitive:
         log1: logs/data_avail_tables.log   
-        data1: output/data/data_check_*.csv
+        data1: output/tables/data_check_*.csv
 """
 
 # Add diseases list to the header dynamically
