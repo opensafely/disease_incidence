@@ -330,11 +330,11 @@
       "downloaded_at": "2025-01-28 09:30:47.481490Z",
       "sha": "d074444b6ba473ff132e2b8e00ee3c9ec61dc138"
     },
-    "opensafely-ethnicity.csv": {
-      "id": "opensafely/ethnicity/746e4c98",
-      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity/746e4c98/",
-      "downloaded_at": "2024-12-31 14:53:28.794428Z",
-      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    "opensafely-ethnicity-snomed-0removed.csv": {
+      "id": "opensafely/ethnicity-snomed-0removed/22911876",
+      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity-snomed-0removed/22911876/",
+      "downloaded_at": "2025-02-05 19:57:42.333396Z",
+      "sha": "d95a2f826299563aa57f6fa99009e6e13a65151b"
     }
   }
 }

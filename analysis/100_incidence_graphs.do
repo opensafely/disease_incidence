@@ -81,10 +81,10 @@ lab var mo_year_diagn_s "Month/Year of Diagnosis"
 
 **Check age and sex categories
 codebook sex
-keep if sex == "female" | sex == "male" //should already be accounted for in dataset definition
+*keep if sex == "female" | sex == "male" //should already be accounted for in dataset definition
 
 codebook age
-keep if age != "" //should already be accounted for in dataset definition
+*keep if age != "" //should already be accounted for in dataset definition
 
 **Code incidence and prevalence
 gen measure_inc = 1 if substr(measure,-10,.) == "_incidence"
@@ -92,25 +92,23 @@ recode measure_inc .=0
 gen measure_prev = 1 if substr(measure,-11,.) == "_prevalence"
 recode measure_prev .=0
 
-/*
 gen measure_imd = 1 if substr(measure,-4,.) == "_imd"
 recode measure_imd .=0
-gen measure_ethnicity = 1 if substr(measure,-10,.) == "_ethnicity"
+gen measure_ethnicity = 1 if substr(measure,-5,.) == "_ethn"
 recode measure_ethnicity .=0
-*/
 
-gen measure_inc_any = 1 if measure_inc ==1
-*gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
+*gen measure_inc_any = 1 if measure_inc ==1
+gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
 recode measure_inc_any .=0
 
 **Drop April/May/June 2016 data - remove this after dataset definition and measures re-run
-drop if measure_inc_any == 1 & (mo_year_diagn_s == "2016m04" | mo_year_diagn_s == "2016m05" | mo_year_diagn_s == "2016m06")
+*drop if measure_inc_any == 1 & (mo_year_diagn_s == "2016m04" | mo_year_diagn_s == "2016m05" | mo_year_diagn_s == "2016m06")
 
 **Label diseases
 gen diseases_ = substr(measure, 1, strlen(measure) - 10) if measure_inc==1
 replace diseases_ = substr(measure, 1, strlen(measure) - 11) if measure_prev==1
-*replace diseases_ = substr(measure, 1, strlen(measure) - 14) if measure_imd==1
-*replace diseases_ = substr(measure, 1, strlen(measure) - 20) if measure_ethnicity==1
+replace diseases_ = substr(measure, 1, strlen(measure) - 8) if measure_imd==1
+replace diseases_ = substr(measure, 1, strlen(measure) - 9) if measure_ethnicity==1
 gen disease = strproper(subinstr(diseases_, "_", " ",.)) 
 
 gen dis_full = disease
@@ -218,7 +216,73 @@ gen ratio_80_100000 = ratio_80*100000
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_80_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_80_100000): replace ratio_80_100000 = ratio_80_100000[_n-1] if missing(ratio_80_100000)
 
-**DO the same for IMD and ethnicity, then add moving average
+*For ethnicity
+bys disease mo_year_diagn measure: egen numerator_white = sum(numerator) if ethnicity=="White"
+bys disease mo_year_diagn measure: egen denominator_white = sum(denominator) if ethnicity=="White"
+
+bys disease mo_year_diagn measure: egen numerator_mixed = sum(numerator) if ethnicity=="Mixed"
+bys disease mo_year_diagn measure: egen denominator_mixed = sum(denominator) if ethnicity=="Mixed"
+
+bys disease mo_year_diagn measure: egen numerator_black = sum(numerator) if ethnicity=="Black or Black British"
+bys disease mo_year_diagn measure: egen denominator_black = sum(denominator) if ethnicity=="Black or Black British"
+
+bys disease mo_year_diagn measure: egen numerator_asian = sum(numerator) if ethnicity=="Asian or Asian British"
+bys disease mo_year_diagn measure: egen denominator_asian = sum(denominator) if ethnicity=="Asian or Asian British"
+
+bys disease mo_year_diagn measure: egen numerator_other = sum(numerator) if ethnicity=="Chinese or Other Ethnic Groups"
+bys disease mo_year_diagn measure: egen denominator_other = sum(denominator) if ethnicity=="Chinese or Other Ethnic Groups"
+
+bys disease mo_year_diagn measure: egen numerator_ethunk = sum(numerator) if ethnicity=="Unknown"
+bys disease mo_year_diagn measure: egen denominator_ethunk = sum(denominator) if ethnicity=="Unknown"
+
+*Redact and round
+foreach var in white mixed black asian other ethunk {
+replace numerator_`var' =. if numerator_`var'<=7 | denominator_`var'<=7
+replace denominator_`var' =. if numerator_`var'<=7 | numerator_`var'==. | denominator_`var'<=7
+replace numerator_`var' = round(numerator_`var', 5)
+replace denominator_`var' = round(denominator_`var', 5)
+
+gen ratio_`var' = (numerator_`var'/denominator_`var') if (numerator_`var'!=. & denominator_`var'!=.)
+replace ratio_`var' =. if (numerator_`var'==. | denominator_`var'==.)
+gen ratio_`var'_100000 = ratio_`var'*100000
+
+sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
+by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
+}
+
+*For IMD
+bys disease mo_year_diagn measure: egen numerator_imd1 = sum(numerator) if imd=="1 (most deprived)"
+bys disease mo_year_diagn measure: egen denominator_imd1 = sum(denominator) if imd=="1 (most deprived)"
+
+bys disease mo_year_diagn measure: egen numerator_imd2 = sum(numerator) if imd=="2"
+bys disease mo_year_diagn measure: egen denominator_imd2 = sum(denominator) if imd=="2"
+
+bys disease mo_year_diagn measure: egen numerator_imd3 = sum(numerator) if imd=="3"
+bys disease mo_year_diagn measure: egen denominator_imd3 = sum(denominator) if imd=="3"
+
+bys disease mo_year_diagn measure: egen numerator_imd4 = sum(numerator) if imd=="4"
+bys disease mo_year_diagn measure: egen denominator_imd4 = sum(denominator) if imd=="4"
+
+bys disease mo_year_diagn measure: egen numerator_imd5 = sum(numerator) if imd=="5 (least deprived)"
+bys disease mo_year_diagn measure: egen denominator_imd5 = sum(denominator) if imd=="5 (least deprived)"
+
+bys disease mo_year_diagn measure: egen numerator_imdunk = sum(numerator) if imd=="Unknown"
+bys disease mo_year_diagn measure: egen denominator_imdunk = sum(denominator) if imd=="Unknown"
+
+*Redact and round
+foreach var in imd1 imd2 imd3 imd4 imd5 imdunk {
+replace numerator_`var' =. if numerator_`var'<=7 | denominator_`var'<=7
+replace denominator_`var' =. if numerator_`var'<=7 | numerator_`var'==. | denominator_`var'<=7
+replace numerator_`var' = round(numerator_`var', 5)
+replace denominator_`var' = round(denominator_`var', 5)
+
+gen ratio_`var' = (numerator_`var'/denominator_`var') if (numerator_`var'!=. & denominator_`var'!=.)
+replace ratio_`var' =. if (numerator_`var'==. | denominator_`var'==.)
+gen ratio_`var'_100000 = ratio_`var'*100000
+
+sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
+by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
+}
 
 save "$projectdir/output/data/processed_nonstandardised.dta", replace
 
@@ -353,6 +417,20 @@ bysort measure (interval_start): gen ratio_60_69_ma =(ratio_60_69_100000[_n-1]+r
 bysort measure (interval_start): gen ratio_70_79_ma =(ratio_70_79_100000[_n-1]+ratio_70_79_100000[_n]+ratio_70_79_100000[_n+1])/3
 bysort measure (interval_start): gen ratio_80_ma =(ratio_80_100000[_n-1]+ratio_80_100000[_n]+ratio_80_100000[_n+1])/3
 
+bysort measure (interval_start): gen ratio_white_ma =(ratio_white_100000[_n-1]+ratio_white_100000[_n]+ratio_white_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_mixed_ma =(ratio_mixed_100000[_n-1]+ratio_mixed_100000[_n]+ratio_mixed_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_black_ma =(ratio_black_100000[_n-1]+ratio_black_100000[_n]+ratio_black_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_asian_ma =(ratio_asian_100000[_n-1]+ratio_asian_100000[_n]+ratio_asian_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_other_ma =(ratio_other_100000[_n-1]+ratio_other_100000[_n]+ratio_other_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_ethunk_ma =(ratio_ethunk_100000[_n-1]+ratio_ethunk_100000[_n]+ratio_ethunk_100000[_n+1])/3
+
+bysort measure (interval_start): gen ratio_imd1_ma =(ratio_imd1_100000[_n-1]+ratio_imd1_100000[_n]+ratio_imd1_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_imd2_ma =(ratio_imd2_100000[_n-1]+ratio_imd2_100000[_n]+ratio_imd2_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_imd3_ma =(ratio_imd3_100000[_n-1]+ratio_imd3_100000[_n]+ratio_imd3_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_imd4_ma =(ratio_imd4_100000[_n-1]+ratio_imd4_100000[_n]+ratio_imd4_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_imd5_ma =(ratio_imd5_100000[_n-1]+ratio_imd5_100000[_n]+ratio_imd5_100000[_n+1])/3
+bysort measure (interval_start): gen ratio_imdunk_ma =(ratio_imdunk_100000[_n-1]+ratio_imdunk_100000[_n]+ratio_imdunk_100000[_n+1])/3
+
 /*gen asr_lci = asr-1.96*(asr/sqrt(denominator_all))
 gen asr_uci = asr+1.96*(asr/sqrt(denominator_all))
 gen asr_esp = Prop*calc_pyr_
@@ -398,6 +476,16 @@ foreach var in all male female 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 
 	gen rate_`var' = string(rate_`var'_n)
 	gen as_rate_`var' = string(as_rate_`var'_n)
 	drop numerator_`var'_n denominator_`var'_n as_rate_`var'_n rate_`var'_n
+}
+
+foreach var in white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
+	rename ratio_`var'_100000 rate_`var'_n
+	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
+	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
+	gen numerator_`var' = string(numerator_`var'_n)
+	gen denominator_`var' = string(denominator_`var'_n)
+	gen rate_`var' = string(rate_`var'_n)
+	drop numerator_`var'_n denominator_`var'_n rate_`var'_n
 }
 
 keep dis_full measure mo_year_diagn numerator_* denominator_* rate_* as_rate_*
@@ -552,6 +640,24 @@ foreach disease_ of local levels {
 		graph export "$projectdir/output/figures/un_age2_ma_`disease_'.svg", replace
 	restore
 */
+
+*Unadjusted incidence moving average, by ethnicity (lines only)
+	preserve
+	keep if measure_ethnicity==1
+	keep if dis_title == "`disease_'"
+
+	twoway line ratio_white_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_mixed_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_black_ma mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_asian_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_other_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_ethunk_ma mo_year_diagn, lcolor(blue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "White" 2 "Mixed" 3 "Black" 4 "Asian" 5 "Chinese/Other" 6 "Unknown")) name(un_ma_ethn, replace) saving("$projectdir/output/figures/`disease_'_un_ma_ethn.gph", replace)
+		graph export "$projectdir/output/figures/un_ma_ethn_`disease_'.svg", replace
+	restore	
+	
+*Unadjusted incidence moving average, by IMD (lines only)
+	preserve
+	keep if measure_imd==1
+	keep if dis_title == "`disease_'"
+
+	twoway line ratio_imd1_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line ratio_imd2_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line ratio_imd3_ma mo_year_diagn, lcolor(red) lstyle(solid) || line ratio_imd4_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line ratio_imd5_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line ratio_imdunk_ma mo_year_diagn, lcolor(blue) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium)) xline(722) legend(region(fcolor(white%0)) order(1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5 Least deprived" 6 "Unknown")) name(un_ma_imd, replace) saving("$projectdir/output/figures/`disease_'_un_ma_imd.gph", replace)
+		graph export "$projectdir/output/figures/un_ma_imd_`disease_'.svg", replace
+	restore	
 }
 
 log close	

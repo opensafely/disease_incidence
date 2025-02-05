@@ -3,8 +3,8 @@ from ehrql import codelist_from_csv
 
 # DEMOGRAPHIC CODELIST
 ethnicity_codes = codelist_from_csv(
-    "codelists/opensafely-ethnicity.csv",
-    column="Code",
+    "codelists/opensafely-ethnicity-snomed-0removed.csv",
+    column="code",
     category_column="Grouping_6",
 )
 

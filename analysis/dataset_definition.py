@@ -20,7 +20,7 @@ dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
 
 index_date = "2016-04-01"
-end_date = "2024-09-30"
+end_date = "2024-12-31"
 
 # Incident diagnostic code in primary care record (SNOMED) (assuming before study end date)
 def first_code_in_period_snomed(dx_codelist):
@@ -42,16 +42,6 @@ def first_code_in_period_icd(dx_codelist):
         apcs.admission_date
     ).first_for_patient()
 
-# # Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
-# def first_code_in_period_icd(dx_codelist):
-#     return apcs.where(
-#         apcs.all_diagnoses.contains_any_of(dx_codelist)
-#     ).where(
-#         apcs.admission_date.is_on_or_before(end_date)
-#     ).sort_by(
-#         apcs.admission_date
-#     ).first_for_patient()
-
 # Last diagnostic code in primary care record (SNOMED) (assuming before study end date)
 def last_code_in_period_snomed(dx_codelist):
     return clinical_events.where(
@@ -72,16 +62,6 @@ def last_code_in_period_icd(dx_codelist):
         apcs.admission_date
     ).last_for_patient()
 
-# # Incident diagnostic code in secondary care record (ICD10 all diagnoses) (assuming before study end date)
-# def last_code_in_period_icd(dx_codelist):
-#     return apcs.where(
-#         apcs.all_diagnoses.contains_any_of(dx_codelist)
-#     ).where(
-#         apcs.admission_date.is_on_or_before(end_date)
-#     ).sort_by(
-#         apcs.admission_date
-#     ).last_for_patient()
-
 # Registration for 12 months prior to incident diagnosis date
 def preceding_registration(dx_date):
     return practice_registrations.where(
@@ -100,6 +80,35 @@ any_registration = practice_registrations.where(
         ).except_where(
             practice_registrations.end_date < index_date    
         ).exists_for_patient()
+
+# Define patient ethnicity
+latest_ethnicity_code = (
+    clinical_events.where(clinical_events.snomedct_code.is_in(codelists.ethnicity_codes))
+    .where(clinical_events.date.is_on_or_before(end_date))
+    .sort_by(clinical_events.date)
+    .last_for_patient().snomedct_code.to_category(codelists.ethnicity_codes)
+)
+
+dataset.ethnicity = case(
+    when(latest_ethnicity_code == "1").then("White"),
+    when(latest_ethnicity_code == "2").then("Mixed"),
+    when(latest_ethnicity_code == "3").then("Asian or Asian British"),
+    when(latest_ethnicity_code == "4").then("Black or Black British"),
+    when(latest_ethnicity_code == "5").then("Chinese or Other Ethnic Groups"),
+    otherwise="Unknown",
+)
+
+# Define patient IMD
+latest_address_per_patient = addresses.sort_by(addresses.start_date).last_for_patient()
+imd_rounded = latest_address_per_patient.imd_rounded
+dataset.imd_quintile = case(
+    when((imd_rounded >= 0) & (imd_rounded < int(32844 * 1 / 5))).then("1 (most deprived)"),
+    when(imd_rounded < int(32844 * 2 / 5)).then("2"),
+    when(imd_rounded < int(32844 * 3 / 5)).then("3"),
+    when(imd_rounded < int(32844 * 4 / 5)).then("4"),
+    when(imd_rounded < int(32844 * 5 / 5)).then("5 (least deprived)"),
+    otherwise="Unknown",
+)
 
 # Define population as any registered patient after index date - then apply further restrictions later
 dataset.define_population(

@@ -133,7 +133,7 @@ actions:
       --output output/measures/measures_dataset_rheumatoid_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 6
+      --intervals 9
       --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
@@ -152,10 +152,11 @@ actions:
         figure4: output/figures/inc_adj_ma2_*.svg
         figure5: output/figures/adj_ma_sex2_*.svg
         figure6: output/figures/adj_ma_age2_*.svg
+        figure7: output/figures/un_ma_ethn_*.svg
+        figure8: output/figures/un_ma_imd_*.svg
         table1: output/tables/arima_nonstandardised.csv
         table2: output/tables/arima_standardised.csv
         table3: output/tables/arima_standardised_s.csv
-
 
   run_sarima:
     run: r:latest analysis/200_sarima.R

@@ -57,7 +57,7 @@ yaml_body = ""
 all_needs = []
 
 for year in range(2016, 2025):
-    intervals = 6 if year == 2024 else 12  # Set intervals conditionally
+    intervals = 9 if year == 2024 else 12  # Set intervals conditionally
     for disease in diseases:
         yaml_body += yaml_template.format(disease=disease, year=year, intervals=intervals)
         all_needs.append(f"measures_dataset_{disease}_{year}")
@@ -77,10 +77,11 @@ yaml_footer_template = f"""
         figure4: output/figures/inc_adj_ma2_*.svg
         figure5: output/figures/adj_ma_sex2_*.svg
         figure6: output/figures/adj_ma_age2_*.svg
+        figure7: output/figures/un_ma_ethn_*.svg
+        figure8: output/figures/un_ma_imd_*.svg
         table1: output/tables/arima_nonstandardised.csv
         table2: output/tables/arima_standardised.csv
         table3: output/tables/arima_standardised_s.csv
-
 
   run_sarima:
     run: r:latest analysis/200_sarima.R
