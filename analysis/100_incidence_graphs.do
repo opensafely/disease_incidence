@@ -162,6 +162,10 @@ gen ratio_male_100000 = ratio_male*100000
 
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_male_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_male_100000): replace ratio_male_100000 = ratio_male_100000[_n-1] if missing(ratio_male_100000)
+sort disease mo_year_diagn measure_prev measure_inc_any numerator_male 
+by disease mo_year_diagn measure_prev measure_inc_any (numerator_male): replace numerator_male = numerator_male[_n-1] if missing(numerator_male)
+sort disease mo_year_diagn measure_prev measure_inc_any denominator_male 
+by disease mo_year_diagn measure_prev measure_inc_any (denominator_male): replace denominator_male = denominator_male[_n-1] if missing(denominator_male)
 
 *For females
 bys disease mo_year_diagn measure: egen numerator_female = sum(numerator) if sex=="female"
@@ -179,6 +183,10 @@ gen ratio_female_100000 = ratio_female*100000
 
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_female_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_female_100000): replace ratio_female_100000 = ratio_female_100000[_n-1] if missing(ratio_female_100000)
+sort disease mo_year_diagn measure_prev measure_inc_any numerator_female 
+by disease mo_year_diagn measure_prev measure_inc_any (numerator_female): replace numerator_female = numerator_female[_n-1] if missing(numerator_female)
+sort disease mo_year_diagn measure_prev measure_inc_any denominator_female 
+by disease mo_year_diagn measure_prev measure_inc_any (denominator_female): replace denominator_female = denominator_female[_n-1] if missing(denominator_female)
 
 *For age groups
 foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 {
@@ -197,6 +205,10 @@ gen ratio_`var'_100000 = ratio_`var'*100000
 
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
+sort disease mo_year_diagn measure_prev measure_inc_any numerator_`var'
+by disease mo_year_diagn measure_prev measure_inc_any (numerator_`var'): replace numerator_`var' = numerator_`var'[_n-1] if missing(numerator_`var')
+sort disease mo_year_diagn measure_prev measure_inc_any denominator_`var' 
+by disease mo_year_diagn measure_prev measure_inc_any (denominator_`var'): replace denominator_`var' = denominator_`var'[_n-1] if missing(denominator_`var')
 }
 
 *For 80+ age group
@@ -215,6 +227,10 @@ gen ratio_80_100000 = ratio_80*100000
 
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_80_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_80_100000): replace ratio_80_100000 = ratio_80_100000[_n-1] if missing(ratio_80_100000)
+sort disease mo_year_diagn measure_prev measure_inc_any numerator_80 
+by disease mo_year_diagn measure_prev measure_inc_any (numerator_80): replace numerator_80 = numerator_80[_n-1] if missing(numerator_80)
+sort disease mo_year_diagn measure_prev measure_inc_any denominator_80 
+by disease mo_year_diagn measure_prev measure_inc_any (denominator_80): replace denominator_80 = denominator_80[_n-1] if missing(denominator_80)
 
 *For ethnicity
 bys disease mo_year_diagn measure: egen numerator_white = sum(numerator) if ethnicity=="White"
@@ -248,6 +264,10 @@ gen ratio_`var'_100000 = ratio_`var'*100000
 
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
+sort disease mo_year_diagn measure_prev measure_inc_any numerator_`var'
+by disease mo_year_diagn measure_prev measure_inc_any (numerator_`var'): replace numerator_`var' = numerator_`var'[_n-1] if missing(numerator_`var')
+sort disease mo_year_diagn measure_prev measure_inc_any denominator_`var' 
+by disease mo_year_diagn measure_prev measure_inc_any (denominator_`var'): replace denominator_`var' = denominator_`var'[_n-1] if missing(denominator_`var')
 }
 
 *For IMD
@@ -282,6 +302,10 @@ gen ratio_`var'_100000 = ratio_`var'*100000
 
 sort disease mo_year_diagn measure_prev measure_inc_any ratio_`var'_100000 
 by disease mo_year_diagn measure_prev measure_inc_any (ratio_`var'_100000): replace ratio_`var'_100000 = ratio_`var'_100000[_n-1] if missing(ratio_`var'_100000)
+sort disease mo_year_diagn measure_prev measure_inc_any numerator_`var'
+by disease mo_year_diagn measure_prev measure_inc_any (numerator_`var'): replace numerator_`var' = numerator_`var'[_n-1] if missing(numerator_`var')
+sort disease mo_year_diagn measure_prev measure_inc_any denominator_`var' 
+by disease mo_year_diagn measure_prev measure_inc_any (denominator_`var'): replace denominator_`var' = denominator_`var'[_n-1] if missing(denominator_`var')
 }
 
 save "$projectdir/output/data/processed_nonstandardised.dta", replace
@@ -319,7 +343,8 @@ replace prop=5000 if age=="age_greater_equal_80"
 
 *Apply the Standard Population Weights: multiply crude age-specific incidence rates by corresponding standard population weights
 
-*Redact and round, then recalculate ratio - can I do this later?
+/*
+*Redact and round, then recalculate ratio
 replace numerator =. if numerator<=7 | denominator<=7
 replace denominator =. if numerator<=7 | numerator==. | denominator<=7
 replace numerator = round(numerator, 5)
@@ -327,64 +352,90 @@ replace denominator = round(denominator, 5)
 
 replace ratio = (numerator/denominator) if (numerator!=. & denominator!=.)
 replace ratio =. if (numerator==. | denominator==.)
+*/
+
 gen ratio_100000 = ratio*100000
 
 *Generate standardised incidence and prevalence, overall and by sex
 gen new_value = prop*ratio_100000
-bys disease mo_year_diagn measure: egen sum_new_value_male=sum(new_value) if sex=="male" 
+bys disease mo_year_diagn measure: egen sum_new_value_male=sum(new_value) if sex=="male"
 gen asr_male = sum_new_value_male/100000
+recode asr_male 0=.
+replace asr_male =. if ratio_male_100000 ==.
 sort disease mo_year_diagn measure asr_male 
 by disease mo_year_diagn measure (asr_male): replace asr_male = asr_male[_n-1] if missing(asr_male)
 bys disease mo_year_diagn measure: egen sum_new_value_female=sum(new_value) if sex=="female" 
 gen asr_female = sum_new_value_female/100000
+recode asr_female 0=.
+replace asr_female =. if ratio_female_100000 ==. 
 sort disease mo_year_diagn measure asr_female 
 by disease mo_year_diagn measure (asr_female): replace asr_female = asr_female[_n-1] if missing(asr_female)
 bys disease mo_year_diagn measure: egen sum_new_value_all=sum(new_value)
 gen asr_all = sum_new_value_all/200000
+recode asr_all 0=.
+replace asr_all =. if ratio_all_100000 ==. 
 
 *Generate standardised incidence and prevalence, by age group
 bys disease mo_year_diagn measure: egen sum_new_value_0_9=sum(new_value) if age=="age_0_9"
 gen asr_0_9 = sum_new_value_0_9/21000
+recode asr_0_9 0=.
+replace asr_0_9 =. if ratio_0_9_100000 ==.
 sort disease mo_year_diagn measure asr_0_9 
 by disease mo_year_diagn measure (asr_0_9): replace asr_0_9 = asr_0_9[_n-1] if missing(asr_0_9)
 
 bys disease mo_year_diagn measure: egen sum_new_value_10_19=sum(new_value) if age=="age_10_19"
 gen asr_10_19 = sum_new_value_10_19/22000
+recode asr_10_19 0=.
+replace asr_10_19 =. if ratio_10_19_100000 ==.
 sort disease mo_year_diagn measure asr_10_19 
 by disease mo_year_diagn measure (asr_10_19): replace asr_10_19 = asr_10_19[_n-1] if missing(asr_10_19)
 
 bys disease mo_year_diagn measure: egen sum_new_value_20_29=sum(new_value) if age=="age_20_29"
 gen asr_20_29 = sum_new_value_20_29/24000
+recode asr_20_29 0=.
+replace asr_20_29 =. if ratio_20_29_100000 ==.
 sort disease mo_year_diagn measure asr_20_29 
 by disease mo_year_diagn measure (asr_20_29): replace asr_20_29 = asr_20_29[_n-1] if missing(asr_20_29)
 
 bys disease mo_year_diagn measure: egen sum_new_value_30_39=sum(new_value) if age=="age_30_39"
 gen asr_30_39 = sum_new_value_30_39/27000
+recode asr_30_39 0=.
+replace asr_30_39 =. if ratio_30_39_100000 ==.
 sort disease mo_year_diagn measure asr_30_39 
 by disease mo_year_diagn measure (asr_30_39): replace asr_30_39 = asr_30_39[_n-1] if missing(asr_30_39)
 
 bys disease mo_year_diagn measure: egen sum_new_value_40_49=sum(new_value) if age=="age_40_49"
 gen asr_40_49 = sum_new_value_40_49/28000
+recode asr_40_49 0=.
+replace asr_40_49 =. if ratio_40_49_100000 ==.
 sort disease mo_year_diagn measure asr_40_49 
 by disease mo_year_diagn measure (asr_40_49): replace asr_40_49 = asr_40_49[_n-1] if missing(asr_40_49)
 
 bys disease mo_year_diagn measure: egen sum_new_value_50_59=sum(new_value) if age=="age_50_59"
 gen asr_50_59 = sum_new_value_50_59/27000
+recode asr_50_59 0=.
+replace asr_50_59 =. if ratio_50_59_100000 ==.
 sort disease mo_year_diagn measure asr_50_59 
 by disease mo_year_diagn measure (asr_50_59): replace asr_50_59 = asr_50_59[_n-1] if missing(asr_50_59)
 
 bys disease mo_year_diagn measure: egen sum_new_value_60_69=sum(new_value) if age=="age_60_69"
 gen asr_60_69 = sum_new_value_60_69/23000
+recode asr_60_69 0=.
+replace asr_60_69 =. if ratio_60_69_100000 ==.
 sort disease mo_year_diagn measure asr_60_69 
 by disease mo_year_diagn measure (asr_60_69): replace asr_60_69 = asr_60_69[_n-1] if missing(asr_60_69)
 
 bys disease mo_year_diagn measure: egen sum_new_value_70_79=sum(new_value) if age=="age_70_79"
 gen asr_70_79 = sum_new_value_70_79/18000
+recode asr_70_79 0=.
+replace asr_70_79 =. if ratio_70_79_100000 ==.
 sort disease mo_year_diagn measure asr_70_79 
 by disease mo_year_diagn measure (asr_70_79): replace asr_70_79 = asr_70_79[_n-1] if missing(asr_70_79)
 
 bys disease mo_year_diagn measure: egen sum_new_value_80=sum(new_value) if age=="age_greater_equal_80"
 gen asr_80 = sum_new_value_80/10000
+recode asr_80 0=.
+replace asr_80 =. if ratio_80_100000 ==.
 sort disease mo_year_diagn measure asr_80 
 by disease mo_year_diagn measure (asr_80): replace asr_80 = asr_80[_n-1] if missing(asr_80)
 
