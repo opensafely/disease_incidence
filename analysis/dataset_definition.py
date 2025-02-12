@@ -12,8 +12,8 @@ import codelists_ehrQL as codelists
 # args = parser.parse_args()
 # diseases = args.diseases.split(", ")
 
-# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-diseases = ["rheumatoid", "pmr"]
+diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+# diseases = ["rheumatoid", "pmr"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 dataset = create_dataset()
@@ -80,6 +80,18 @@ any_registration = practice_registrations.where(
         ).except_where(
             practice_registrations.end_date < index_date    
         ).exists_for_patient()
+
+# Registration start date (for purposes of calculating age)
+dataset.registration_start = practice_registrations.where(
+            practice_registrations.start_date <= end_date
+        ).except_where(
+            practice_registrations.end_date < index_date   
+        ).sort_by(
+            practice_registrations.start_date
+        ).last_for_patient().start_date
+
+# Define age at practice registration start date
+dataset.age_reg = patients.age_on(dataset.registration_start)
 
 # Define patient ethnicity
 latest_ethnicity_code = (

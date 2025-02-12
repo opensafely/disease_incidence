@@ -1,5 +1,5 @@
-# diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-diseases = ["rheumatoid", "pmr"]
+diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+# diseases = ["rheumatoid", "pmr"]
 
 yaml_header = """
 version: '3.0'
@@ -34,6 +34,14 @@ actions:
   #     moderately_sensitive:
   #       log1: logs/data_avail_tables.log   
   #       data1: output/tables/data_check_*.csv
+
+  # run_baseline_data:
+  #   run: stata-mp:latest analysis/001_baseline_data.do
+  #   needs: [generate_dataset]
+  #   outputs:
+  #     moderately_sensitive:
+  #       log1: logs/baseline_data.log   
+  #       table1: output/tables/redacted_baseline.csv
 """
 
 # Add diseases list to the header dynamically
@@ -66,7 +74,7 @@ needs_list = ", ".join(all_needs)
 
 yaml_footer_template = f"""
   run_data_processing:
-    run: stata-mp:latest analysis/001_processing_data.do
+    run: stata-mp:latest analysis/002_processing_data.do
     needs: [generate_dataset, {needs_list}]
     outputs:
       moderately_sensitive:
