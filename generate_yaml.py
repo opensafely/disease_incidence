@@ -35,13 +35,14 @@ actions:
   #       log1: logs/data_avail_tables.log   
   #       data1: output/tables/data_check_*.csv
 
-  # run_baseline_data:
-  #   run: stata-mp:latest analysis/001_baseline_data.do
-  #   needs: [generate_dataset]
-  #   outputs:
-  #     moderately_sensitive:
-  #       log1: logs/baseline_data.log   
-  #       table1: output/tables/redacted_baseline.csv
+  run_baseline_data:
+    run: stata-mp:latest analysis/001_baseline_data.do
+    needs: [generate_dataset]
+    outputs:
+      moderately_sensitive:
+        log1: logs/baseline_data.log   
+        table1: output/tables/baseline_table_rounded.csv
+        table2: output/tables/table_mean_age_rounded.csv
 """
 
 # Add diseases list to the header dynamically
