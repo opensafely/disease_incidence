@@ -119,7 +119,6 @@ foreach disease in $diseases {
 
 **Gen incident disease cohorts during study period, and shorten variable names - too long for Stata
 foreach disease in $diseases {
-	rename `disease'_preceding_reg_inc `disease'_pre_reg
 	gen `disease' = 1 if (((`disease'_inc_date >= date("$start_date", "DMY")) & (`disease'_inc_date <= date("$end_date", "DMY"))) & `disease'_inc_date!=. & gender!=. & `disease'_age!=. & `disease'_pre_reg=="T" & `disease'_alive_inc=="T")
 	recode `disease' .=0
 }

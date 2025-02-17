@@ -171,7 +171,7 @@ for disease in diseases:
     )
 
     # 12 months registration preceding incident diagnosis date
-    dataset.add_column(f"{disease}_preceding_reg_inc", 
+    dataset.add_column(f"{disease}_pre_reg", 
         preceding_registration(getattr(dataset, f"{disease}_inc_date")
         ).exists_for_patient()
     )

@@ -92,7 +92,7 @@ inc_case[disease + "_inc_case"] = (
 # Preceding registration and alive at incident diagnosis date
 inc_case_12m_alive[disease + "_inc_case_12m_alive"] = ( 
     inc_case[disease + "_inc_case"]
-    & getattr(dataset, disease + "_preceding_reg_inc")
+    & getattr(dataset, disease + "_pre_reg")
     & getattr(dataset, disease + "_alive_inc")
 ).when_null_then(False)
 
