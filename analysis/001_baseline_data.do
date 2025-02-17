@@ -123,9 +123,21 @@ foreach disease in $diseases {
 	recode `disease' .=0
 }
 
+**Format dates
+foreach disease in $diseases {
+    gen `disease'_year = year(`disease'_inc_date)
+	format `disease'_year %ty
+	gen `disease'_mon = month(`disease'_inc_date)
+	gen `disease'_moyear = ym(`disease'_year, `disease'_mon)
+	format `disease'_moyear %tmMon-CCYY
+	generate str16 `disease'_moyear_s = strofreal(`disease'_moyear,"%tmCCYY!mNN")
+	lab var `disease'_moyear "Month/Year of Diagnosis"
+	lab var `disease'_moyear_s "Month/Year of Diagnosis"
+}
+
 save "$projectdir/output/data/baseline_data_processed.dta", replace
 
-/*Tables=====================================================================================*/
+/*Tables================================================================*/
 
 use "$projectdir/output/data/baseline_data_processed.dta", clear
 
@@ -290,6 +302,43 @@ import excel "$projectdir/output/tables/baseline_table_rounded.xls", clear
 export delimited using "$projectdir/output/tables/baseline_table_rounded.csv", novarnames  replace
 
 import excel "$projectdir/output/tables/table_mean_age_rounded.xls", clear
-export delimited using "$projectdir/output/tables/table_mean_age_rounded.csv", novarnames  replace				
+export delimited using "$projectdir/output/tables/table_mean_age_rounded.csv", novarnames  replace	
+
+/*Graphs================================================================*/
+
+use "$projectdir/output/data/baseline_data_processed.dta", clear
+
+*Graph of (count) diagnoses by month, by disease
+
+foreach disease in $diseases {
+	preserve
+	keep if `disease'==1 //would need to remove this if calculating incidence
+	keep if (`disease'_inc_date >= date("$start_date", "DMY")) & (`disease'_inc_date <= date("$end_date", "DMY")) //should be accounted for with above
+	recode `disease' 0=.
+	collapse (count) total_diag=`disease', by(`disease'_moyear) 
+	
+	**Round to nearest 5
+	*foreach var of varlist *_diag {
+		*gen `var'_round=round(`var', 5)
+		*drop `var'
+		
+	outsheet * using "$projectdir/output/tables/incidence_count_`disease'.csv" , comma replace
+		
+	**Label diseases
+	local dis_full = strproper(subinstr("`disease'", "_", " ",.)) 
+	if "`dis_full'" == "Rheumatoid" local dis_full "Rheumatoid Arthritis"
+	if "`dis_full'" == "Copd" local dis_full "COPD"
+	if "`dis_full'" == "Crohns Disease" local dis_full "Crohn's Disease"
+	if "`dis_full'" == "Dm Type2" local dis_full "Type 2 Diabetes Mellitus"
+	if "`dis_full'" == "Chd" local dis_full "Coronary Heart Disease"
+	if "`dis_full'" == "Ckd" local dis_full "Chronic Kidney Disease"
+	if "`dis_full'" == "Coeliac" local dis_full "Coeliac Disease"
+	if "`dis_full'" == "Pmr" local dis_full "Polymyalgia Rheumatica"
+	
+	twoway connected total_diag `disease'_moyear, ytitle("Monthly count of diagnoses", size(med)) color(gold%35) msymbol(circle) lstyle(solid) lcolor(gold) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small)) xline(722) title("`dis_full'", size(medium) margin(b=2)) name(`disease'_count, replace) saving("$projectdir/output/figures/count_inc_`disease'.gph", replace)
+		graph export "$projectdir/output/figures/count_inc_`disease'.svg", replace
+	
+	restore
+}
 
 log close	

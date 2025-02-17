@@ -43,6 +43,8 @@ actions:
         log1: logs/baseline_data.log   
         table1: output/tables/baseline_table_rounded.csv
         table2: output/tables/table_mean_age_rounded.csv
+        table3: output/tables/incidence_count_*.csv
+        figure1: output/figures/count_inc_*.svg
 """
 
 # Add diseases list to the header dynamically
