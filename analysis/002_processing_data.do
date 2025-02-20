@@ -487,7 +487,7 @@ set type double
 
 keep if measure_inc==1 | measure_prev==1
 
-foreach var in all male female 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 {
+foreach var in all male female {
 	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
 	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
 	rename ratio_`var'_100000 rate_`var'_n // unadjusted IR
@@ -503,7 +503,7 @@ foreach var in all male female 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 
 	drop numerator_`var'_n denominator_`var'_n s_rate_`var'_n rate_`var'_n 
 }
 
-foreach var in white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
+foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
 	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
 	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
 	rename ratio_`var'_100000 rate_`var'_n

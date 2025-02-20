@@ -96,7 +96,7 @@ yaml_footer_template = f"""
         figure3: output/figures/prev_adj_*.svg
         figure4: output/figures/inc_adj_*.svg
         figure5: output/figures/adj_sex_*.svg
-        figure6: output/figures/adj_age_*.svg
+        figure6: output/figures/unadj_age_*.svg
         figure7: output/figures/unadj_ethn_*.svg
         figure8: output/figures/unadj_imd_*.svg
         table1: output/tables/arima_standardised.csv

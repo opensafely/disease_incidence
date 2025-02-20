@@ -70,6 +70,8 @@ order year, after(mo_year_diagn)
 bysort disease measure (mo_year_diagn): gen s_rate_all_ma =(s_rate_all[_n-1]+s_rate_all[_n]+s_rate_all[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_male_ma =(s_rate_male[_n-1]+s_rate_male[_n]+s_rate_male[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_female_ma =(s_rate_female[_n-1]+s_rate_female[_n]+s_rate_female[_n+1])/3
+
+/*
 bysort disease measure (mo_year_diagn): gen s_rate_0_9_ma =(s_rate_0_9[_n-1]+s_rate_0_9[_n]+s_rate_0_9[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_10_19_ma =(s_rate_10_19[_n-1]+s_rate_10_19[_n]+s_rate_10_19[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_20_29_ma =(s_rate_20_29[_n-1]+s_rate_20_29[_n]+s_rate_20_29[_n+1])/3
@@ -79,6 +81,7 @@ bysort disease measure (mo_year_diagn): gen s_rate_50_59_ma =(s_rate_50_59[_n-1]
 bysort disease measure (mo_year_diagn): gen s_rate_60_69_ma =(s_rate_60_69[_n-1]+s_rate_60_69[_n]+s_rate_60_69[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_70_79_ma =(s_rate_70_79[_n-1]+s_rate_70_79[_n]+s_rate_70_79[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_80_ma =(s_rate_80[_n-1]+s_rate_80[_n]+s_rate_80[_n+1])/3
+*/
 
 bysort disease measure (mo_year_diagn): gen rate_0_9_ma =(rate_0_9[_n-1]+rate_0_9[_n]+rate_0_9[_n+1])/3
 bysort disease measure (mo_year_diagn): gen rate_10_19_ma =(rate_10_19[_n-1]+rate_10_19[_n]+rate_10_19[_n+1])/3
@@ -168,13 +171,13 @@ foreach disease_ of local levels {
 		graph export "$projectdir/output/figures/adj_sex_`disease_'.svg", replace
 	restore		
 	
-*Adjusted incidence overall with moving average, by age group (lines only)
+*Unadjusted incidence overall with moving average, by age group (lines only)
 	preserve
 	keep if measure=="Incidence"
 	keep if disease_full == "`disease_'"
 
-	twoway line s_rate_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line s_rate_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line s_rate_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line s_rate_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line s_rate_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line s_rate_50_59_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || line s_rate_60_69_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line s_rate_70_79_ma mo_year_diagn, lcolor(navy) lstyle(solid) || line s_rate_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(region(fcolor(white%0)) title("Age group", size(small) margin(b=1)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(adj_age, replace) saving("$projectdir/output/figures/`disease_'_adj_age.gph", replace)
-		graph export "$projectdir/output/figures/adj_age_`disease_'.svg", replace
+	twoway line rate_0_9_ma mo_year_diagn, lcolor(gold) lstyle(solid) ytitle("Monthly incidence per 100,000 population", size(med)) || line rate_10_19_ma mo_year_diagn, lcolor(orange) lstyle(solid) || line rate_20_29_ma mo_year_diagn, lcolor(red) lstyle(solid) || line rate_30_39_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) || line rate_40_49_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line rate_50_59_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || line rate_60_69_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line rate_70_79_ma mo_year_diagn, lcolor(navy) lstyle(solid) || line rate_80_ma mo_year_diagn, lcolor(black) lstyle(solid) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small))  title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(region(fcolor(white%0)) title("Age group", size(small) margin(b=1)) order(1 "0-9" 2 "10-19" 3 "20-29" 4 "30-39" 5 "40-49" 6 "50-59" 7 "60-69" 8 "70-79" 9 "80+")) name(unadj_age, replace) saving("$projectdir/output/figures/`disease_'_unadj_age_.gph", replace)
+		graph export "$projectdir/output/figures/unadj_age_`disease_'.svg", replace
 	restore	
 	
 *Unadjusted incidence moving average, by ethnicity (lines only)
