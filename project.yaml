@@ -15,6 +15,13 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition.csv
 
+  generate_dataset_midpoint:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_midpoint.py
+      --output output/dataset_definition_midpoint.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_definition_midpoint.csv        
+
   # generate_dataset_data_avail:
   #   run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
   #     --output output/dataset_definition_data_avail.csv
@@ -31,6 +38,15 @@ actions:
   #     moderately_sensitive:
   #       log1: logs/data_avail_tables.log   
   #       data1: output/tables/data_check_*.csv
+
+  run_baseline_data_midpoint:
+    run: stata-mp:latest analysis/000_baseline_data_midpoint.do
+    needs: [generate_dataset_midpoint]
+    outputs:
+      moderately_sensitive:
+        log1: logs/baseline_data_midpoint.log   
+        table1: output/tables/reference_table_rounded.csv
+        table2: output/tables/reference_mean_age_rounded.csv
 
   run_baseline_data:
     run: stata-mp:latest analysis/001_baseline_data.do

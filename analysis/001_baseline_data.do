@@ -46,6 +46,10 @@ set scheme plotplainblind
 
 *Create and label variables ===========================================================*/
 
+**Age
+codebook age_reg
+keep if age_reg !=.
+
 **Sex
 gen gender = 1 if sex == "female"
 replace gender = 2 if sex == "male"
@@ -53,11 +57,12 @@ lab var gender "Gender"
 lab define gender 1 "Female" 2 "Male", modify
 lab val gender gender
 tab gender, missing
+keep if gender !=.
 drop sex
 
 **Ethnicity
 gen ethnicity_n = 1 if ethnicity == "White"
-replace ethnicity_n = 2 if ethnicity == "Asian or Asian British" /* mixed to 6 */
+replace ethnicity_n = 2 if ethnicity == "Asian or Asian British"
 replace ethnicity_n = 3 if ethnicity == "Black or Black British"
 replace ethnicity_n = 4 if ethnicity == "Mixed"
 replace ethnicity_n = 5 if ethnicity == "Chinese or Other Ethnic Groups"
@@ -150,7 +155,7 @@ table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
 		 )
 restore
 
-**Baseline table for reference population
+**Baseline table by disease
 foreach disease in $diseases {
 	preserve
 	keep if `disease'==1
