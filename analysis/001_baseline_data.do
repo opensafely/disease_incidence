@@ -48,16 +48,16 @@ set scheme plotplainblind
 
 **Age
 codebook age_reg
-keep if age_reg !=.
 
 **Sex
+codebook sex
 gen gender = 1 if sex == "female"
 replace gender = 2 if sex == "male"
 lab var gender "Gender"
 lab define gender 1 "Female" 2 "Male", modify
 lab val gender gender
 tab gender, missing
-keep if gender !=.
+keep if gender == 1 | gender == 2
 drop sex
 
 **Ethnicity
@@ -103,6 +103,7 @@ foreach date_var in date_of_death registration_start {
 	format `date_var' %td
 	drop `date_var'_s 
 }
+codebook registration_start
 
 foreach disease in $diseases {
 	rename `disease'_inc_date `disease'_inc_date_s
@@ -120,11 +121,12 @@ foreach disease in $diseases {
 	*gen `disease'_inc_date = date(`disease'_inc_date_s, "YMD") 
 	*format `disease'_inc_date %td
 	*drop `disease'_inc_date_s
+	codebook `disease'_age
 }
 
 **Gen incident disease cohorts during study period, and shorten variable names - too long for Stata
 foreach disease in $diseases {
-	gen `disease' = 1 if (((`disease'_inc_date >= date("$start_date", "DMY")) & (`disease'_inc_date <= date("$end_date", "DMY"))) & `disease'_inc_date!=. & gender!=. & `disease'_age!=. & `disease'_pre_reg=="T" & `disease'_alive_inc=="T")
+	gen `disease' = 1 if (((`disease'_inc_date >= date("$start_date", "DMY")) & (`disease'_inc_date <= date("$end_date", "DMY"))) & (`disease'_age >=0 & `disease'_age!=.) & `disease'_pre_reg=="T" & `disease'_alive_inc=="T")
 	recode `disease' .=0
 }
 
@@ -318,8 +320,6 @@ use "$projectdir/output/data/baseline_data_processed.dta", clear
 foreach disease in $diseases {
 	preserve
 	keep if `disease'==1 //would need to remove this if calculating incidence
-	keep if (`disease'_inc_date >= date("$start_date", "DMY")) & (`disease'_inc_date <= date("$end_date", "DMY")) //should be accounted for with above
-	recode `disease' 0=.
 	collapse (count) total_diag=`disease', by(`disease'_moyear) 
 	
 	**Round to nearest 5
