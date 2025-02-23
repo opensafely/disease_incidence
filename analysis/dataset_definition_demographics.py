@@ -4,23 +4,27 @@ from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
-# # Arguments (from project.yaml)
-# from argparse import ArgumentParser
+# Arguments (from project.yaml)
+from argparse import ArgumentParser
 
-# parser = ArgumentParser()
-# parser.add_argument("--diseases", type=str)
-# args = parser.parse_args()
-# diseases = args.diseases.split(", ")
+parser = ArgumentParser()
+parser.add_argument("--start-date", type=str)
+parser.add_argument("--intervals", type=int)
+args = parser.parse_args()
+
+start_date = args.start_date
+intervals = args.intervals
+intervals_years = int(intervals/12)
 
 diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
 # diseases = ["rheumatoid", "pmr"]
 codelist_types = ["snomed", "icd", "resolved"]
 
+index_date = start_date
+end_date = index_date + months(intervals)
+
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
-
-index_date = "2016-04-01"
-end_date = "2024-12-31"
 
 # Incident diagnostic code in primary care record (SNOMED) (assuming before study end date)
 def first_code_in_period_snomed(dx_codelist):
@@ -70,7 +74,7 @@ def preceding_registration(dx_date):
         practice_registrations.end_date.is_on_or_before(dx_date)
     )
 
-# Define sex, date of death (only need to capture once) 
+# Define sex, date of death
 dataset.sex = patients.sex
 dataset.date_of_death = patients.date_of_death
 
@@ -81,17 +85,8 @@ any_registration = practice_registrations.where(
             practice_registrations.end_date < index_date    
         ).exists_for_patient()
 
-# Registration start date (for purposes of calculating age)
-dataset.registration_start = practice_registrations.where(
-            practice_registrations.start_date <= end_date
-        ).except_where(
-            practice_registrations.end_date < index_date   
-        ).sort_by(
-            practice_registrations.start_date
-        ).last_for_patient().start_date
-
-# Define age at practice registration start date
-dataset.age_reg = patients.age_on(dataset.registration_start)
+# Age at index date
+dataset.age = patients.age_on(index_date)
 
 dataset.age_band = case(  
     when((dataset.age >= 0) & (dataset.age < 9)).then("age_0_9"),
@@ -123,14 +118,14 @@ dataset.ethnicity = case(
 )
 
 # Define patient IMD
-latest_address_per_patient = addresses.sort_by(addresses.start_date).last_for_patient()
-imd_rounded = latest_address_per_patient.imd_rounded
+imd = addresses.for_patient_on(end_date).imd_rounded
+
 dataset.imd_quintile = case(
-    when((imd_rounded >= 0) & (imd_rounded < int(32844 * 1 / 5))).then("1 (most deprived)"),
-    when(imd_rounded < int(32844 * 2 / 5)).then("2"),
-    when(imd_rounded < int(32844 * 3 / 5)).then("3"),
-    when(imd_rounded < int(32844 * 4 / 5)).then("4"),
-    when(imd_rounded < int(32844 * 5 / 5)).then("5 (least deprived)"),
+    when((imd >= 0) & (imd < int(32844 * 1 / 5))).then("1 (most deprived)"),
+    when(imd < int(32844 * 2 / 5)).then("2"),
+    when(imd < int(32844 * 3 / 5)).then("3"),
+    when(imd < int(32844 * 4 / 5)).then("4"),
+    when(imd < int(32844 * 5 / 5)).then("5 (least deprived)"),
     otherwise="Unknown",
 )
 
@@ -183,6 +178,12 @@ for disease in diseases:
             (snomed_inc_date[f"{disease}_snomed_inc_date"]),
             (icd_inc_date[f"{disease}_icd_inc_date"])
             ] if date is not None]),
+    )
+
+    # Incident date within window
+    dataset.add_column(f"{disease}_inc_case",
+        (getattr(dataset, disease + "_inc_date").is_on_or_between(index_date, end_date)
+        ).when_null_then(False)
     )
 
     # 12 months registration preceding incident diagnosis date
