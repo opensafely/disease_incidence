@@ -138,6 +138,14 @@ sort disease mo_year_diagn measure
 bys disease mo_year_diagn measure: egen numerator_all = sum(numerator)
 bys disease mo_year_diagn measure: egen denominator_all = sum(denominator)
 
+preserve
+keep if measure_prev==1
+bys disease mo_year_diagn: gen n=_n
+keep if n==1
+drop n
+list disease mo_year_diagn numerator_all denominator_all
+restore
+
 *Redact and round
 replace numerator_all =. if numerator_all<=7 | denominator_all<=7
 replace denominator_all =. if numerator_all<=7 | numerator_all==. | denominator_all<=7
