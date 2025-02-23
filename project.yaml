@@ -46,7 +46,8 @@ actions:
       moderately_sensitive:
         log1: logs/baseline_data_midpoint.log   
         table1: output/tables/reference_table_rounded.csv
-        table2: output/tables/reference_mean_age_rounded.csv
+        table2: output/tables/reference_table_rounded2.csv
+        table3: output/tables/reference_mean_age_rounded.csv
 
   run_baseline_data:
     run: stata-mp:latest analysis/001_baseline_data.do

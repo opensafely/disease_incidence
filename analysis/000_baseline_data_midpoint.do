@@ -150,6 +150,39 @@ foreach var of varlist imd ethnicity gender  {
 use "$projectdir/output/data/reference_table_rounded.dta", clear
 export excel "$projectdir/output/tables/reference_table_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
 
+**Rounded and redacted baseline table for full population
+clear *
+save "$projectdir/output/data/reference_table_rounded2.dta", replace emptyok
+use "$projectdir/output/data/reference_data_processed.dta", clear
+
+set type double
+
+foreach var of varlist imd ethnicity gender  {
+	preserve
+	contract `var'
+	local v : variable label `var' 
+	gen variable = `"`v'"'
+    decode `var', gen(categories)
+	gen count = round(_freq, 5)
+	egen total = total(count)
+	gen percent = round((count/total)*100, 0.1)
+	order total, after(percent)
+	replace count = . if count<=7
+	replace percent = . if count<=7
+	replace total = . if count<=7
+    order total, after(count)
+	gen cohort = "All"
+	order cohort, first
+	list cohort variable categories count percent total
+	keep cohort variable categories count percent total
+	append using "$projectdir/output/data/reference_table_rounded2.dta"
+	save "$projectdir/output/data/reference_table_rounded2.dta", replace
+	restore
+}
+use "$projectdir/output/data/reference_table_rounded2.dta", clear
+export excel "$projectdir/output/tables/reference_table_rounded2.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
+
+
 **Table of mean age
 clear *
 save "$projectdir/output/data/reference_mean_age_rounded.dta", replace emptyok
@@ -186,6 +219,9 @@ export excel "$projectdir/output/tables/reference_mean_age_rounded.xls", replace
 ***Output tables as CSVs		 
 import excel "$projectdir/output/tables/reference_table_rounded.xls", clear
 export delimited using "$projectdir/output/tables/reference_table_rounded.csv", novarnames  replace
+
+import excel "$projectdir/output/tables/reference_table_rounded2.xls", clear
+export delimited using "$projectdir/output/tables/reference_table_rounded2.csv", novarnames  replace
 
 import excel "$projectdir/output/tables/reference_mean_age_rounded.xls", clear
 export delimited using "$projectdir/output/tables/reference_mean_age_rounded.csv", novarnames  replace	
