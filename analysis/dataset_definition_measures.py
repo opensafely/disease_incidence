@@ -57,7 +57,7 @@ measures.configure_dummy_data(population_size=1000, legacy=True)
 measures.configure_disclosure_control(enabled=False)
 measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
-## Prevalence denominator - people registered for more than one year on index date (Nb. sex already selected for in dataset definition)
+## Prevalence denominator
 prev_denominator = (
     age_band.is_not_null()
     & dataset.sex.is_in(["male", "female"])

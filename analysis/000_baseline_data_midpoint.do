@@ -43,6 +43,7 @@ set scheme plotplainblind
 lab var age "Age"
 codebook age
 keep if age !=.
+codebook age_band
 
 **Sex
 gen gender = 1 if sex == "female"

@@ -11,10 +11,25 @@ index_date = "2020-08-01"
 
 # Demographics
 dataset.age = patients.age_on(index_date)
+
+dataset.age_band = case(  
+    when((dataset.age >= 0) & (dataset.age < 9)).then("age_0_9"),
+    when((dataset.age >= 10) & (dataset.age < 19)).then("age_10_19"),
+    when((dataset.age >= 20) & (dataset.age < 29)).then("age_20_29"),
+    when((dataset.age >= 30) & (dataset.age < 39)).then("age_30_39"),
+    when((dataset.age >= 40) & (dataset.age < 49)).then("age_40_49"),
+    when((dataset.age >= 50) & (dataset.age < 59)).then("age_50_59"),
+    when((dataset.age >= 60) & (dataset.age < 69)).then("age_60_69"),
+    when((dataset.age >= 70) & (dataset.age < 79)).then("age_70_79"),
+    when((dataset.age >= 80)).then("age_greater_equal_80"),
+)
+
 dataset.sex = patients.sex
 
+dataset.date_of_death = patients.date_of_death
+
 # Currently registered at mid-point
-any_registration = practice_registrations.for_patient_on(index_date).exists_for_patient()
+curr_registered = practice_registrations.for_patient_on(index_date).exists_for_patient()
 
 # Define patient ethnicity
 latest_ethnicity_code = (
@@ -47,6 +62,8 @@ dataset.imd_quintile = case(
 
 # Define population as any registered patient after index date - then apply further restrictions later
 dataset.define_population(
-    any_registration
+    curr_registered
     & dataset.sex.is_in(["male", "female"]) 
-)  
+    & dataset.age_band.is_not_null()
+    & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
+)
