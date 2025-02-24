@@ -115,7 +115,7 @@ needs_list = ", ".join(all_needs)
 yaml_footer_template = f"""
   run_baseline_data:
     run: stata-mp:latest analysis/001_baseline_data2.do
-    needs: [dataset_definition_2016]
+    needs: [generate_baseline_data_2016]
     outputs:
       moderately_sensitive:
         log1: logs/baseline_data.log   
