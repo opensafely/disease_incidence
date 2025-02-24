@@ -27,7 +27,7 @@ di "$logdir"
 
 *Open a log file
 cap log close
-log using "$logdir/baseline_data.log", replace
+log using "$logdir/baseline_data_disease.log", replace
 
 *Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
@@ -41,14 +41,14 @@ set type double
 global start_date = "01/04/2016"
 
 *Import dataset
-import delimited "$projectdir/output/dataset_definition_2016.csv", clear
+import delimited "$projectdir/output/dataset_definition_demographics_disease.csv", clear
 
 set scheme plotplainblind
 
 *Create and label variables ===========================================================*/
 
-**Age
-lab var age "Age"
+**Age at index date
+lab var age "Age at index date"
 codebook age
 
 **Sex
@@ -97,14 +97,6 @@ lab var imd "Index of multiple deprivation"
 tab imd, missing
 drop imd_quintile
 
-**Format dates
-foreach date_var in date_of_death {
-	rename `date_var' `date_var'_s
-	gen `date_var' = date(`date_var'_s, "YMD") 
-	format `date_var' %td
-	drop `date_var'_s 
-}
-
 foreach disease in $diseases {
 	rename `disease'_inc_date `disease'_inc_date_s
 	gen `disease'_inc_date = date(`disease'_inc_date_s, "YMD") 
@@ -112,11 +104,8 @@ foreach disease in $diseases {
 	drop `disease'_inc_date_s
 }
 
-**Work out age at diagnosis
+**Age at diagnosis
 foreach disease in $diseases {
-	gen `disease'_int = `disease'_inc_date - date("$start_date", "DMY") if `disease'_inc_date!=.
-	replace `disease'_int = `disease'_int/365.25
-	gen `disease'_age = age + `disease'_int
 	lab var `disease'_age "Age at diagnosis"
 	codebook `disease'_age
 }
@@ -145,16 +134,20 @@ save "$projectdir/output/data/baseline_data_processed.dta", replace
 
 use "$projectdir/output/data/baseline_data_processed.dta", clear
 
-**Baseline table for reference population
+**Baseline table for each disease
+foreach disease in $diseases {
 preserve
+keep if `disease'==1
+di "`disease'"
 table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
-	vars(age contn %5.1f \ ///
+	vars(`disease'_age contn %5.1f \ ///
 		 gender cat %5.1f \ ///
 		 ethnicity cat %5.1f \ ///
 		 imd cat %5.1f \ ///
 		 )
 restore
-
+}
+/*
 **Rounded and redacted baseline table for full population
 clear *
 save "$projectdir/output/data/baseline_table_rounded.dta", replace emptyok
@@ -319,5 +312,5 @@ foreach disease in $diseases {
 	
 	restore
 }
-
+*/
 log close	

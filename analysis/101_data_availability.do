@@ -32,6 +32,8 @@ log using "$logdir/data_avail_tables.log", replace
 *Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
+set type double
+
 *Import datasets for diseases
 import delimited "$projectdir/output/dataset_definition_data_avail.csv", clear
 
@@ -72,7 +74,7 @@ foreach disease in `diseases' {
 	lab var mo_year_diagn "Month/Year of Diagnosis"
 	lab var mo_year_diagn_s "Month/Year of Diagnosis"
 	collapse (sum) all_`disease'=all_`disease' ho1_`disease'=ho1_`disease' gp1_`disease'=gp1_`disease' hosp_`disease'=hosp_`disease' gp_`disease'=gp_`disease', by(mo_year_diagn)
-	outsheet * using "$projectdir/output/tables/data_check_`disease'.csv" , comma replace
+	export delimited using "$projectdir/output/tables/data_check_`disease'.csv", datafmt replace
 	restore
 }
 

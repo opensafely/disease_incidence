@@ -18,12 +18,12 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition.csv
 
-  # generate_dataset_midpoint:
-  #   run: ehrql:v1 generate-dataset analysis/dataset_definition_midpoint.py
-  #     --output output/dataset_definition_midpoint.csv
-  #   outputs:
-  #     highly_sensitive:
-  #       cohort: output/dataset_definition_midpoint.csv        
+  generate_dataset_demographics_disease:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics_disease.py
+      --output output/dataset_definition_demographics_disease.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_definition_demographics_disease.csv        
 
   # generate_dataset_data_avail:
   #   run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
@@ -41,27 +41,6 @@ actions:
   #     moderately_sensitive:
   #       log1: logs/data_avail_tables.log   
   #       data1: output/tables/data_check_*.csv
-
-  # run_baseline_data_midpoint:
-  #   run: stata-mp:latest analysis/000_baseline_data_midpoint.do
-  #   needs: [generate_dataset_midpoint]
-  #   outputs:
-  #     moderately_sensitive:
-  #       log1: logs/baseline_data_midpoint.log   
-  #       table1: output/tables/reference_table_rounded.csv
-  #       table2: output/tables/reference_table_rounded2.csv
-  #       table3: output/tables/reference_mean_age_rounded.csv
-
-  # run_baseline_data:
-  #   run: stata-mp:latest analysis/001_baseline_data.do
-  #   needs: [generate_dataset]
-  #   outputs:
-  #     moderately_sensitive:
-  #       log1: logs/baseline_data.log   
-  #       table1: output/tables/baseline_table_rounded.csv
-  #       table2: output/tables/table_mean_age_rounded.csv
-  #       table3: output/tables/incidence_count_*.csv
-  #       figure1: output/figures/count_inc_*.svg
 """
 
 yaml_demog = """
@@ -70,7 +49,6 @@ yaml_demog = """
       --output output/dataset_definition_{year}.csv
       --
       --start-date "{year}-04-01"
-      --intervals {intervals}
     outputs:
       highly_sensitive:
         cohort: output/dataset_definition_{year}.csv        
@@ -80,8 +58,7 @@ yaml_prebody = ""
 all_need = []
 
 for year in range(2016, 2025):
-    intervals = 9 if year == 2024 else 12  # Set intervals conditionally
-    yaml_prebody += yaml_demog.format(year=year, intervals=intervals)
+    yaml_prebody += yaml_demog.format(year=year)
     all_need.append(f"generate_baseline_data_{year}")
 
 need_list = ", ".join(all_need)
@@ -113,16 +90,25 @@ for year in range(2016, 2025):
 needs_list = ", ".join(all_needs)
 
 yaml_footer_template = f"""
-  run_baseline_data:
-    run: stata-mp:latest analysis/001_baseline_data2.do
+  run_baseline_data_reference:
+    run: stata-mp:latest analysis/000_baseline_data_reference.do
     needs: [generate_baseline_data_2016]
     outputs:
       moderately_sensitive:
-        log1: logs/baseline_data.log   
-        table1: output/tables/baseline_table_rounded*.csv
-        table2: output/tables/table_mean_age_rounded*.csv
-        table3: output/tables/incidence_count_*.csv
-        figure1: output/figures/count_inc_*.svg      
+        log1: logs/baseline_data_reference.log   
+        table1: output/tables/reference_table_rounded.csv
+        table3: output/tables/reference_mean_age_rounded.csv  
+  
+  run_baseline_data_disease:
+    run: stata-mp:latest analysis/001_baseline_data_disease.do
+    needs: [generate_dataset_demographics_disease]
+    outputs:
+      moderately_sensitive:
+        log1: logs/baseline_data_disease.log   
+        # table1: output/tables/baseline_table_rounded*.csv
+        # table2: output/tables/table_mean_age_rounded*.csv
+        # table3: output/tables/incidence_count_*.csv
+        # figure1: output/figures/count_inc_*.svg      
   
   run_data_processing:
     run: stata-mp:latest analysis/002_processing_data.do

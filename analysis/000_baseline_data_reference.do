@@ -27,14 +27,10 @@ di "$logdir"
 
 *Open a log file
 cap log close
-log using "$logdir/baseline_data.log", replace
+log using "$logdir/baseline_data_reference.log", replace
 
 *Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
-
-*Set disease list
-global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-*global diseases "rheumatoid pmr"
 
 set type double
 
@@ -49,7 +45,21 @@ set scheme plotplainblind
 
 **Age
 lab var age "Age"
-codebook age
+rename age_band age_band_old
+encode age_band_old, gen(age_band)
+drop age_band_old
+lab var age_band "Age band, years"
+
+label define age_band		1 "0 to 9"  ///
+							2 "10 to 19" ///
+							3 "20 to 29" ///
+							4 "30 to 39" ///
+							5 "40 to 49" ///
+							6 "50 to 59" ///
+							7 "60 to 69" ///
+							8 "70 to 79" ///
+							9 "80 or above", modify
+lab val age_band age_band
 
 **Sex
 gen gender = 1 if sex == "female"
@@ -97,70 +107,29 @@ lab var imd "Index of multiple deprivation"
 tab imd, missing
 drop imd_quintile
 
-**Format dates
-foreach date_var in date_of_death {
-	rename `date_var' `date_var'_s
-	gen `date_var' = date(`date_var'_s, "YMD") 
-	format `date_var' %td
-	drop `date_var'_s 
-}
-
-foreach disease in $diseases {
-	rename `disease'_inc_date `disease'_inc_date_s
-	gen `disease'_inc_date = date(`disease'_inc_date_s, "YMD") 
-	format `disease'_inc_date %td
-	drop `disease'_inc_date_s
-}
-
-**Work out age at diagnosis
-foreach disease in $diseases {
-	gen `disease'_int = `disease'_inc_date - date("$start_date", "DMY") if `disease'_inc_date!=.
-	replace `disease'_int = `disease'_int/365.25
-	gen `disease'_age = age + `disease'_int
-	lab var `disease'_age "Age at diagnosis"
-	codebook `disease'_age
-}
-
-**Gen incident disease cohorts during study period, and shorten variable names - too long for Stata
-foreach disease in $diseases {
-	gen `disease' = 1 if `disease'_inc_case=="T" & (`disease'_age >=0 & `disease'_age!=.) & `disease'_pre_reg=="T" & `disease'_alive_inc=="T"
-	recode `disease' .=0
-}
-
-**Format dates
-foreach disease in $diseases {
-    gen `disease'_year = year(`disease'_inc_date)
-	format `disease'_year %ty
-	gen `disease'_mon = month(`disease'_inc_date)
-	gen `disease'_moyear = ym(`disease'_year, `disease'_mon)
-	format `disease'_moyear %tmMon-CCYY
-	generate str16 `disease'_moyear_s = strofreal(`disease'_moyear,"%tmCCYY!mNN")
-	lab var `disease'_moyear "Month/Year of Diagnosis"
-	lab var `disease'_moyear_s "Month/Year of Diagnosis"
-}
-
-save "$projectdir/output/data/baseline_data_processed.dta", replace
+save "$projectdir/output/data/reference_data_processed.dta", replace
 
 /*Tables================================================================*/
 
-use "$projectdir/output/data/baseline_data_processed.dta", clear
+use "$projectdir/output/data/reference_data_processed.dta", clear
 
 **Baseline table for reference population
 preserve
 table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
 	vars(age contn %5.1f \ ///
+		 age_band cat %5.1f \ ///
 		 gender cat %5.1f \ ///
 		 ethnicity cat %5.1f \ ///
 		 imd cat %5.1f \ ///
 		 )
 restore
 
-**Rounded and redacted baseline table for full population
+**Rounded and redacted baseline table for ref population
 clear *
-save "$projectdir/output/data/baseline_table_rounded.dta", replace emptyok
-use "$projectdir/output/data/baseline_data_processed.dta", clear
+save "$projectdir/output/data/reference_table_rounded.dta", replace emptyok
+use "$projectdir/output/data/reference_data_processed.dta", clear
 
-foreach var of varlist imd ethnicity gender  {
+foreach var of varlist imd ethnicity gender age_band  {
 	preserve
 	contract `var'
 	local v : variable label `var' 
@@ -179,15 +148,16 @@ foreach var of varlist imd ethnicity gender  {
 	format count total %14.0f
 	list cohort variable categories count total percent
 	keep cohort variable categories count total percent
-	append using "$projectdir/output/data/baseline_table_rounded.dta"
-	save "$projectdir/output/data/baseline_table_rounded.dta", replace
+	append using "$projectdir/output/data/reference_table_rounded.dta"
+	save "$projectdir/output/data/reference_table_rounded.dta", replace
 	restore
 }
-use "$projectdir/output/data/baseline_table_rounded.dta", clear
-export excel "$projectdir/output/tables/baseline_table_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
+use "$projectdir/output/data/reference_table_rounded.dta", clear
+export excel "$projectdir/output/tables/reference_table_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
 
+/*
 **Baseline table for individual diagnoses - tagged to above excel
-use "$projectdir/output/data/baseline_data_processed.dta", clear
+use "$projectdir/output/data/reference_data_processed.dta", clear
 
 local index=1
 foreach disease in $diseases {
@@ -225,11 +195,12 @@ foreach var of varlist imd ethnicity gender {
 use "$projectdir/output/data/baseline_table_rounded_`disease'", clear
 export excel "$projectdir/output/tables/baseline_table_rounded.xls", sheet("Overall", modify) cell("A`index'") keepcellfmt firstrow(variables)
 }
+*/
 
 *Table of mean age for reference population
 clear *
-save "$projectdir/output/data/table_mean_age_rounded.dta", replace emptyok
-use "$projectdir/output/data/baseline_data_processed.dta", clear
+save "$projectdir/output/data/reference_mean_age_rounded.dta", replace emptyok
+use "$projectdir/output/data/reference_data_processed.dta", clear
 
 foreach var of varlist age  {
 	preserve
@@ -246,13 +217,14 @@ foreach var of varlist age  {
 	format count %14.0f
 	list cohort count mean_age stdev_age
 	keep cohort count mean_age stdev_age
-	append using "$projectdir/output/data/table_mean_age_rounded.dta"
-	save "$projectdir/output/data/table_mean_age_rounded.dta", replace
+	append using "$projectdir/output/data/reference_mean_age_rounded.dta"
+	save "$projectdir/output/data/reference_mean_age_rounded.dta", replace
 	restore
 }
-use "$projectdir/output/data/table_mean_age_rounded.dta", clear
-export excel "$projectdir/output/tables/table_mean_age_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
-		 
+use "$projectdir/output/data/reference_mean_age_rounded.dta", clear
+export excel "$projectdir/output/tables/reference_mean_age_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
+
+/*		 
 **Table of mean age at diagnosis, by disease - tagged to the above
 use "$projectdir/output/data/baseline_data_processed.dta", clear
 
@@ -280,13 +252,14 @@ foreach disease in $diseases {
 
 use "$projectdir/output/data/table_mean_age_rounded.dta", clear
 export excel "$projectdir/output/tables/table_mean_age_rounded.xls", replace keepcellfmt firstrow(variables)
+*/
 
 ***Output tables as CSVs		 
-import excel "$projectdir/output/tables/baseline_table_rounded.xls", clear
-export delimited using "$projectdir/output/tables/baseline_table_rounded.csv", novarnames  replace
+import excel "$projectdir/output/tables/reference_table_rounded.xls", clear
+export delimited using "$projectdir/output/tables/reference_table_rounded.csv", novarnames  replace
 
-import excel "$projectdir/output/tables/table_mean_age_rounded.xls", clear
-export delimited using "$projectdir/output/tables/table_mean_age_rounded.csv", novarnames  replace	
+import excel "$projectdir/output/tables/reference_mean_age_rounded.xls", clear
+export delimited using "$projectdir/output/tables/reference_mean_age_rounded.csv", novarnames  replace	
 
 /*Graphs================================================================*/
 
