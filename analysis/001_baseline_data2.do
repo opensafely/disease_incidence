@@ -36,6 +36,8 @@ adopath + "$projectdir/analysis/extra_ados"
 global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
 *global diseases "rheumatoid pmr"
 
+set type double
+
 global start_date = "01/04/2016"
 global end_date = "31/12/2016"
 
@@ -175,8 +177,6 @@ foreach disease in $diseases {
 clear *
 save "$projectdir/output/data/baseline_table_rounded.dta", replace emptyok
 use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-set type double
 
 foreach var of varlist imd ethnicity gender  {
 	preserve

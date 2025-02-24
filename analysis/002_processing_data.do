@@ -531,6 +531,7 @@ foreach var in all male female {
 foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
 	rename ratio_`var'_100000 rate_`var'
 	format rate_`var' %14.4f
+	order rate_`var', after(denominator_`var')
 	format numerator_`var' %14.0f
 	format denominator_`var' %14.0f
 }
@@ -547,7 +548,6 @@ foreach dis in $diseases {
 	rename dis_title disease_full
 	order disease, before(disease_full)
 	save "$projectdir/output/tables/redacted_counts_`dis'.dta", replace
-	*outsheet * using "$projectdir/output/tables/redacted_counts_`dis'.csv" , comma replace
 	export delimited using "$projectdir/output/tables/redacted_counts_`dis'.csv", datafmt replace
 	restore
 }
