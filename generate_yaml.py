@@ -131,7 +131,6 @@ yaml_footer_template = f"""
       moderately_sensitive:
         log1: logs/processing_data.log   
         table1: output/tables/redacted_counts_*.csv
-        table2: output/tables/arima_standardised2.csv
 
   run_incidence_graphs:
     run: stata-mp:latest analysis/100_incidence_graphs.do

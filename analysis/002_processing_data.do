@@ -138,14 +138,6 @@ sort disease mo_year_diagn measure
 bys disease mo_year_diagn measure: egen numerator_all = sum(numerator)
 bys disease mo_year_diagn measure: egen denominator_all = sum(denominator)
 
-preserve
-keep if measure_prev==1
-bys disease mo_year_diagn: gen n=_n
-keep if n==1
-drop n
-list disease mo_year_diagn numerator_all denominator_all
-restore
-
 *Redact and round
 replace numerator_all =. if numerator_all<=7 | denominator_all<=7
 replace denominator_all =. if numerator_all<=7 | numerator_all==. | denominator_all<=7
@@ -470,7 +462,7 @@ gen standerror = sqrt(sum_ci_95)
 gen asir_lci = asir-1.96*standerror
 gen asir_uci = asir+1.96*standerror
 */
-*/
+
 *Export a CSV for import into ARIMA R file - adjusted incidence rates
 use "$projectdir/output/data/processed_standardised.dta", clear
 
@@ -495,6 +487,7 @@ set type double
 
 keep if measure_inc==1 | measure_prev==1
 
+/*
 foreach var in all male female {
 	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
 	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
@@ -523,6 +516,24 @@ foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 white mixed blac
 	replace rate_`var' = "" if rate_`var' == "."
 	drop numerator_`var'_n denominator_`var'_n rate_`var'_n
 }
+*/
+
+foreach var in all male female {
+	rename ratio_`var'_100000 rate_`var' //unadjusted IR 
+	rename asr_`var' s_rate_`var' //age and sex-standardised IR
+	order s_rate_`var', after(rate_`var')
+	format s_rate_`var' %14.2f
+	format rate_`var' %14.2f
+	format numerator_`var' %14.0f
+	format denominator_`var' %14.0f
+}
+
+foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
+	rename ratio_`var'_100000 rate_`var'
+	format rate_`var' %14.2f
+	format numerator_`var' %14.0f
+	format denominator_`var' %14.0f
+}
 
 keep diseases_ dis_title measure mo_year_diagn numerator_* denominator_* rate_* s_rate_*
 order dis_title, before(measure)
@@ -532,12 +543,12 @@ replace measure = "Prevalence" if substr(measure,-10,.) == "prevalence"
 foreach dis in $diseases {
 	preserve
 	keep if diseases_ == "`dis'"
-	*drop diseases_
 	rename diseases_ disease
 	rename dis_title disease_full
 	order disease, before(disease_full)
 	save "$projectdir/output/tables/redacted_counts_`dis'.dta", replace
-	outsheet * using "$projectdir/output/tables/redacted_counts_`dis'.csv" , comma replace
+	*outsheet * using "$projectdir/output/tables/redacted_counts_`dis'.csv" , comma replace
+	export delimited using "$projectdir/output/tables/redacted_counts_`dis'.csv", datafmt replace
 	restore
 }
 
