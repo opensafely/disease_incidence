@@ -36,6 +36,8 @@ adopath + "$projectdir/analysis/extra_ados"
 global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
 *global diseases "rheumatoid pmr"
 
+set type double
+
 local years "2016 2017 2018 2019 2020 2021 2022 2023 2024"
 local first_disease: word 1 of $diseases
 di "`first_disease'"
@@ -483,8 +485,6 @@ outsheet * using "$projectdir/output/tables/arima_standardised2.csv" , comma rep
 *Output string version of incidence and prevalence (to stop conversion for big numbers)
 use "$projectdir/output/data/processed_standardised.dta", clear
 
-set type double
-
 keep if measure_inc==1 | measure_prev==1
 
 /*
@@ -522,15 +522,15 @@ foreach var in all male female {
 	rename ratio_`var'_100000 rate_`var' //unadjusted IR 
 	rename asr_`var' s_rate_`var' //age and sex-standardised IR
 	order s_rate_`var', after(rate_`var')
-	format s_rate_`var' %14.2f
-	format rate_`var' %14.2f
+	format s_rate_`var' %14.4f
+	format rate_`var' %14.4f
 	format numerator_`var' %14.0f
 	format denominator_`var' %14.0f
 }
 
 foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
 	rename ratio_`var'_100000 rate_`var'
-	format rate_`var' %14.2f
+	format rate_`var' %14.4f
 	format numerator_`var' %14.0f
 	format denominator_`var' %14.0f
 }
