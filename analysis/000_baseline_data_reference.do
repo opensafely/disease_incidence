@@ -260,7 +260,7 @@ export delimited using "$projectdir/output/tables/reference_table_rounded.csv", 
 
 import excel "$projectdir/output/tables/reference_mean_age_rounded.xls", clear
 export delimited using "$projectdir/output/tables/reference_mean_age_rounded.csv", novarnames  replace	
-
+/*
 /*Graphs================================================================*/
 
 use "$projectdir/output/data/baseline_data_processed.dta", clear
@@ -292,5 +292,5 @@ foreach disease in $diseases {
 	
 	restore
 }
-
+*/
 log close	
