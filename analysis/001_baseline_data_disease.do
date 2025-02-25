@@ -108,6 +108,27 @@ foreach disease in $diseases {
 foreach disease in $diseases {
 	lab var `disease'_age "Age at diagnosis"
 	codebook `disease'_age
+	gen `disease'_age_band = 1 if ((`disease'_age >= 0) & (`disease'_age < 10)) 
+	replace `disease'_age_band = 2 if ((`disease'_age >= 10) & (`disease'_age < 20)) 
+	replace `disease'_age_band = 3 if ((`disease'_age >= 20) & (`disease'_age < 30))
+	replace `disease'_age_band = 4 if ((`disease'_age >= 30) & (`disease'_age < 40))
+	replace `disease'_age_band = 5 if ((`disease'_age >= 40) & (`disease'_age < 50))
+	replace `disease'_age_band = 6 if ((`disease'_age >= 50) & (`disease'_age < 60))
+	replace `disease'_age_band = 7 if ((`disease'_age >= 60) & (`disease'_age < 70))
+	replace `disease'_age_band = 8 if ((`disease'_age >= 70) & (`disease'_age < 80))
+	replace `disease'_age_band = 9 if ((`disease'_age >= 80) & (`disease'_age !=.))
+	lab var `disease'_age_band "Age band, years"
+
+	label define `disease'_age_band		1 "0 to 9"  ///
+										2 "10 to 19" ///
+										3 "20 to 29" ///
+										4 "30 to 39" ///
+										5 "40 to 49" ///
+										6 "50 to 59" ///
+										7 "60 to 69" ///
+										8 "70 to 79" ///
+										9 "80 or above", modify
+	lab val `disease'_age_band `disease'_age_band
 }
 
 **Gen incident disease cohorts during study period, and shorten variable names - too long for Stata
@@ -141,117 +162,46 @@ keep if `disease'==1
 di "`disease'"
 table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
 	vars(`disease'_age contn %5.1f \ ///
+		 `disease'_age_band cat %5.1f \ ///
 		 gender cat %5.1f \ ///
 		 ethnicity cat %5.1f \ ///
 		 imd cat %5.1f \ ///
 		 )
 restore
 }
-/*
-**Rounded and redacted baseline table for full population
+
+**Rounded and redacted baseline tables for each disease
 clear *
 save "$projectdir/output/data/baseline_table_rounded.dta", replace emptyok
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-foreach var of varlist imd ethnicity gender  {
-	preserve
-	contract `var'
-	local v : variable label `var' 
-	gen variable = `"`v'"'
-    decode `var', gen(categories)
-	gen count = round(_freq, 5)
-	egen total = total(count)
-	gen percent = round((count/total)*100, 0.1)
-	order total, before(percent)
-	replace percent = . if count<=7
-	replace total = . if count<=7
-	replace count = . if count<=7
-	gen cohort = "All"
-	order cohort, first
-	format percent %14.4f
-	format count total %14.0f
-	list cohort variable categories count total percent
-	keep cohort variable categories count total percent
-	append using "$projectdir/output/data/baseline_table_rounded.dta"
-	save "$projectdir/output/data/baseline_table_rounded.dta", replace
-	restore
-}
-use "$projectdir/output/data/baseline_table_rounded.dta", clear
-export excel "$projectdir/output/tables/baseline_table_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
-
-**Baseline table for individual diagnoses - tagged to above excel
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-local index=1
-foreach disease in $diseases {
-	clear *
-	save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace emptyok
-	local index = `index' + 16
-
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-foreach var of varlist imd ethnicity gender {
-	preserve
-	keep if `disease'==1
-	contract `var'
-	local v : variable label `var' 
-	gen variable = `"`v'"'
-    decode `var', gen(categories)
-	gen count = round(_freq, 5)
-	egen total = total(count)
-	gen percent = round((count/total)*100, 0.1)
-	order total, before(percent)
-	replace percent = . if count<=7
-	replace total = . if count<=7
-	replace count = . if count<=7
-	gen cohort = "`disease'"
-	order cohort, first
-	format percent %14.4f
-	format count total %14.0f
-	list cohort variable categories count total percent
-	keep cohort variable categories count total percent
-	append using "$projectdir/output/data/baseline_table_rounded_`disease'.dta"
-	save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace
-	restore
-}
-
-use "$projectdir/output/data/baseline_table_rounded_`disease'", clear
-export excel "$projectdir/output/tables/baseline_table_rounded.xls", sheet("Overall", modify) cell("A`index'") keepcellfmt firstrow(variables)
-}
-
-*Table of mean age for reference population
-clear *
-save "$projectdir/output/data/table_mean_age_rounded.dta", replace emptyok
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-foreach var of varlist age  {
-	preserve
-	collapse (count) count=patient_id (mean) mean_age=age (sd) stdev_age=age
-	gen cohort = "All"
-	rename *count freq
-	gen count = round(freq, 5)
-	replace stdev_age = . if count<=7
-	replace mean_age = . if count<=7
-	replace count = . if count<=7
-	order count, first
-	order cohort, first
-	format mean_age stdev_age %14.4f
-	format count %14.0f
-	list cohort count mean_age stdev_age
-	keep cohort count mean_age stdev_age
-	append using "$projectdir/output/data/table_mean_age_rounded.dta"
-	save "$projectdir/output/data/table_mean_age_rounded.dta", replace
-	restore
-}
-use "$projectdir/output/data/table_mean_age_rounded.dta", clear
-export excel "$projectdir/output/tables/table_mean_age_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
-		 
-**Table of mean age at diagnosis, by disease - tagged to the above
-use "$projectdir/output/data/baseline_data_processed.dta", clear
 
 foreach disease in $diseases {
-	preserve
+	use "$projectdir/output/data/baseline_data_processed.dta", clear
 	keep if `disease'==1
+	foreach var of varlist imd ethnicity gender `disease'_age_band {
+		preserve
+		contract `var'
+		local v : variable label `var' 
+		gen variable = `"`v'"'
+		decode `var', gen(categories)
+		gen count = round(_freq, 5)
+		egen total = total(count)
+		gen percent = round((count/total)*100, 0.1)
+		order total, before(percent)
+		replace percent = . if count<=7
+		replace total = . if count<=7
+		replace count = . if count<=7
+		gen cohort = "`disease'"
+		order cohort, first
+		format percent %14.4f
+		format count total %14.0f
+		list cohort variable categories count total percent
+		keep cohort variable categories count total percent
+		append using "$projectdir/output/data/baseline_table_rounded.dta"
+		save "$projectdir/output/data/baseline_table_rounded.dta", replace
+		restore
+	}
+
+	preserve
 	collapse (count) count=`disease' (mean) mean_age=`disease'_age (sd) stdev_age=`disease'_age
 	gen cohort ="`disease'"
 	rename *count freq
@@ -260,28 +210,108 @@ foreach disease in $diseases {
 	replace stdev_age = . if count<=7
 	replace mean_age = . if count<=7
 	replace count = . if count<=7
-	order count, first
 	order cohort, first
-	format mean_age stdev_age %14.4f
+	gen variable = "Age"
+	order variable, after(cohort)
+	gen categories = "Not applicable"
+	order categories, after(variable)
+	order count, after(stdev_age)
+	gen total = count
+	order total, after(count)
+	format mean_age %14.4f
+	format stdev_age %14.4f
 	format count %14.0f
-	list cohort count mean_age stdev_age
-	keep cohort count mean_age stdev_age
-	append using "$projectdir/output/data/table_mean_age_rounded.dta"
-	save "$projectdir/output/data/table_mean_age_rounded.dta", replace	
+	list cohort variable categories mean_age stdev_age count total
+	keep cohort variable categories mean_age stdev_age count total
+	append using "$projectdir/output/data/baseline_table_rounded.dta"
+	save "$projectdir/output/data/baseline_table_rounded.dta", replace	
 	restore
 }	
+use "$projectdir/output/data/baseline_table_rounded.dta", clear
+export delimited using "$projectdir/output/tables/baseline_table_rounded.csv", datafmt replace
 
-use "$projectdir/output/data/table_mean_age_rounded.dta", clear
-export excel "$projectdir/output/tables/table_mean_age_rounded.xls", replace keepcellfmt firstrow(variables)
+/*Old way
 
-***Output tables as CSVs		 
-import excel "$projectdir/output/tables/baseline_table_rounded.xls", clear
-export delimited using "$projectdir/output/tables/baseline_table_rounded.csv", novarnames  replace
+**Rounded and redacted tables
+local first_disease: word 1 of $diseases
+di "`first_disease'"
+local index=1
 
-import excel "$projectdir/output/tables/table_mean_age_rounded.xls", clear
-export delimited using "$projectdir/output/tables/table_mean_age_rounded.csv", novarnames  replace	
+foreach disease in $diseases {
+	if "`disease'" == "`first_disease'" {
+		di "`disease'"
 
-/*Graphs================================================================*/
+		**First disease
+		clear *
+		save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace emptyok
+		use "$projectdir/output/data/baseline_data_processed.dta", clear
+
+		foreach var of varlist imd ethnicity gender `disease'_age_band {
+			preserve
+			keep if `disease'==1
+			contract `var'
+			local v : variable label `var' 
+			gen variable = `"`v'"'
+			decode `var', gen(categories)
+			gen count = round(_freq, 5)
+			egen total = total(count)
+			gen percent = round((count/total)*100, 0.1)
+			order total, before(percent)
+			replace percent = . if count<=7
+			replace total = . if count<=7
+			replace count = . if count<=7
+			gen cohort = "`disease'"
+			order cohort, first
+			format percent %14.4f
+			format count total %14.0f
+			list cohort variable categories count total percent
+			keep cohort variable categories count total percent
+			append using "$projectdir/output/data/baseline_table_rounded_`disease'.dta"
+			save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace
+			restore
+		}
+		use "$projectdir/output/data/baseline_table_rounded_`disease'.dta", clear
+		export excel "$projectdir/output/tables/baseline_table_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
+	}
+	else if "`disease'" != "`first_disease'" {
+		**Subsequent diseases - tagged to the above excel		
+		di "`disease'"	
+		local index = `index' + 25
+		clear *
+		save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace emptyok
+		use "$projectdir/output/data/baseline_data_processed.dta", clear
+
+		foreach var of varlist imd ethnicity gender `disease'_age_band {
+			preserve
+			keep if `disease'==1
+			contract `var'
+			local v : variable label `var' 
+			gen variable = `"`v'"'
+			decode `var', gen(categories)
+			gen count = round(_freq, 5)
+			egen total = total(count)
+			gen percent = round((count/total)*100, 0.1)
+			order total, before(percent)
+			replace percent = . if count<=7
+			replace total = . if count<=7
+			replace count = . if count<=7
+			gen cohort = "`disease'"
+			order cohort, first
+			format percent %14.4f
+			format count total %14.0f
+			list cohort variable categories count total percent
+			keep cohort variable categories count total percent
+			append using "$projectdir/output/data/baseline_table_rounded_`disease'.dta"
+			save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace
+			restore
+		}
+		use "$projectdir/output/data/baseline_table_rounded_`disease'", clear
+		export excel "$projectdir/output/tables/baseline_table_rounded.xls", sheet("Overall", modify) cell("A`index'") keepcellfmt
+	}
+}
+*/
+
+/*Graphs of incidence counts================================================================*/
 
 use "$projectdir/output/data/baseline_data_processed.dta", clear
 
@@ -312,5 +342,5 @@ foreach disease in $diseases {
 	
 	restore
 }
-*/
+
 log close	

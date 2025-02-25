@@ -48,10 +48,14 @@ dataset.sex = patients.sex
 # Date of death
 dataset.date_of_death = patients.date_of_death
 
-# Currently registered
-curr_registered = practice_registrations.for_patient_on(index_date).exists_for_patient()
+# Any practice registration before study end date
+any_registration = practice_registrations.where(
+            practice_registrations.start_date <= end_date
+        ).except_where(
+            practice_registrations.end_date < index_date    
+        ).exists_for_patient()
 
-# Age at index date
+# Age at index date - check this doesn't drop those not registered at index date
 dataset.age = patients.age_on(index_date)
 
 age_band = case(  
@@ -100,7 +104,7 @@ dataset.define_population(
     age_band.is_not_null()
     & dataset.sex.is_in(["male", "female"])
     & (dataset.date_of_death.is_after(index_date) | dataset.date_of_death.is_null())
-    & curr_registered
+    & any_registration
 )
 
 for disease in diseases:

@@ -92,12 +92,11 @@ needs_list = ", ".join(all_needs)
 yaml_footer_template = f"""
   run_baseline_data_reference:
     run: stata-mp:latest analysis/000_baseline_data_reference.do
-    needs: [generate_baseline_data_2016]
+    needs: [{need_list}]
     outputs:
       moderately_sensitive:
         log1: logs/baseline_data_reference.log   
         table1: output/tables/reference_table_rounded.csv
-        table3: output/tables/reference_mean_age_rounded.csv  
   
   run_baseline_data_disease:
     run: stata-mp:latest analysis/001_baseline_data_disease.do
@@ -105,10 +104,9 @@ yaml_footer_template = f"""
     outputs:
       moderately_sensitive:
         log1: logs/baseline_data_disease.log   
-        # table1: output/tables/baseline_table_rounded*.csv
-        # table2: output/tables/table_mean_age_rounded*.csv
-        # table3: output/tables/incidence_count_*.csv
-        # figure1: output/figures/count_inc_*.svg      
+        table1: output/tables/baseline_table_rounded.csv
+        table3: output/tables/incidence_count_*.csv
+        figure1: output/figures/count_inc_*.svg      
   
   run_data_processing:
     run: stata-mp:latest analysis/002_processing_data.do

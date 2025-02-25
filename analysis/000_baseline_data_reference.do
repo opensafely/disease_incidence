@@ -32,12 +32,18 @@ log using "$logdir/baseline_data_reference.log", replace
 *Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
+clear *
+save "$projectdir/output/data/reference_table_rounded.dta", replace emptyok
+
 set type double
 
-global start_date = "01/04/2016"
+*global years "2024 2023 2022 2021 2020 2019 2018 2017 2016"
+global years "2017 2016"
+
+foreach year in $years {
 
 *Import dataset
-import delimited "$projectdir/output/dataset_definition_2016.csv", clear
+import delimited "$projectdir/output/dataset_definition_`year'.csv", clear
 
 set scheme plotplainblind
 
@@ -107,190 +113,84 @@ lab var imd "Index of multiple deprivation"
 tab imd, missing
 drop imd_quintile
 
-save "$projectdir/output/data/reference_data_processed.dta", replace
+save "$projectdir/output/data/reference_data_processed_`year'.dta", replace
 
 /*Tables================================================================*/
 
-use "$projectdir/output/data/reference_data_processed.dta", clear
-
-**Baseline table for reference population
-preserve
-table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
-	vars(age contn %5.1f \ ///
-		 age_band cat %5.1f \ ///
-		 gender cat %5.1f \ ///
-		 ethnicity cat %5.1f \ ///
-		 imd cat %5.1f \ ///
-		 )
-restore
-
-**Rounded and redacted baseline table for ref population
-clear *
-save "$projectdir/output/data/reference_table_rounded.dta", replace emptyok
-use "$projectdir/output/data/reference_data_processed.dta", clear
-
-foreach var of varlist imd ethnicity gender age_band  {
+**Baseline table
+use "$projectdir/output/data/reference_data_processed_`year'.dta", clear
 	preserve
-	contract `var'
-	local v : variable label `var' 
-	gen variable = `"`v'"'
-    decode `var', gen(categories)
-	gen count = round(_freq, 5)
-	egen total = total(count)
-	gen percent = round((count/total)*100, 0.1)
-	order total, before(percent)
-	replace percent = . if count<=7
-	replace total = . if count<=7
-	replace count = . if count<=7
-	gen cohort = "All"
-	order cohort, first
-	format percent %14.4f
-	format count total %14.0f
-	list cohort variable categories count total percent
-	keep cohort variable categories count total percent
-	append using "$projectdir/output/data/reference_table_rounded.dta"
-	save "$projectdir/output/data/reference_table_rounded.dta", replace
+	table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
+		vars(age contn %5.1f \ ///
+			 age_band cat %5.1f \ ///
+			 gender cat %5.1f \ ///
+			 ethnicity cat %5.1f \ ///
+			 imd cat %5.1f \ ///
+			 )
 	restore
+
+*Table of mean age and demographics for reference population, with counts rounded and redacted
+
+use "$projectdir/output/data/reference_data_processed_`year'.dta", clear
+
+	foreach var of varlist imd ethnicity gender age_band {
+		preserve
+		contract `var'
+		local v : variable label `var' 
+		gen variable = `"`v'"'
+		decode `var', gen(categories)
+		gen count = round(_freq, 5)
+		egen total = total(count)
+		gen percent = round((count/total)*100, 0.1)
+		order total, before(percent)
+		replace percent = . if count<=7
+		replace total = . if count<=7
+		replace count = . if count<=7
+		gen cohort = "Reference population"
+		order cohort, first
+		gen year = "`year'"
+		order year, after(cohort)
+		format percent %14.4f
+		format count total %14.0f
+		list cohort year variable categories count total percent
+		keep cohort year variable categories count total percent
+		append using "$projectdir/output/data/reference_table_rounded.dta"
+		save "$projectdir/output/data/reference_table_rounded.dta", replace
+		restore
+	}
+	
+	use "$projectdir/output/data/reference_data_processed_`year'.dta", clear
+
+	foreach var of varlist age {
+		preserve
+		collapse (count) count=patient_id (mean) mean_age=age (sd) stdev_age=age
+		rename *count freq
+		gen count = round(freq, 5)
+		replace stdev_age = . if count<=7
+		replace mean_age = . if count<=7
+		replace count = . if count<=7
+		gen cohort = "Reference population"
+		order cohort, first
+		gen year = "`year'"
+		order year, after(cohort)
+		gen variable = "Age"
+		order variable, after(year)
+		gen categories = "Not applicable"
+		order categories, after(variable)
+		order count, after(stdev_age)
+		gen total = count
+		order total, after(count)
+		format mean_age stdev_age %14.4f
+		format count %14.0f
+		list cohort year variable categories mean_age stdev_age count total
+		keep cohort year variable categories mean_age stdev_age count total
+		append using "$projectdir/output/data/reference_table_rounded.dta"
+		save "$projectdir/output/data/reference_table_rounded.dta", replace
+		restore
+	}
 }
+
 use "$projectdir/output/data/reference_table_rounded.dta", clear
-export excel "$projectdir/output/tables/reference_table_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
-
-/*
-**Baseline table for individual diagnoses - tagged to above excel
-use "$projectdir/output/data/reference_data_processed.dta", clear
-
-local index=1
-foreach disease in $diseases {
-	clear *
-	save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace emptyok
-	local index = `index' + 16
-
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-foreach var of varlist imd ethnicity gender {
-	preserve
-	keep if `disease'==1
-	contract `var'
-	local v : variable label `var' 
-	gen variable = `"`v'"'
-    decode `var', gen(categories)
-	gen count = round(_freq, 5)
-	egen total = total(count)
-	gen percent = round((count/total)*100, 0.1)
-	order total, before(percent)
-	replace percent = . if count<=7
-	replace total = . if count<=7
-	replace count = . if count<=7
-	gen cohort = "`disease'"
-	order cohort, first
-	format percent %14.4f
-	format count total %14.0f
-	list cohort variable categories count total percent
-	keep cohort variable categories count total percent
-	append using "$projectdir/output/data/baseline_table_rounded_`disease'.dta"
-	save "$projectdir/output/data/baseline_table_rounded_`disease'.dta", replace
-	restore
-}
-
-use "$projectdir/output/data/baseline_table_rounded_`disease'", clear
-export excel "$projectdir/output/tables/baseline_table_rounded.xls", sheet("Overall", modify) cell("A`index'") keepcellfmt firstrow(variables)
-}
-*/
-
-*Table of mean age for reference population
-clear *
-save "$projectdir/output/data/reference_mean_age_rounded.dta", replace emptyok
-use "$projectdir/output/data/reference_data_processed.dta", clear
-
-foreach var of varlist age  {
-	preserve
-	collapse (count) count=patient_id (mean) mean_age=age (sd) stdev_age=age
-	gen cohort = "All"
-	rename *count freq
-	gen count = round(freq, 5)
-	replace stdev_age = . if count<=7
-	replace mean_age = . if count<=7
-	replace count = . if count<=7
-	order count, first
-	order cohort, first
-	format mean_age stdev_age %14.4f
-	format count %14.0f
-	list cohort count mean_age stdev_age
-	keep cohort count mean_age stdev_age
-	append using "$projectdir/output/data/reference_mean_age_rounded.dta"
-	save "$projectdir/output/data/reference_mean_age_rounded.dta", replace
-	restore
-}
-use "$projectdir/output/data/reference_mean_age_rounded.dta", clear
-export excel "$projectdir/output/tables/reference_mean_age_rounded.xls", replace sheet("Overall") keepcellfmt firstrow(variables)
-
-/*		 
-**Table of mean age at diagnosis, by disease - tagged to the above
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-foreach disease in $diseases {
-	preserve
-	keep if `disease'==1
-	collapse (count) count=`disease' (mean) mean_age=`disease'_age (sd) stdev_age=`disease'_age
-	gen cohort ="`disease'"
-	rename *count freq
-	gen count = round(freq, 5)
-	gen countstr = string(count)
-	replace stdev_age = . if count<=7
-	replace mean_age = . if count<=7
-	replace count = . if count<=7
-	order count, first
-	order cohort, first
-	format mean_age stdev_age %14.4f
-	format count %14.0f
-	list cohort count mean_age stdev_age
-	keep cohort count mean_age stdev_age
-	append using "$projectdir/output/data/table_mean_age_rounded.dta"
-	save "$projectdir/output/data/table_mean_age_rounded.dta", replace	
-	restore
-}	
-
-use "$projectdir/output/data/table_mean_age_rounded.dta", clear
-export excel "$projectdir/output/tables/table_mean_age_rounded.xls", replace keepcellfmt firstrow(variables)
-*/
-
-***Output tables as CSVs		 
-import excel "$projectdir/output/tables/reference_table_rounded.xls", clear
-export delimited using "$projectdir/output/tables/reference_table_rounded.csv", novarnames  replace
-
-import excel "$projectdir/output/tables/reference_mean_age_rounded.xls", clear
-export delimited using "$projectdir/output/tables/reference_mean_age_rounded.csv", novarnames  replace	
-
-/*Graphs================================================================*/
-
-use "$projectdir/output/data/baseline_data_processed.dta", clear
-
-*Graph of (count) diagnoses by month, by disease
-foreach disease in $diseases {
-	preserve
-	keep if `disease'==1 //would need to remove this if calculating incidence
-	collapse (count) total_diag_un=`disease', by(`disease'_moyear) 
-	gen total_diag = round(total_diag_un, 5)
-	drop total_diag_un
-	
-	outsheet * using "$projectdir/output/tables/incidence_count_`disease'.csv" , comma replace
-	export delimited using "$projectdir/output/tables/incidence_count_`disease'.csv", datafmt replace
-	
-	**Label diseases
-	local dis_full = strproper(subinstr("`disease'", "_", " ",.)) 
-	if "`dis_full'" == "Rheumatoid" local dis_full "Rheumatoid Arthritis"
-	if "`dis_full'" == "Copd" local dis_full "COPD"
-	if "`dis_full'" == "Crohns Disease" local dis_full "Crohn's Disease"
-	if "`dis_full'" == "Dm Type2" local dis_full "Type 2 Diabetes Mellitus"
-	if "`dis_full'" == "Chd" local dis_full "Coronary Heart Disease"
-	if "`dis_full'" == "Ckd" local dis_full "Chronic Kidney Disease"
-	if "`dis_full'" == "Coeliac" local dis_full "Coeliac Disease"
-	if "`dis_full'" == "Pmr" local dis_full "Polymyalgia Rheumatica"
-	
-	twoway connected total_diag `disease'_moyear, ytitle("Monthly count of diagnoses", size(med)) color(gold%35) msymbol(circle) lstyle(solid) lcolor(gold) ylabel(, nogrid labsize(small)) xtitle("Date of diagnosis", size(medium) margin(medsmall)) xlabel(671 "2016" 683 "2017" 695 "2018" 707 "2019" 719 "2020" 731 "2021" 743 "2022" 755 "2023" 767 "2024" 779 "2025", nogrid labsize(small)) xline(722) title("`dis_full'", size(medium) margin(b=2)) name(`disease'_count, replace) saving("$projectdir/output/figures/count_inc_`disease'.gph", replace)
-		graph export "$projectdir/output/figures/count_inc_`disease'.svg", replace
-	
-	restore
-}
+export delimited using "$projectdir/output/tables/reference_table_rounded.csv", datafmt replace
 
 log close	

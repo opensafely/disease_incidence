@@ -2174,12 +2174,11 @@ actions:
 
   run_baseline_data_reference:
     run: stata-mp:latest analysis/000_baseline_data_reference.do
-    needs: [generate_baseline_data_2016]
+    needs: [generate_baseline_data_2016, generate_baseline_data_2017, generate_baseline_data_2018, generate_baseline_data_2019, generate_baseline_data_2020, generate_baseline_data_2021, generate_baseline_data_2022, generate_baseline_data_2023, generate_baseline_data_2024]
     outputs:
       moderately_sensitive:
         log1: logs/baseline_data_reference.log   
         table1: output/tables/reference_table_rounded.csv
-        table3: output/tables/reference_mean_age_rounded.csv  
   
   run_baseline_data_disease:
     run: stata-mp:latest analysis/001_baseline_data_disease.do
@@ -2187,10 +2186,9 @@ actions:
     outputs:
       moderately_sensitive:
         log1: logs/baseline_data_disease.log   
-        # table1: output/tables/baseline_table_rounded*.csv
-        # table2: output/tables/table_mean_age_rounded*.csv
-        # table3: output/tables/incidence_count_*.csv
-        # figure1: output/figures/count_inc_*.svg      
+        table1: output/tables/baseline_table_rounded.csv
+        table3: output/tables/incidence_count_*.csv
+        figure1: output/figures/count_inc_*.svg
   
   run_data_processing:
     run: stata-mp:latest analysis/002_processing_data.do
