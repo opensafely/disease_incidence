@@ -37,8 +37,8 @@ save "$projectdir/output/data/reference_table_rounded.dta", replace emptyok
 
 set type double
 
-*global years "2024 2023 2022 2021 2020 2019 2018 2017 2016"
-global years "2017 2016"
+global years "2024 2023 2022 2021 2020 2019 2018 2017 2016"
+*global years "2017 2016"
 
 foreach year in $years {
 
