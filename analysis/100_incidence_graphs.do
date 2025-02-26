@@ -68,6 +68,9 @@ order mo_year_diagn, after(measure)
 gen year=yofd(dofm(mo_year_diagn))
 order year, after(mo_year_diagn)
 
+**Drop December 2024 data (partial data)
+drop if mo_year_diagn == ym(2024, 12)
+
 **Generate 3-monthly moving averages
 bysort disease measure (mo_year_diagn): gen s_rate_all_ma =(s_rate_all[_n-1]+s_rate_all[_n]+s_rate_all[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_male_ma =(s_rate_male[_n-1]+s_rate_male[_n]+s_rate_male[_n+1])/3

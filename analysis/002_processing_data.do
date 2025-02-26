@@ -103,9 +103,6 @@ recode measure_ethnicity .=0
 gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
 recode measure_inc_any .=0
 
-**Drop April/May/June 2016 data - remove this after dataset definition and measures re-run
-*drop if measure_inc_any == 1 & (mo_year_diagn_s == "2016m04" | mo_year_diagn_s == "2016m05" | mo_year_diagn_s == "2016m06")
-
 **Label diseases
 gen diseases_ = substr(measure, 1, strlen(measure) - 10) if measure_inc==1
 replace diseases_ = substr(measure, 1, strlen(measure) - 11) if measure_prev==1

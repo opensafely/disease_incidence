@@ -38,8 +38,6 @@ global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosi
 
 set type double
 
-global start_date = "01/04/2016"
-
 *Import dataset
 import delimited "$projectdir/output/dataset_definition_demographics_disease.csv", clear
 

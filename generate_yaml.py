@@ -82,7 +82,7 @@ yaml_body = ""
 all_needs = []
 
 for year in range(2016, 2025):
-    intervals = 9 if year == 2024 else 12  # Set intervals conditionally
+    intervals = 8 if year == 2024 else 12  # Set intervals conditionally
     for disease in diseases:
         yaml_body += yaml_template.format(disease=disease, year=year, intervals=intervals)
         all_needs.append(f"measures_dataset_{disease}_{year}")

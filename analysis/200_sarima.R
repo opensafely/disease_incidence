@@ -33,14 +33,9 @@ dir_create(here::here("output/figures"), showWarnings = FALSE, recurse = TRUE)
 dir_create(here::here("output/tables"), showWarnings = FALSE, recurse = TRUE)
 
 sink("logs/sarima_log.txt")
-#pdf("output/figures/sarima_plots.pdf", width = 8, height = 6)
 
 # Incidence data - use age and sex-standardised rates for incidence rates and unadjusted for counts
 df <-read.csv("output/tables/arima_standardised.csv")
-#df <-read.csv("output/tables/arima_standardised2.csv")
-
-# Drop April/May/June 2016 months for SARIMA
-#df <- df[!df$mo_year_diagn %in% c("Apr-2016", "May-2016", "Jun-2016"), ]
 
 #Rename variables in the datafile 
 names(df)[names(df) == "numerator"] <- "count"
@@ -144,8 +139,8 @@ for (j in 1:length(disease_list)) {
     dev.off()
     Box.test(suggested.rate$residuals, lag = 58, type = "Ljung-Box")
   
-    #Forecast 24 months from March 2020 and convert to time series object - could change h to max_index - pre-March 2020
-    fc.rate  <- forecast(m1.rate, h=58)
+    #Forecast from March 2020 and convert to time series object - could change h to max_index - pre-March 2020
+    fc.rate  <- forecast(m1.rate, h=57)
   
     #Forecasted rates 
     fc.ratemean <- ts(as.numeric(fc.rate$mean), start=c(2020,3), frequency=12)

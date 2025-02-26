@@ -1949,7 +1949,7 @@ actions:
       --output output/measures/measures_dataset_asthma_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "asthma"
     needs: [generate_dataset]
     outputs:
@@ -1961,7 +1961,7 @@ actions:
       --output output/measures/measures_dataset_copd_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "copd"
     needs: [generate_dataset]
     outputs:
@@ -1973,7 +1973,7 @@ actions:
       --output output/measures/measures_dataset_chd_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "chd"
     needs: [generate_dataset]
     outputs:
@@ -1985,7 +1985,7 @@ actions:
       --output output/measures/measures_dataset_stroke_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "stroke"
     needs: [generate_dataset]
     outputs:
@@ -1997,7 +1997,7 @@ actions:
       --output output/measures/measures_dataset_heart_failure_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "heart_failure"
     needs: [generate_dataset]
     outputs:
@@ -2009,7 +2009,7 @@ actions:
       --output output/measures/measures_dataset_dementia_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "dementia"
     needs: [generate_dataset]
     outputs:
@@ -2021,7 +2021,7 @@ actions:
       --output output/measures/measures_dataset_multiple_sclerosis_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "multiple_sclerosis"
     needs: [generate_dataset]
     outputs:
@@ -2033,7 +2033,7 @@ actions:
       --output output/measures/measures_dataset_epilepsy_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "epilepsy"
     needs: [generate_dataset]
     outputs:
@@ -2045,7 +2045,7 @@ actions:
       --output output/measures/measures_dataset_crohns_disease_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "crohns_disease"
     needs: [generate_dataset]
     outputs:
@@ -2057,7 +2057,7 @@ actions:
       --output output/measures/measures_dataset_ulcerative_colitis_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "ulcerative_colitis"
     needs: [generate_dataset]
     outputs:
@@ -2069,7 +2069,7 @@ actions:
       --output output/measures/measures_dataset_dm_type2_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "dm_type2"
     needs: [generate_dataset]
     outputs:
@@ -2081,7 +2081,7 @@ actions:
       --output output/measures/measures_dataset_ckd_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "ckd"
     needs: [generate_dataset]
     outputs:
@@ -2093,7 +2093,7 @@ actions:
       --output output/measures/measures_dataset_psoriasis_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "psoriasis"
     needs: [generate_dataset]
     outputs:
@@ -2105,7 +2105,7 @@ actions:
       --output output/measures/measures_dataset_atopic_dermatitis_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "atopic_dermatitis"
     needs: [generate_dataset]
     outputs:
@@ -2117,7 +2117,7 @@ actions:
       --output output/measures/measures_dataset_osteoporosis_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "osteoporosis"
     needs: [generate_dataset]
     outputs:
@@ -2129,7 +2129,7 @@ actions:
       --output output/measures/measures_dataset_rheumatoid_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "rheumatoid"
     needs: [generate_dataset]
     outputs:
@@ -2141,7 +2141,7 @@ actions:
       --output output/measures/measures_dataset_depression_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "depression"
     needs: [generate_dataset]
     outputs:
@@ -2153,7 +2153,7 @@ actions:
       --output output/measures/measures_dataset_coeliac_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "coeliac"
     needs: [generate_dataset]
     outputs:
@@ -2165,7 +2165,7 @@ actions:
       --output output/measures/measures_dataset_pmr_2024.csv
       --
       --start-date "2024-04-01"
-      --intervals 9
+      --intervals 8
       --disease "pmr"
     needs: [generate_dataset]
     outputs:

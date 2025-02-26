@@ -9,7 +9,7 @@ diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "mul
 codelist_types = ["snomed", "icd"]
 
 index_date = "2016-04-01"
-end_date = "2024-12-31"
+end_date = "2024-11-30"
 
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
