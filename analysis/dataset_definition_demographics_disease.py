@@ -55,7 +55,7 @@ any_registration = practice_registrations.where(
             practice_registrations.end_date < index_date    
         ).exists_for_patient()
 
-# Age at index date - check this doesn't drop those not registered at index date
+# Age at index date
 dataset.age = patients.age_on(index_date)
 
 age_band = case(  

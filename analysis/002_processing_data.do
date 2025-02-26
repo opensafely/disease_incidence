@@ -85,10 +85,8 @@ lab var mo_year_diagn_s "Month/Year of Diagnosis"
 
 **Check age and sex categories
 codebook sex
-*keep if sex == "female" | sex == "male" 
 
 codebook age
-*keep if age != ""
 
 **Code incidence and prevalence
 gen measure_inc = 1 if substr(measure,-10,.) == "_incidence"
@@ -409,47 +407,6 @@ drop n
 
 save "$projectdir/output/data/processed_standardised.dta", replace
 
-/* No longer needed - done at the next stage of pipeline 
-*Generate 3-monthly moving averages
-bysort measure (interval_start): gen asr_all_ma =(asr_all[_n-1]+asr_all[_n]+asr_all[_n+1])/3
-bysort measure (interval_start): gen asr_male_ma =(asr_male[_n-1]+asr_male[_n]+asr_male[_n+1])/3
-bysort measure (interval_start): gen asr_female_ma =(asr_female[_n-1]+asr_female[_n]+asr_female[_n+1])/3
-bysort measure (interval_start): gen asr_0_9_ma =(asr_0_9[_n-1]+asr_0_9[_n]+asr_0_9[_n+1])/3
-bysort measure (interval_start): gen asr_10_19_ma =(asr_10_19[_n-1]+asr_10_19[_n]+asr_10_19[_n+1])/3
-bysort measure (interval_start): gen asr_20_29_ma =(asr_20_29[_n-1]+asr_20_29[_n]+asr_20_29[_n+1])/3
-bysort measure (interval_start): gen asr_30_39_ma =(asr_30_39[_n-1]+asr_30_39[_n]+asr_30_39[_n+1])/3
-bysort measure (interval_start): gen asr_40_49_ma =(asr_40_49[_n-1]+asr_40_49[_n]+asr_40_49[_n+1])/3
-bysort measure (interval_start): gen asr_50_59_ma =(asr_50_59[_n-1]+asr_50_59[_n]+asr_50_59[_n+1])/3
-bysort measure (interval_start): gen asr_60_69_ma =(asr_60_69[_n-1]+asr_60_69[_n]+asr_60_69[_n+1])/3
-bysort measure (interval_start): gen asr_70_79_ma =(asr_70_79[_n-1]+asr_70_79[_n]+asr_70_79[_n+1])/3
-bysort measure (interval_start): gen asr_80_ma =(asr_80[_n-1]+asr_80[_n]+asr_80[_n+1])/3
-
-bysort measure (interval_start): gen ratio_0_9_ma =(ratio_0_9_100000[_n-1]+ratio_0_9_100000[_n]+ratio_0_9_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_10_19_ma =(ratio_10_19_100000[_n-1]+ratio_10_19_100000[_n]+ratio_10_19_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_20_29_ma =(ratio_20_29_100000[_n-1]+ratio_20_29_100000[_n]+ratio_20_29_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_30_39_ma =(ratio_30_39_100000[_n-1]+ratio_30_39_100000[_n]+ratio_30_39_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_40_49_ma =(ratio_40_49_100000[_n-1]+ratio_40_49_100000[_n]+ratio_40_49_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_50_59_ma =(ratio_50_59_100000[_n-1]+ratio_50_59_100000[_n]+ratio_50_59_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_60_69_ma =(ratio_60_69_100000[_n-1]+ratio_60_69_100000[_n]+ratio_60_69_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_70_79_ma =(ratio_70_79_100000[_n-1]+ratio_70_79_100000[_n]+ratio_70_79_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_80_ma =(ratio_80_100000[_n-1]+ratio_80_100000[_n]+ratio_80_100000[_n+1])/3
-
-bysort measure (interval_start): gen ratio_white_ma =(ratio_white_100000[_n-1]+ratio_white_100000[_n]+ratio_white_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_mixed_ma =(ratio_mixed_100000[_n-1]+ratio_mixed_100000[_n]+ratio_mixed_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_black_ma =(ratio_black_100000[_n-1]+ratio_black_100000[_n]+ratio_black_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_asian_ma =(ratio_asian_100000[_n-1]+ratio_asian_100000[_n]+ratio_asian_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_other_ma =(ratio_other_100000[_n-1]+ratio_other_100000[_n]+ratio_other_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_ethunk_ma =(ratio_ethunk_100000[_n-1]+ratio_ethunk_100000[_n]+ratio_ethunk_100000[_n+1])/3
-
-bysort measure (interval_start): gen ratio_imd1_ma =(ratio_imd1_100000[_n-1]+ratio_imd1_100000[_n]+ratio_imd1_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_imd2_ma =(ratio_imd2_100000[_n-1]+ratio_imd2_100000[_n]+ratio_imd2_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_imd3_ma =(ratio_imd3_100000[_n-1]+ratio_imd3_100000[_n]+ratio_imd3_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_imd4_ma =(ratio_imd4_100000[_n-1]+ratio_imd4_100000[_n]+ratio_imd4_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_imd5_ma =(ratio_imd5_100000[_n-1]+ratio_imd5_100000[_n]+ratio_imd5_100000[_n+1])/3
-bysort measure (interval_start): gen ratio_imdunk_ma =(ratio_imdunk_100000[_n-1]+ratio_imdunk_100000[_n]+ratio_imdunk_100000[_n+1])/3
-
-save "$projectdir/output/data/processed_standardised.dta", replace
-
 /*
 gen asr_lci = asr-1.96*(asr/sqrt(denominator_all))
 gen asr_uci = asr+1.96*(asr/sqrt(denominator_all))
@@ -463,7 +420,6 @@ gen sum_ci_95 = sum(ci_95)/(sum_prop*sum_prop)
 gen standerror = sqrt(sum_ci_95)
 gen asir_lci = asir-1.96*standerror
 gen asir_uci = asir+1.96*standerror
-*/
 
 *Export a CSV for import into ARIMA R file - adjusted incidence rates
 use "$projectdir/output/data/processed_standardised.dta", clear
@@ -486,37 +442,6 @@ outsheet * using "$projectdir/output/tables/arima_standardised2.csv" , comma rep
 use "$projectdir/output/data/processed_standardised.dta", clear
 
 keep if measure_inc==1 | measure_prev==1
-
-/*
-foreach var in all male female {
-	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
-	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
-	rename ratio_`var'_100000 rate_`var'_n // unadjusted IR
-	rename asr_`var' s_rate_`var'_n //age and sex-standardised IR 
-	gen numerator_`var' = string(numerator_`var'_n)
-	replace numerator_`var' = "" if numerator_`var' == "."
-	gen denominator_`var' = string(denominator_`var'_n)
-	replace denominator_`var' = "" if denominator_`var' == "."
-	gen rate_`var' = string(rate_`var'_n)
-	replace rate_`var' = "" if rate_`var' == "."
-	gen s_rate_`var' = string(s_rate_`var'_n)
-	replace s_rate_`var' = "" if s_rate_`var' == "."
-	drop numerator_`var'_n denominator_`var'_n s_rate_`var'_n rate_`var'_n 
-}
-
-foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 80 white mixed black asian other ethunk imd1 imd2 imd3 imd4 imd5 imdunk {
-	rename numerator_`var' numerator_`var'_n //unadjusted counts (rounded and redacted)
-	rename denominator_`var' denominator_`var'_n //unadjusted counts (rounded and redacted)
-	rename ratio_`var'_100000 rate_`var'_n
-	gen numerator_`var' = string(numerator_`var'_n)
-	replace numerator_`var' = "" if numerator_`var' == "."
-	gen denominator_`var' = string(denominator_`var'_n)
-	replace denominator_`var' = "" if denominator_`var' == "."
-	gen rate_`var' = string(rate_`var'_n)
-	replace rate_`var' = "" if rate_`var' == "."
-	drop numerator_`var'_n denominator_`var'_n rate_`var'_n
-}
-*/
 
 foreach var in all male female {
 	rename ratio_`var'_100000 rate_`var' //unadjusted IR 

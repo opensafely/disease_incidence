@@ -97,7 +97,15 @@ yaml_footer_template = f"""
       moderately_sensitive:
         log1: logs/baseline_data_reference.log   
         table1: output/tables/reference_table_rounded.csv
-  
+
+  run_baseline_data_reference_all:
+    run: stata-mp:latest analysis/003_baseline_data_reference_all.do
+    needs: [generate_dataset_demographics_disease]
+    outputs:
+      moderately_sensitive:
+        log1: logs/baseline_data_reference_all.log   
+        table1: output/tables/reference_table_rounded_all.csv       
+
   run_baseline_data_disease:
     run: stata-mp:latest analysis/001_baseline_data_disease.do
     needs: [generate_dataset_demographics_disease]
