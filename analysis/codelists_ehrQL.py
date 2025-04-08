@@ -232,7 +232,7 @@ depression_icd = codelist_from_csv(
 )
 
 depression_broad_snomed = codelist_from_csv(
-    "codelists/user-markdrussell-depression-broad.csv", column="code",
+    "codelists/user-markdrussell-depression_broad.csv", column="code",
 )
 
 depression_broad_icd = codelist_from_csv(
