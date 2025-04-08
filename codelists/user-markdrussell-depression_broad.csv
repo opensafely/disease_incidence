@@ -1,0 +1,436 @@
+code,term
+10211000132109,Perinatal depression
+104851000119103,Postpartum major depression in remission
+1050341000000107,Maternal postnatal depression
+10532003,"Primary degenerative dementia of the Alzheimer type, presenile onset, with depression"
+1057351000000106,Signposting to depression self-help group
+10811121000119102,Major depressive disorder in mother complicating childbirth
+10811161000119107,Major depressive disorder in mother complicating pregnancy
+10835871000119104,Depressive disorder in mother complicating childbirth
+1084061000000106,Depressive personality disorder
+1086471000000103,"Recurrent reactive depressive episodes, severe, with psychosis"
+1086661000000108,"Reactive depression, prolonged single episode"
+1086671000000101,"Reactive depression, single episode"
+1086681000000104,"Reactive depression, recurrent"
+1086691000000102,"Reactive depression, first episode"
+1089511000000100,Recurrent depression with current severe episode and psychotic features
+1089631000000109,Recurrent depression with current severe episode without psychotic features
+1089641000000100,Recurrent depression with current moderate episode
+112001000119100,Positive screening for depression on Patient Health Questionnaire 9
+1129471000000105,Couple therapy for depression
+1137673006,Improvement in level of depressed mood
+1153570009,Treatment resistant depression
+1153575004,Persistent depressive disorder
+1196001,"Chronic bipolar II disorder, most recent episode major depressive"
+1234780005,Mood disorder with mixed manic and depressive symptoms caused by ethanol
+1234782002,Mood disorder with depressive symptoms caused by ethanol
+1260298008,Depression following menopause
+12969000,"Severe bipolar II disorder, most recent episode major depressive, in full remission"
+133121000119109,Severe seasonal affective disorder
+139480000,(Depressed (& symptom)) or (unhappy)
+139596004,Blunting of mood
+139947002,O/E - depressed
+14070001,Multi-infarct dementia with depression
+14183003,"Chronic major depressive disorder, single episode"
+142001000119106,Depressed mood in Alzheimer's disease
+143661000000100,Whooley Depression Screen positive
+14661003,Diminished libido due to mood
+147016002,Postnatal depressive disorder
+149631000000108,Digital cognitive behavioural therapy for depression
+15193003,"Severe recurrent major depression with psychotic features, mood-incongruent"
+154848003,Senile dementia with depressive or paranoid features
+154871001,Affective psychoses: [manic depressive] or [involutional melancholia]
+154873003,Endogenous depression
+154876006,Seasonal affective disorder
+154889000,Depression: [reactive (neurotic)] or [postnatal]
+154897007,Personality: [depressive] or [cyclothymic]
+154919005,Moderate depression
+154963001,Depression NOS
+154964007,Mixed anxiety and depressive disorder
+154965008,Mild depression
+154966009,Moderate depression
+154967000,Severe depression
+154969002,Seasonal affective disorder
+154970001,Recurrent depression
+15639000,"Moderate major depression, single episode"
+162196004,(Depressed) or (C/O feeling: [depressed] or [unhappy])
+162324003,Blunting of mood
+16238181000119101,Depressive disorder caused by amphetamine
+16238221000119109,Depressive disorder caused by methamphetamine
+16264621000119109,Recurrent mild major depressive disorder co-occurrent with anxiety
+16264821000119108,Recurrent severe major depressive disorder co-occurrent with anxiety
+16264901000119109,Recurrent moderate major depressive disorder co-occurrent with anxiety
+16265061000119105,Recurrent major depressive disorder co-occurrent with anxiety in full remission
+16265301000119106,Recurrent major depressive disorder in partial remission co-occurrent with anxiety
+16265951000119109,Mild major depressive disorder co-occurrent with anxiety single episode
+16266831000119100,Moderate major depressive disorder co-occurrent with anxiety single episode
+16266991000119108,Severe major depressive disorder co-occurrent with anxiety single episode
+162722001,On examination - depressed
+16295005,"Bipolar II disorder, most recent episode major depressive"
+170031000000108,Patient given advice about management of depression
+174691000000109,Patient given advice about management of depression
+185571000000102,Dysphoric mood
+186591000000107,Dysphoric mood
+18818009,Moderate recurrent major depression
+190031000000103,Dysphoric mood
+191455000,Presenile dementia with depression
+191457008,Senile dementia with depressive or paranoid features
+191458003,Senile dementia with paranoia
+191459006,Senile dementia with depression
+191460001,Senile dementia with depressive or paranoid features NOS
+191495003,Depressive disorder caused by drug
+191599006,Depression: [single major episode] or [agitated] or [endogenous (including first episode)]
+191600009,"Single major depressive episode, unspecified"
+191601008,"Single major depressive episode, mild"
+191602001,"Single major depressive episode, moderate"
+191603006,"Single major depressive episode, severe, without mention of psychosis"
+191604000,"Single major depressive episode, severe, with psychosis"
+191605004,"Single major depressive episode, in partial or unspecified remission"
+191606003,"Single major depressive episode, in full remission"
+191607007,Single major depressive episode NOS
+191608002,Recurrent depression: [major episode] or [endogenous]
+191609005,"Recurrent major depressive episodes, unspecified"
+191610000,"Recurrent major depressive episodes, mild"
+191611001,"Recurrent major depressive episodes, moderate"
+191612008,"Recurrent major depressive episodes, severe, without mention of psychosis"
+191613003,"Recurrent major depressive episodes, severe, with psychosis"
+191614009,"Recurrent major depressive episodes, in partial or unspecified remission"
+191615005,"Recurrent major depressive episodes, in full remission"
+191616006,Recurrent depression
+191617002,Recurrent major depressive episode NOS
+191627008,"Bipolar affective disorder, current episode depression"
+191628003,"Bipolar affective disorder, currently depressed, unspecified"
+191629006,"Bipolar affective disorder, currently depressed, mild"
+191630001,"Bipolar affective disorder, currently depressed, moderate"
+191631002,"Bipolar affective disorder, currently depressed, severe, without mention of psychosis"
+191632009,"Bipolar affective disorder, currently depressed, severe, with psychosis"
+191633004,"Bipolar affective disorder, currently depressed, in partial or unspecified remission"
+191634005,"Bipolar affective disorder, currently depressed, in full remission"
+191635006,"Bipolar affective disorder, currently depressed, NOS"
+191655007,Seasonal affective disorder
+191659001,Atypical depressive disorder
+191665001,Masked depression
+191676002,Reactive depressive psychosis
+191681006,Agitated depression
+191707004,Mixed anxiety and depressive disorder
+191740008,(Neurotic depression reactive type) or (postnatal depression)
+192046006,Brief depressive adjustment reaction
+192048007,Brief depressive reaction NOS
+192049004,Prolonged depressive adjustment reaction
+192078003,Depressive disorder NEC
+192079006,Postviral depression
+192080009,Chronic depression
+192323004,Post-schizophrenic depression
+192342000,"Schizoaffective disorder, depressive type"
+192358002,"[X]Bipolar affective disorder, current episode mild or moderate depression"
+192359005,"[X]Bipolar affective disorder, current episode severe depression without psychotic symptoms"
+192361001,"Bipolar affective disorder, currently depressed, severe, with psychosis"
+192366006,Single major depressive episode
+192367002,[X]Mild depressive episode
+192368007,[X]Moderate depressive episode
+192369004,[X] Severe depressive episode without psychotic symptoms: (& [single episode agitated depression] or [single episode major depression] or [single episode vital depression])
+192370003,[X] Severe depressive episode with psychotic symptoms: (& single episode of [major depression] or [psychogenic depressive psychosis] or [psychotic depression] or [reactive depressive psychosis])
+192371004,[X] Depression: [other episodes] or [atypical] or [single episode masked NOS]
+192372006,"[X] (Depression: [episode, unspecified] or [NOS (& reactive)] or [depressive disorder NOS]"
+192374007,[X]Recurrent depressive disorder (& [episodes of depressive reaction] or [episodes of psychogenic depression] or [episodes of reactive depression] or [seasonal depressive disorder])
+192375008,"[X]Recurrent depressive disorder, current episode mild"
+192376009,"[X]Recurrent depressive disorder, current episode moderate"
+192377000,"[X]Depression without psychotic symptoms: [recurrent: [major] or [manic-depressive psychosis, depressed type] or [vital] or [current severe episode]] or [endogenous]"
+192378005,"[X] Depression with psychotic symptoms: [recurrent: (current episode severe) or (manic-depressive, depressed type) or (severe major episodes) or (severe episodes)] or [endogenous]"
+192379002,"[X]Recurrent depressive disorder, currently in remission"
+192380004,[X]Other recurrent depressive disorders
+192381000,[X] Depression recurrent: [unspecified] or [monopolar NOS]
+192384008,Dysthymia
+192402009,[X]Mixed anxiety and depressive disorder (& mild anxiety depression)
+192605002,Depressive conduct disorder
+19300006,"Severe bipolar II disorder, most recent episode major depressive with psychotic features, mood-congruent"
+19527009,Single episode of major depression in full remission
+19694002,Late onset dysthymia
+199111000000100,Referral for guided self-help for depression
+20250007,"Severe major depression, single episode, with psychotic features, mood-incongruent"
+20960007,"Severe bipolar II disorder, most recent episode major depressive with psychotic features, mood-incongruent"
+21061000119107,Mood disorder of depressed type
+214331000000105,Referral for guided self-help for depression
+214341000000101,Referral for guided self-help for depression
+21900002,"Bipolar I disorder, most recent episode depressed with catatonic features"
+22121000,Depressed bipolar I disorder in full remission
+22407005,"Bipolar II disorder, most recent episode major depressive with catatonic features"
+231485007,Post-schizophrenic depression
+231492002,"Schizoaffective disorder, depressive type"
+231498003,Endogenous depression
+231499006,Endogenous depression first episode
+231500002,Masked depression
+231504006,Mixed anxiety and depressive disorder
+231542000,Depressive conduct disorder
+237349002,Mild postnatal depression
+237350002,Severe postnatal depression
+237739002,Pseudo-Cushing's syndrome of depression
+247686005,Depressive delusion of catastrophe
+247687001,Depressive delusion of poverty
+247689003,Depressive hypochondriacal delusion
+247776002,Depressive preoccupation
+247801000,Depression worse in morning
+247802007,Depression worse later in day
+247803002,Seasonal affective disorder
+2506003,Early onset dysthymia
+251000119105,"Severe major depression, single episode"
+25922000,"Major depressive disorder, single episode with postpartum onset"
+261000119107,Severe depressed bipolar I disorder
+2618002,Chronic recurrent major depressive disorder
+26203008,"Severe depressed bipolar I disorder with psychotic features, mood-incongruent"
+267171009,(Depressed (& symptom)) or (unhappy)
+26852004,"Primary degenerative dementia of the Alzheimer type, senile onset, with depression"
+268620009,Single major depressive episode
+268621008,Recurrent major depressive episodes
+268702009,[X]Severe depressive episode without psychotic symptoms
+268704005,[X]Severe depressive episode with psychotic symptoms
+268705006,[X]Other depressive episodes
+268706007,"[X]Depressive episode, unspecified"
+268707003,[X]Recurrent depressive disorder
+268708008,"[X]Recurrent depressive disorder, current episode severe without psychotic symptoms"
+268709000,"[X]Recurrent depressive disorder, current episode severe with psychotic symptoms"
+268710005,"[X]Recurrent depressive disorder, unspecified"
+268749008,Affective psychoses: [manic depressive] or [involutional melancholia]
+268753005,Depression: [reactive (neurotic)] or [postnatal]
+268756002,Personality: [depressive] or [cyclothymic]
+272022009,Complaining of feeling depressed
+274948002,Endogenous depression - recurrent
+276246006,Blunting of mood
+276303005,Preoccupation with death
+276304004,Preoccupation with disaster
+276305003,Preoccupation with ruin
+277538003,Atypical depressive disorder
+279225001,Maternity blues
+281000119103,Severe recurrent major depression
+28475009,Severe recurrent major depression with psychotic features
+288751000119101,"Reactive depressive psychosis, single episode"
+29929003,"Bipolar I disorder, most recent episode depressed with atypical features"
+300706003,Endogenous depression
+304862002,Depressive position relationship
+30520009,"Severe bipolar II disorder, most recent episode major depressive with psychotic features"
+30605009,Major depression in partial remission
+30687003,"Bipolar II disorder, most recent episode major depressive with postpartum onset"
+307537002,Depression NOS
+30819006,Dysphoric mood
+310462009,"[X] Manic-depressive psychosis, depressed type without psychotic symptoms"
+310465006,[X] Single episode agitated depression without psychotic symptoms
+310466007,[X] Single episode major depression without psychotic symptoms
+310495003,Mild depression
+310496002,Moderate depression
+310497006,Severe depression
+3109008,Secondary dysthymia early onset
+319768000,Recurrent major depressive disorder with melancholic features
+320751009,"Major depression, melancholic type"
+321717001,Involutional depression
+33078009,"Severe recurrent major depression with psychotic features, mood-congruent"
+33135002,Recurrent major depression in partial remission
+33736005,"Severe major depression with psychotic features, mood-congruent"
+34315001,"Bipolar II disorder, most recent episode major depressive with melancholic features"
+35489007,Depressive disorder
+35722002,"Severe bipolar II disorder, most recent episode major depressive, in remission"
+357705009,Cotard's syndrome
+35846004,"Moderate bipolar II disorder, most recent episode major depressive"
+36170009,Secondary dysthymia late onset
+36474008,Severe recurrent major depression without psychotic features
+366979004,Depressed mood
+367204005,Depressed mood
+36923009,"Major depression, single episode"
+370143000,Major depressive disorder
+37273005,Lifelong depressive personality trait
+38451003,Primary dysthymia early onset
+38694004,Recurrent major depressive disorder with atypical features
+390717003,Mild depression
+392721003,Symptoms of depression
+393676006,Symptoms of depression
+394924000,Symptoms of depression
+397701000000102,[X]Severe depressive episode without psychotic symptoms
+397711000000100,[X]Severe depressive episode with psychotic symptoms
+39809009,Recurrent major depressive disorder with catatonic features
+401174001,Depression management program
+401211000000106,[X] Single episode major depression without psychotic symptoms
+401761000000100,[X] Severe depressive episode with psychotic symptoms: (& single episode of [major depression] or [psychogenic depressive psychosis] or [psychotic depression] or [reactive depressive psychosis])
+402441000000102,"[X]Recurrent depressive disorder, current episode severe without psychotic symptoms"
+40379007,Mild recurrent major depression
+40568001,Recurrent brief depressive disorder
+40781000000103,Depression management programme
+41006004,Depression
+413296003,Depression requiring intervention
+415044007,Patient given advice about management of depression
+415051000000101,[X]Other depressive episodes
+419311000000100,[X] Depression: [other episodes] or [atypical] or [single episode masked NOS]
+424961000000107,"[X]Recurrent depressive disorder, currently in remission"
+42594001,Organic mood disorder of depressed type
+426578000,Premenstrual dysphoric disorder in remission
+427781000000106,[X]Other recurrent depressive disorders
+42810003,Major depression in remission
+42925002,"Major depressive disorder, single episode with atypical features"
+430051000000100,"[X]Recurrent depressive disorder, current episode mild"
+430421000000104,[X]Mild depressive episode
+430852001,"Severe major depression, single episode, with psychotic features"
+43141000000104,Depression management programme
+431821000000108,[X]Recurrent depressive disorder (& [episodes of depressive reaction] or [episodes of psychogenic depression] or [episodes of reactive depression] or [seasonal depressive disorder])
+432601000000107,"[X]Depressive episode, unspecified"
+43568002,"Bipolar II disorder, most recent episode major depressive with atypical features"
+439366005,Education about postpartum depression
+442057004,Chronic depressive personality disorder
+444051000000108,"[X]Recurrent depressive disorder, current episode severe with psychotic symptoms"
+44491000000101,Depression management programme
+450714000,Severe major depression
+455421000000106,[X] Depression recurrent: [unspecified] or [monopolar NOS]
+455621000000108,[X] Severe depressive episode without psychotic symptoms: (& [single episode agitated depression] or [single episode major depression] or [single episode vital depression])
+455731000000100,[X] Single episode agitated depression without psychotic symptoms
+456601000000107,[X]Recurrent depressive disorder
+46244001,Recurrent major depression in full remission
+465441000000108,[X]Moderate depressive episode
+465451000000106,"[X]Recurrent depressive disorder, current episode moderate"
+465911000000102,"[X]Bipolar affective disorder, current episode severe depression without psychotic symptoms"
+467121000000100,"[X]Bipolar affective disorder, current episode mild or moderate depression"
+467361000000105,"[X] Manic-depressive psychosis, depressed type without psychotic symptoms"
+470951000000103,"[X] (Depression: [episode, unspecified] or [NOS (& reactive)] or [depressive disorder NOS]"
+471451000000102,"[X]Recurrent depressive disorder, unspecified"
+48589009,Minor depressive disorder
+49468007,Depressed bipolar I disorder
+49512000,Depressed bipolar I disorder in partial remission
+507521000000101,Major depressive disorder
+507531000000104,Mild major depression
+507541000000108,Moderate major depression
+507851000000109,Severe major depression without psychotic features
+507861000000107,Severe major depression with psychotic features
+509781000000103,Severe major depression without psychotic features
+509791000000101,Severe major depression with psychotic features
+510371000000107,Mild major depression
+510381000000109,Moderate major depression
+51637008,"Chronic bipolar I disorder, most recent episode depressed"
+530281000000109,"Single major depressive episode, severe, without mention of psychosis"
+530291000000106,"Recurrent major depressive episodes, severe, without mention of psychosis"
+530311000000107,"Bipolar affective disorder, currently depressed, severe, without mention of psychosis"
+53607008,Depressed bipolar I disorder in remission
+54761006,"Severe depressed bipolar I disorder with psychotic features, mood-congruent"
+57194009,Adjustment disorder with depressed mood
+58703003,Postpartum depression
+596004,Premenstrual dysphoric disorder
+59617007,Severe depressed bipolar I disorder with psychotic features
+60099002,"Severe major depression with psychotic features, mood-incongruent"
+606921000000104,"Recurrent major depressive episodes, unspecified"
+609311000000100,Depressive disorder NEC
+613511000000109,"Bipolar affective disorder, currently depressed, NOS"
+613601000000106,Senile dementia with depressive or paranoid features NOS
+6140007,Blunted affect
+61403008,Severe depressed bipolar I disorder without psychotic features
+615941000000103,"Bipolar affective disorder, currently depressed, unspecified"
+615951000000100,"Bipolar affective disorder, currently depressed, in partial or unspecified remission"
+62951006,"Major depression, melancholic type"
+633681000000107,"Single major depressive episode, unspecified"
+633691000000109,"Single major depressive episode, in partial or unspecified remission"
+633701000000109,Single major depressive episode NOS
+633711000000106,"Recurrent major depressive episodes, in partial or unspecified remission"
+633721000000100,Recurrent major depressive episode NOS
+63412003,Major depression in full remission
+63778009,"Major depressive disorder, single episode with melancholic features"
+655231000000105,Brief depressive reaction NOS
+66344007,Recurrent major depression
+66446005,Depressed mood
+66631006,Moderate depressed bipolar I disorder
+67002003,"Severe bipolar II disorder, most recent episode major depressive, in partial remission"
+67711008,Primary dysthymia late onset
+68019004,Recurrent major depression in remission
+69392006,"Major depressive disorder, single episode with catatonic features"
+698696007,Adjustment disorder with depressed mood in remission
+698957003,Depressive disorder in remission
+702291000000103,Depression NOS
+704678007,Depressed mood with postpartum onset
+70747007,"Major depression single episode, in partial remission"
+710061000,Management of depressed mood with postpartum onset
+712823008,Acute depression
+71294008,"Mild bipolar II disorder, most recent episode major depressive"
+71336009,Recurrent major depressive disorder with postpartum onset
+718636001,Minimal depression
+719592004,Moderately severe major depression
+719593009,Moderately severe depression
+720451004,Minimal recurrent major depression
+720452006,Moderately severe recurrent major depression
+720453001,Moderately severe major depression single episode
+720454007,Minimal major depression single episode
+720455008,Minimal major depression
+720696003,Major depressive disorder clinical management plan
+723928009,Mood disorder with depressive symptoms caused by alcohol
+723930006,Mood disorder with mixed manic and depressive symptoms caused by alcohol
+724676000,Mood disorder with depressive symptoms caused by sedative
+724677009,Mood disorder with depressive symptoms caused by hypnotic
+724678004,Mood disorder with depressive symptoms caused by anxiolytic
+724682002,Mood disorder with mixed depressive and manic symptoms caused by sedative
+724683007,Mood disorder with mixed depressive and manic symptoms caused by hypnotic
+724684001,Mood disorder with mixed depressive and manic symptoms caused by anxiolytic
+724690002,Mood disorder with depressive symptoms caused by cocaine
+724692005,Mood disorder with mixed depressive and manic symptoms caused by cocaine
+724757005,Depressive symptoms due to primary psychotic disorder
+726772006,Major depression with psychotic features
+737434004,Major depressive disorder clinical management plan
+73867007,Severe major depression with psychotic features
+74686005,Mild depressed bipolar I disorder
+75084000,Severe major depression without psychotic features
+755321000000106,"Single major depressive episode, severe, with psychosis, psychosis in remission"
+755331000000108,"Recurrent major depressive episodes, severe, with psychosis, psychosis in remission"
+75752004,"Bipolar I disorder, most recent episode depressed with melancholic features"
+758011000000108,"Single major depressive episode, severe, with psychosis, psychosis in remission"
+758021000000102,"Recurrent major depressive episodes, severe, with psychosis, psychosis in remission"
+75837004,Mood disorder with depressive features due to general medical condition
+762321000,Mood disorder with depressive symptoms caused by opioid
+762322007,Mood disorder with mixed depressive and manic symptoms caused by opioid
+762329003,Mood disorder with depressive symptoms caused by stimulant
+762330008,Mood disorder with mixed depressive and manic symptoms caused by stimulant
+762336002,Mood disorder with depressive symptoms caused by hallucinogen
+762337006,Mood disorder with mixed depressive and manic symptoms caused by hallucinogen
+762339009,Mood disorder with depressive symptoms caused by volatile inhalant
+762340006,Mood disorder with mixed depressive and manic symptoms caused by volatile inhalant
+762342003,Mood disorder with depressive symptoms caused by ecstasy type drug
+762343008,Mood disorder with mixed depressive and manic symptoms caused by ecstasy type drug
+762345001,Mood disorder with depressive symptoms caused by dissociative drug
+762346000,Mood disorder with mixed depressive and manic symptoms caused by dissociative drug
+762512002,Mood disorder with depressive symptoms caused by synthetic cathinone
+762514001,Mood disorder with mixed depressive and manic symptoms caused by synthetic cathinone
+76441001,"Severe major depression, single episode, without psychotic features"
+764611000000100,"Recurrent major depressive episodes, severe"
+764631000000108,"Single major depressive episode, severe"
+764691000000109,"Recurrent major depressive episodes, in partial remission"
+764701000000109,"Recurrent major depressive episodes, in remission"
+764711000000106,"Single major depressive episode, in remission"
+764721000000100,"Single major depressive episode, in partial remission"
+765176007,Psychosis and severe depression co-occurrent and due to bipolar affective disorder
+767631007,"Bipolar disorder, most recent episode depression"
+767636002,"Bipolar I disorder, most recent episode depression"
+768835002,Depression care management
+77071000000103,Depression management programme
+77486005,Mood disorder with major depressive-like episode due to general medical condition
+7777001,Blunting of mood
+77911002,"Severe major depression, single episode, with psychotic features, mood-congruent"
+782501005,Adjustment disorder with mixed anxiety and depressed mood
+784051000000106,Depression care management
+78667006,Dysthymia
+788120007,Antenatal depression
+790961000000101,Antenatal depression
+79298009,"Mild major depression, single episode"
+79842004,Stuporous depression
+808721000000109,Antenatal depression
+81319007,"Severe bipolar II disorder, most recent episode major depressive without psychotic features"
+81391000000102,Depression management programme
+814191000000100,Referral to postnatal depression group
+82218004,Postoperative depression
+83176005,Primary dysthymia
+832007,Moderate major depression
+83458005,Agitated depression
+838529004,Mood disorder with mixed depressive and manic symptoms caused by amfetamine and/or amfetamine derivative
+838530009,Mood disorder with depressive symptoms caused by amfetamine and/or amfetamine derivative
+84760002,"Schizoaffective disorder, depressive type"
+84788008,Menopausal depression
+85080004,Secondary dysthymia
+859001000000101,Provision of written information about depression
+860721000000107,Education about depression
+871840004,Episode of depression
+87203005,"Bipolar I disorder, most recent episode depressed with postpartum onset"
+87414006,Reactive depression (situational)
+87512008,Mild major depression
+87842000,Generalized neuromuscular exhaustion syndrome
+923921000000104,Referral for depression self-help video
+923931000000102,Referral for depression self help video 
+94631000119100,Depressive disorder in mother complicating pregnancy

@@ -231,6 +231,18 @@ depression_icd = codelist_from_csv(
     "codelists/user-markdrussell-depression-secondary-care.csv", column="code",
 )
 
+depression_broad_snomed = codelist_from_csv(
+    "codelists/user-markdrussell-depression-broad.csv", column="code",
+)
+
+depression_broad_icd = codelist_from_csv(
+    "codelists/user-markdrussell-depression-secondary-care.csv", column="code",
+)
+
+depression_broad_resolved = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-depres_cod.csv", column="code",
+)
+
 coeliac_snomed = codelist_from_csv(
     "codelists/nhsd-primary-care-domain-refsets-coeliac-disease-codes.csv", column="code",
 )
