@@ -2195,7 +2195,7 @@ actions:
       moderately_sensitive:
         log1: logs/baseline_data_disease.log   
         table1: output/tables/baseline_table_rounded.csv
-        table3: output/tables/incidence_count_*.csv
+        table2: output/tables/incidence_count_*.csv
         figure1: output/figures/count_inc_*.svg      
   
   run_data_processing:

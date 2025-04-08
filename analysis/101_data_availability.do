@@ -37,8 +37,9 @@ set type double
 *Import datasets for diseases
 import delimited "$projectdir/output/dataset_definition_data_avail.csv", clear
 
-*local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 dm_type1 ckd psoriasis atopic_dermatitis osteoporosis hiv depression coeliac pmr"
-local diseases "rheumatoid copd stroke heart_failure"
+local diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 dm_type1 ckd psoriasis atopic_dermatitis osteoporosis hiv depression coeliac pmr"
+*local diseases "rheumatoid copd stroke heart_failure"
+
 local variables "icd_inc_d sno_inc_d inc_d icd_last_d sno_last_d last_d res_d"
 
 foreach disease in `diseases' {

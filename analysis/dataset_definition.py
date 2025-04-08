@@ -52,7 +52,7 @@ def last_code_in_period_snomed(dx_codelist):
         clinical_events.date
     ).last_for_patient()
 
-# Incident diagnostic code in secondary care record (ICD10 primary diagnoses) (assuming before study end date)
+# Last diagnostic code in secondary care record (ICD10 primary diagnoses) (assuming before study end date)
 def last_code_in_period_icd(dx_codelist):
     return apcs.where(
         apcs.primary_diagnosis.is_in(dx_codelist)

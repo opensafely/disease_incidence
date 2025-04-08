@@ -85,7 +85,6 @@ lab var mo_year_diagn_s "Month/Year of Diagnosis"
 
 **Check age and sex categories
 codebook sex
-
 codebook age
 
 **Code incidence and prevalence
@@ -99,7 +98,6 @@ recode measure_imd .=0
 gen measure_ethnicity = 1 if substr(measure,-5,.) == "_ethn"
 recode measure_ethnicity .=0
 
-*gen measure_inc_any = 1 if measure_inc ==1
 gen measure_inc_any = 1 if measure_inc ==1 | measure_imd==1 | measure_ethnicity==1
 recode measure_inc_any .=0
 
@@ -417,22 +415,6 @@ gen sum_ci_95 = sum(ci_95)/(sum_prop*sum_prop)
 gen standerror = sqrt(sum_ci_95)
 gen asir_lci = asir-1.96*standerror
 gen asir_uci = asir+1.96*standerror
-
-*Export a CSV for import into ARIMA R file - adjusted incidence rates
-use "$projectdir/output/data/processed_standardised.dta", clear
-
-keep if measure_inc==1
-
-rename year_diag year
-rename asr_all incidence //age and sex-standardised IR
-replace sex = "All"
-keep disease sex mo_year_diagn year numerator_all denominator_all incidence //incidence is adjusted
-rename numerator_all numerator //unadjusted counts (rounded and redacted)
-rename denominator_all denominator //unadjusted counts (rounded and redacted)
-order disease, before(sex)
-
-save "$projectdir/output/tables/arima_standardised2.dta", replace
-outsheet * using "$projectdir/output/tables/arima_standardised2.csv" , comma replace
 */
 
 *Output string version of incidence and prevalence (to stop conversion for big numbers)

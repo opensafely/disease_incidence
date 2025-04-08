@@ -33,8 +33,6 @@ pre_registrations = (
         practice_registrations.end_date.is_on_or_before(index_date)
     )
 )
-
-# 12m preceding registration exist at interval start
 preceding_reg_index = pre_registrations.exists_for_patient()
 
 # Age at interval start
@@ -57,7 +55,7 @@ measures.configure_dummy_data(population_size=1000, legacy=True)
 measures.configure_disclosure_control(enabled=False)
 measures.define_defaults(intervals=months(intervals).starting_on(start_date))
 
-## Prevalence denominator
+# Prevalence denominator
 prev_denominator = (
     age_band.is_not_null()
     & dataset.sex.is_in(["male", "female"])
