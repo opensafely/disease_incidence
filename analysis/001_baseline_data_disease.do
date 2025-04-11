@@ -39,7 +39,7 @@ global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosi
 set type double
 
 *Import dataset
-import delimited "output/dataset_definition_demographics_disease.csv", clear
+import delimited "$projectdir/output/dataset_definition_demographics_disease.csv", clear
 
 set scheme plotplainblind
 
