@@ -85,6 +85,8 @@ for (j in 1:length(disease_list)) {
     dis_title <- "Coeliac Disease"
   } else if (dis == "pmr") {
     dis_title <- "Polymyalgia Rheumatica"
+  } else if (dis == "depression_broad") {
+    dis_title <- "Depression and depressive symptoms"
   } else {
     dis_title <- str_to_title(str_replace_all(dis, "_", " "))
   }
@@ -213,7 +215,7 @@ for (j in 1:length(disease_list)) {
       geom_line(aes(y = moving_average), color = "#5E716A", linetype = "solid", size=0.70)+
       geom_point(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange", alpha = 0.25, size=1.5)+
       geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean_ma), color = "orange", linetype = "solid", size=0.65)+
-      #geom_ribbon(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
+      geom_ribbon(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
       geom_segment(x = as.Date("2020-03-01"), 
                        xend = as.Date("2020-03-01"), 
                        y = min(df_new[[var]], na.rm = TRUE) * 0.85, 
@@ -243,7 +245,8 @@ for (j in 1:length(disease_list)) {
       ggtitle(dis_title)
     
     saveRDS(c1, file = paste0("output/figures/obs_pred_", var, "_", dis, ".rds"))
-    ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, ".svg"), plot = c1, width = 8, height = 6, device = "svg")
+    #ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, ".svg"), plot = c1, width = 8, height = 6, device = "svg")
+    ggsave(filename = paste0("output/figures/obs_pred_", var, "_", dis, ".png"), plot = c1, width = 8, height = 6, device = "png")
     
     print(c1)
     

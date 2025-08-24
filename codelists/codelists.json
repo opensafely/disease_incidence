@@ -97,10 +97,10 @@
       "sha": "31f7b48569d24259d4da0e6cb77d0468638804b3"
     },
     "user-markdrussell-heart-failure-secondary-care.csv": {
-      "id": "user/markdrussell/heart-failure-secondary-care/5ef6b57b",
-      "url": "https://www.opencodelists.org/codelist/user/markdrussell/heart-failure-secondary-care/5ef6b57b/",
-      "downloaded_at": "2024-12-31 14:51:37.819087Z",
-      "sha": "8aff21b4034021f0bc4dcf434c2881387d95c3dc"
+      "id": "user/markdrussell/heart-failure-secondary-care/7822ef0e",
+      "url": "https://www.opencodelists.org/codelist/user/markdrussell/heart-failure-secondary-care/7822ef0e/",
+      "downloaded_at": "2025-08-24 07:41:37.260607Z",
+      "sha": "a652f4202189a314cf789b582afabaf93639487e"
     },
     "nhsd-primary-care-domain-refsets-dem_cod.csv": {
       "id": "nhsd-primary-care-domain-refsets/dem_cod/21b792ed",

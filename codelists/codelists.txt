@@ -14,7 +14,7 @@ user/markdrussell/stroke-and-tia-secondary-care/780628b0
 nhsd-primary-care-domain-refsets/hf_cod/70b49c5d
 nhsd-primary-care-domain-refsets/hflvsd_cod/44634425
 nhsd-primary-care-domain-refsets/hfres_cod/627991fd
-user/markdrussell/heart-failure-secondary-care/5ef6b57b
+user/markdrussell/heart-failure-secondary-care/7822ef0e
 nhsd-primary-care-domain-refsets/dem_cod/21b792ed
 user/markdrussell/dementia-secondary-care/45e74246
 nhsd-primary-care-domain-refsets/multiple-sclerosis-codes/5ac96061
