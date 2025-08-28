@@ -34,7 +34,7 @@ adopath + "$projectdir/analysis/extra_ados"
 
 *Set disease list
 *global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-global diseases "depression_broad"
+global diseases "depression"
 
 set type double
 

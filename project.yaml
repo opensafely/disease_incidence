@@ -22,113 +22,113 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition_demographics_disease.csv        
 
-  measures_dataset_depression_broad_2016:
+  measures_dataset_depression_2016:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2016.csv
+      --output output/measures/measures_dataset_depression_2016.csv
       --
       --start-date "2016-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2016.csv
+        measure_csv: output/measures/measures_dataset_depression_2016.csv
 
-  measures_dataset_depression_broad_2017:
+  measures_dataset_depression_2017:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2017.csv
+      --output output/measures/measures_dataset_depression_2017.csv
       --
       --start-date "2017-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2017.csv
+        measure_csv: output/measures/measures_dataset_depression_2017.csv
 
-  measures_dataset_depression_broad_2018:
+  measures_dataset_depression_2018:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2018.csv
+      --output output/measures/measures_dataset_depression_2018.csv
       --
       --start-date "2018-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2018.csv
+        measure_csv: output/measures/measures_dataset_depression_2018.csv
 
-  measures_dataset_depression_broad_2019:
+  measures_dataset_depression_2019:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2019.csv
+      --output output/measures/measures_dataset_depression_2019.csv
       --
       --start-date "2019-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2019.csv
+        measure_csv: output/measures/measures_dataset_depression_2019.csv
 
-  measures_dataset_depression_broad_2020:
+  measures_dataset_depression_2020:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2020.csv
+      --output output/measures/measures_dataset_depression_2020.csv
       --
       --start-date "2020-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2020.csv
+        measure_csv: output/measures/measures_dataset_depression_2020.csv
 
-  measures_dataset_depression_broad_2021:
+  measures_dataset_depression_2021:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2021.csv
+      --output output/measures/measures_dataset_depression_2021.csv
       --
       --start-date "2021-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2021.csv
+        measure_csv: output/measures/measures_dataset_depression_2021.csv
 
-  measures_dataset_depression_broad_2022:
+  measures_dataset_depression_2022:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2022.csv
+      --output output/measures/measures_dataset_depression_2022.csv
       --
       --start-date "2022-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2022.csv
+        measure_csv: output/measures/measures_dataset_depression_2022.csv
 
-  measures_dataset_depression_broad_2023:
+  measures_dataset_depression_2023:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2023.csv
+      --output output/measures/measures_dataset_depression_2023.csv
       --
       --start-date "2023-04-01"
       --intervals 12
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2023.csv
+        measure_csv: output/measures/measures_dataset_depression_2023.csv
 
-  measures_dataset_depression_broad_2024:
+  measures_dataset_depression_2024:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
-      --output output/measures/measures_dataset_depression_broad_2024.csv
+      --output output/measures/measures_dataset_depression_2024.csv
       --
       --start-date "2024-04-01"
       --intervals 8
-      --disease "depression_broad"
+      --disease "depression"
     needs: [generate_dataset]
     outputs:
       highly_sensitive:
-        measure_csv: output/measures/measures_dataset_depression_broad_2024.csv
+        measure_csv: output/measures/measures_dataset_depression_2024.csv
 
   run_baseline_data_reference_all:
     run: stata-mp:latest analysis/003_baseline_data_reference_all.do
@@ -154,7 +154,7 @@ actions:
 
   run_data_processing:
     run: stata-mp:latest analysis/002_processing_data.do
-    needs: [generate_dataset, measures_dataset_depression_broad_2016, measures_dataset_depression_broad_2017, measures_dataset_depression_broad_2018, measures_dataset_depression_broad_2019, measures_dataset_depression_broad_2020, measures_dataset_depression_broad_2021, measures_dataset_depression_broad_2022, measures_dataset_depression_broad_2023, measures_dataset_depression_broad_2024]
+    needs: [generate_dataset, measures_dataset_depression_2016, measures_dataset_depression_2017, measures_dataset_depression_2018, measures_dataset_depression_2019, measures_dataset_depression_2020, measures_dataset_depression_2021, measures_dataset_depression_2022, measures_dataset_depression_2023, measures_dataset_depression_2024]
     outputs:
       moderately_sensitive:
         log1: logs/processing_data.log   

@@ -1,11 +1,11 @@
-from ehrql import create_dataset, days, months, years, case, when, create_measures, INTERVAL, minimum_of, maximum_of
-from ehrql.tables.tpp import patients, medications, practice_registrations, clinical_events, apcs, addresses, ons_deaths, appointments
+from ehrql import create_dataset, days, months, years, case, when, INTERVAL, minimum_of, maximum_of
+from ehrql.tables.tpp import patients, medications, practice_registrations, clinical_events, apcs, addresses, ethnicity_from_sus
 from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
 #diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-diseases = ["depression_broad"]
+diseases = ["depression"]
 codelist_types = ["snomed", "icd"]
 
 index_date = "2016-04-01"
@@ -82,14 +82,17 @@ latest_ethnicity_code = (
     .last_for_patient().snomedct_code.to_category(codelists.ethnicity_codes)
 )
 
+## Extract ethnicity from SUS records if it isn't present in primary care data 
+ethnicity_sus = ethnicity_from_sus.code
+
 dataset.ethnicity = case(
-    when(latest_ethnicity_code == "1").then("White"),
-    when(latest_ethnicity_code == "2").then("Mixed"),
-    when(latest_ethnicity_code == "3").then("Asian or Asian British"),
-    when(latest_ethnicity_code == "4").then("Black or Black British"),
-    when(latest_ethnicity_code == "5").then("Chinese or Other Ethnic Groups"),
-    otherwise="Unknown",
-)
+    when((latest_ethnicity_code == "1") | ((latest_ethnicity_code.is_null()) & (ethnicity_sus.is_in(["A", "B", "C"])))).then("White"),
+    when((latest_ethnicity_code == "2") | ((latest_ethnicity_code.is_null()) & (ethnicity_sus.is_in(["D", "E", "F", "G"])))).then("Mixed"),
+    when((latest_ethnicity_code == "3") | ((latest_ethnicity_code.is_null()) & (ethnicity_sus.is_in(["H", "J", "K", "L"])))).then("Asian or Asian British"),
+    when((latest_ethnicity_code == "4") | ((latest_ethnicity_code.is_null()) & (ethnicity_sus.is_in(["M", "N", "P"])))).then("Black or Black British"),
+    when((latest_ethnicity_code == "5") | ((latest_ethnicity_code.is_null()) & (ethnicity_sus.is_in(["R", "S"])))).then("Chinese or Other Ethnic Groups"),
+    otherwise="Unknown", 
+) 
 
 # Define patient IMD
 imd = addresses.for_patient_on(end_date).imd_rounded
