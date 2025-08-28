@@ -33,8 +33,8 @@ log using "$logdir/descriptive_tables.log", replace
 adopath + "$projectdir/analysis/extra_ados"
 
 *Import redacted data for each disease
-global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-*global diseases depression depression_broad 
+*global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
+global diseases depression_broad 
 
 set type double
 
@@ -259,19 +259,19 @@ foreach disease_ of local levels {
 	di "`format'"
 	
 	twoway scatter s_rate_all mo_year_diagn, ytitle("`ytitle'", size(med)) color(emerald%20) msymbol(circle) || line s_rate_all_ma mo_year_diagn, lcolor(emerald) lstyle(solid) ylabel(, `format' nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(671 "2016" 695 "2018" 719 "2020" 743 "2022" 767 "2024" 779 " ", nogrid labsize(small)) title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(off) name("inc_adj_`index'", replace) saving("$projectdir/output/figures/inc_adj_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/inc_adj_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/inc_adj_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/inc_adj_`disease_'.png", replace
+		graph export "$projectdir/output/figures/inc_adj_`disease_'.svg", replace
 		
 	*Adjusted incidence overall with moving average, by sex (scatter)
 	twoway scatter s_rate_male mo_year_diagn, ytitle("`ytitle'", size(med)) color(eltblue%20) mlcolor(eltblue%20) msymbol(circle) || line s_rate_male_ma mo_year_diagn, lcolor(midblue) lstyle(solid) || scatter s_rate_female mo_year_diagn, color(orange%20) mlcolor(orange%20) msymbol(circle)  || line s_rate_female_ma mo_year_diagn, lcolor(red) lstyle(solid) ylabel(, `format' nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(671 "2016" 695 "2018" 719 "2020" 743 "2022" 767 "2024" 779 " ", nogrid labsize(small))  title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(off) name(adj_sex_`index', replace) saving("$projectdir/output/figures/adj_sex_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/adj_sex_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/adj_sex_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/adj_sex_`disease_'.png", replace
+		graph export "$projectdir/output/figures/adj_sex_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) order(2 "Male" 4 "Female")) 
 
 	*Adjusted incidence comparison
 	twoway line rate_all_ma mo_year_diagn, ytitle("`ytitle'", size(med)) lstyle(solid) lcolor(gold)  || line s_rate_all_ma mo_year_diagn, lstyle(solid) lcolor(emerald) ylabel(, `format' nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(671 "2016" 695 "2018" 719 "2020" 743 "2022" 767 "2024" 779 " ", nogrid labsize(small)) xline(722) title("`disease_title'", size(medium) margin(b=2)) legend(off) name(inc_comp_`index', replace) saving("$projectdir/output/figures/inc_comp_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/inc_comp_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/inc_comp_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/inc_comp_`disease_'.png", replace
+		graph export "$projectdir/output/figures/inc_comp_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted")) 
 	
 /*	
@@ -282,14 +282,14 @@ foreach disease_ of local levels {
 */
 	*Unadjusted incidence overall with moving average, by 20-year age groups (lines only)
 	twoway line rate_0_19_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) ytitle("`ytitle'", size(med)) || line rate_20_39_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line rate_40_59_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || line rate_60_79_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line rate_80_ma mo_year_diagn, lcolor(navy) lstyle(solid) ylabel(, `format' nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(671 "2016" 695 "2018" 719 "2020" 743 "2022" 767 "2024" 779 " ", nogrid labsize(small))  title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(off) name(unadj_age_`index', replace) saving("$projectdir/output/figures/unadj_age_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/unadj_age_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/unadj_age_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/unadj_age_`disease_'.png", replace
+		graph export "$projectdir/output/figures/unadj_age_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) title("Age group", size(small) margin(b=1)) order(1 "0-19" 2 "20-39" 3 "40-59" 4 "60-79" 5 "80+"))		
 	
 	*Unadjusted incidence moving average, by IMD (lines only)
 	twoway line rate_imd1_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) ytitle("`ytitle'", size(med)) || line rate_imd2_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line rate_imd3_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || line rate_imd4_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line rate_imd5_ma mo_year_diagn, lcolor(navy) lstyle(solid) ylabel(, `format' nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(671 "2016" 695 "2018" 719 "2020" 743 "2022" 767 "2024" 779 " ", nogrid labsize(small))  title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(off) name(unadj_imd_`index', replace) saving("$projectdir/output/figures/unadj_imd_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/unadj_imd_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/unadj_imd_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/unadj_imd_`disease_'.png", replace
+		graph export "$projectdir/output/figures/unadj_imd_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) title("IMD quintile", size(small) margin(b=1)) order(1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5 Least deprived"))
 	restore		
 
@@ -341,15 +341,15 @@ foreach disease_ of local levels {
 	di "`ylab'"
 
 	twoway connected s_rate_all year, ytitle("", size(med)) color(emerald%30) msymbol(circle) lcolor(emerald) lstyle(solid) || connected s_rate_male year, color(eltblue%30) msymbol(circle) lcolor(midblue) lstyle(solid) || connected s_rate_female year, color(orange%30) msymbol(circle) lcolor(red) lstyle(solid) ylabel("`ylab'", nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid) title("`disease_title'", size(medium) margin(b=2)) xline(2020) legend(off) name(prev_adj_`index', replace) saving("$projectdir/output/figures/prev_adj_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/prev_adj_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/prev_adj_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/prev_adj_`disease_'.png", replace
+		graph export "$projectdir/output/figures/prev_adj_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) order(1 "All" 2 "Male" 3 "Female"))
 		*ytitle("`ytitleprev'", size(med))
 		
 	*Adjusted prevalence comparison
 	twoway connected rate_all year, ytitle("", size(med)) color(gold%30) msymbol(circle) lstyle(solid) lcolor(gold) || connected s_rate_all year, color(emerald%30) msymbol(circle) lstyle(solid) lcolor(emerald) ylabel("`ylab'", nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(2016(1)2023, nogrid) xline(2020) title("`disease_title'", size(medium) margin(b=2)) legend(off) name(prev_comp_`index', replace) saving("$projectdir/output/figures/prev_comp_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/prev_comp_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/prev_comp_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/prev_comp_`disease_'.png", replace
+		graph export "$projectdir/output/figures/prev_comp_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted"))
 		*ytitle("`ytitleprev'", size(med))
 */
@@ -459,8 +459,8 @@ foreach disease_ of local levels {
 	di "`format'"
 
 	twoway line rate_white_ma mo_year_diagn, lcolor(ltblue) lstyle(solid) ytitle("`ytitle'", size(med)) || line rate_mixed_ma mo_year_diagn, lcolor(eltblue) lstyle(solid) || line rate_black_ma mo_year_diagn, lcolor(ebblue) lstyle(solid) || line rate_asian_ma mo_year_diagn, lcolor(blue) lstyle(solid) || line rate_other_ma mo_year_diagn, lcolor(navy) lstyle(solid) ylabel(, `format' nogrid labsize(small)) xtitle("`xtitle'", size(medium) margin(medsmall)) xlabel(671 "2016" 695 "2018" 719 "2020" 743 "2022" 767 "2024" 779 " ", nogrid labsize(small))  title("`disease_title'", size(medium) margin(b=2)) xline(722) legend(off) name(unadj_ethn_`index', replace) saving("$projectdir/output/figures/unadj_ethn_`disease_'.gph", replace)
-		graph export "$projectdir/output/figures/unadj_ethn_`disease_'.png", replace
-		*graph export "$projectdir/output/figures/unadj_ethn_`disease_'.svg", replace
+		*graph export "$projectdir/output/figures/unadj_ethn_`disease_'.png", replace
+		graph export "$projectdir/output/figures/unadj_ethn_`disease_'.svg", replace
 		*legend(region(fcolor(white%0)) title("Ethnicity", size(medsmall) margin(b=1)) order(1 "White" 2 "Mixed" 3 "Black" 4 "Asian" 5 "Chinese/Other"))	
 	restore	
 			

@@ -22,104 +22,6 @@ actions:
       highly_sensitive:
         cohort: output/dataset_definition_demographics_disease.csv        
 
-  # generate_dataset_data_avail:
-  #   run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
-  #     --output output/dataset_definition_data_avail.csv
-  #     #--
-  #     #--diseases "{diseases}"
-  #   outputs:
-  #     highly_sensitive:
-  #       cohort: output/dataset_definition_data_avail.csv
-
-  # run_data_avail:
-  #   run: stata-mp:latest analysis/101_data_availability.do
-  #   needs: [generate_dataset_data_avail]
-  #   outputs:
-  #     moderately_sensitive:
-  #       log1: logs/data_avail_tables.log   
-  #       data1: output/tables/data_check_*.csv
-
-  generate_baseline_data_2016:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2016.csv
-      --
-      --start-date "2016-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2016.csv        
-
-  generate_baseline_data_2017:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2017.csv
-      --
-      --start-date "2017-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2017.csv        
-
-  generate_baseline_data_2018:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2018.csv
-      --
-      --start-date "2018-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2018.csv        
-
-  generate_baseline_data_2019:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2019.csv
-      --
-      --start-date "2019-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2019.csv        
-
-  generate_baseline_data_2020:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2020.csv
-      --
-      --start-date "2020-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2020.csv        
-
-  generate_baseline_data_2021:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2021.csv
-      --
-      --start-date "2021-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2021.csv        
-
-  generate_baseline_data_2022:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2022.csv
-      --
-      --start-date "2022-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2022.csv        
-
-  generate_baseline_data_2023:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2023.csv
-      --
-      --start-date "2023-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2023.csv        
-
-  generate_baseline_data_2024:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_2024.csv
-      --
-      --start-date "2024-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_2024.csv        
-
   measures_dataset_depression_broad_2016:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
       --output output/measures/measures_dataset_depression_broad_2016.csv
@@ -227,14 +129,6 @@ actions:
     outputs:
       highly_sensitive:
         measure_csv: output/measures/measures_dataset_depression_broad_2024.csv
-
-  run_baseline_data_reference:
-    run: stata-mp:latest analysis/000_baseline_data_reference.do
-    needs: [generate_baseline_data_2016, generate_baseline_data_2017, generate_baseline_data_2018, generate_baseline_data_2019, generate_baseline_data_2020, generate_baseline_data_2021, generate_baseline_data_2022, generate_baseline_data_2023, generate_baseline_data_2024]
-    outputs:
-      moderately_sensitive:
-        log1: logs/baseline_data_reference.log   
-        table1: output/tables/reference_table_rounded.csv
 
   run_baseline_data_reference_all:
     run: stata-mp:latest analysis/003_baseline_data_reference_all.do

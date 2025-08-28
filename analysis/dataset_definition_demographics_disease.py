@@ -4,8 +4,8 @@ from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
-diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-#diseases = ["depression_broad"]
+#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+diseases = ["depression_broad"]
 codelist_types = ["snomed", "icd"]
 
 index_date = "2016-04-01"
@@ -33,6 +33,10 @@ def first_code_in_period_icd(dx_codelist):
     ).sort_by(
         apcs.admission_date
     ).first_for_patient()
+
+# Expand 3-character ICD10 codes
+def expand_three_char_icd10_codes(dx_codelist):
+    return dx_codelist + [f"{code}X" for code in dx_codelist if len(code) == 3]
 
 # Registration for 12 months prior to incident diagnosis date
 def preceding_registration(dx_date):
@@ -122,7 +126,8 @@ for disease in diseases:
                 dataset.add_column(f"{disease}_prim_date", first_code_in_period_snomed([]).date)
         elif (f"{codelist_type}" == "icd"):
             if hasattr(codelists, f"{disease}_icd"):
-                disease_codelist = getattr(codelists, f"{disease}_icd")    
+                disease_codelist = getattr(codelists, f"{disease}_icd")
+                disease_codelist = expand_three_char_icd10_codes(disease_codelist)   
                 dataset.add_column(f"{disease}_sec_date", first_code_in_period_icd(disease_codelist).admission_date)
             else:
                 dataset.add_column(f"{disease}_sec_date", first_code_in_period_icd([]).admission_date)

@@ -24,46 +24,7 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_definition_demographics_disease.csv        
-
-  # generate_dataset_data_avail:
-  #   run: ehrql:v1 generate-dataset analysis/dataset_definition_data_avail.py
-  #     --output output/dataset_definition_data_avail.csv
-  #     #--
-  #     #--diseases "{diseases}"
-  #   outputs:
-  #     highly_sensitive:
-  #       cohort: output/dataset_definition_data_avail.csv
-
-  # run_data_avail:
-  #   run: stata-mp:latest analysis/101_data_availability.do
-  #   needs: [generate_dataset_data_avail]
-  #   outputs:
-  #     moderately_sensitive:
-  #       log1: logs/data_avail_tables.log   
-  #       data1: output/tables/data_check_*.csv
 """
-
-yaml_demog = """
-  generate_baseline_data_{year}:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_demographics.py
-      --output output/dataset_definition_{year}.csv
-      --
-      --start-date "{year}-04-01"
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_definition_{year}.csv        
-"""
-
-yaml_prebody = ""
-all_need = []
-
-for year in range(2016, 2025):
-    yaml_prebody += yaml_demog.format(year=year)
-    all_need.append(f"generate_baseline_data_{year}")
-
-need_list = ", ".join(all_need)
-
-
 yaml_template = """
   measures_dataset_{disease}_{year}:
     run: ehrql:v1 generate-measures analysis/dataset_definition_measures.py
@@ -90,14 +51,6 @@ for year in range(2016, 2025):
 needs_list = ", ".join(all_needs)
 
 yaml_footer_template = f"""
-  run_baseline_data_reference:
-    run: stata-mp:latest analysis/000_baseline_data_reference.do
-    needs: [{need_list}]
-    outputs:
-      moderately_sensitive:
-        log1: logs/baseline_data_reference.log   
-        table1: output/tables/reference_table_rounded.csv
-
   run_baseline_data_reference_all:
     run: stata-mp:latest analysis/003_baseline_data_reference_all.do
     needs: [generate_dataset_demographics_disease]
@@ -165,7 +118,7 @@ yaml_footer_template = f"""
 yaml_footer = yaml_footer_template.format(needs_list=needs_list)
 
 # Combine header, body, and footer
-generated_yaml = yaml_header + yaml_prebody + yaml_body + yaml_footer
+generated_yaml = yaml_header + yaml_body + yaml_footer
 
 # Save to a file
 with open("project.yaml", "w") as file:
