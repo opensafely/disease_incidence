@@ -33,8 +33,8 @@ log using "$logdir/processing_data.log", replace
 adopath + "$projectdir/analysis/extra_ados"
 
 *Import and append measures datasets for diseases
-*global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-global diseases "depression"
+global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression depression_broad coeliac pmr"
+*global diseases "depression"
 
 set type double
 
