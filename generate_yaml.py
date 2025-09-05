@@ -106,11 +106,8 @@ yaml_footer_template = f"""
         figure1: output/figures/raw_pre_covid_*.svg
         figure2: output/figures/differenced_pre_covid_*.svg
         figure3: output/figures/seasonal_pre_covid_*.svg
-        figure4: output/figures/raw_acf_*.svg
-        figure5: output/figures/differenced_acf_*.svg
-        figure6: output/figures/seasonal_acf_*.svg
-        figure7: output/figures/auto_residuals_*.svg
-        figure8: output/figures/obs_pred_*.svg
+        figure4: output/figures/auto_residuals_*.svg
+        figure5: output/figures/obs_pred_*.svg
         table1: output/tables/change_incidence_byyear.csv
         table2: output/tables/values_*.csv   
 """

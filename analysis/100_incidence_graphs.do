@@ -33,8 +33,8 @@ log using "$logdir/descriptive_tables.log", replace
 adopath + "$projectdir/analysis/extra_ados"
 
 *Import redacted data for each disease
-*global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression depression_broad coeliac pmr"
-global diseases depression 
+global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression depression_broad coeliac pmr"
+*global diseases depression 
 
 set type double
 
@@ -132,6 +132,7 @@ foreach disease in $diseases {
 	} 
 }
 */
+
 **Generate 3-monthly moving averages
 bysort disease measure (mo_year_diagn): gen s_rate_all_ma =(s_rate_all[_n-1]+s_rate_all[_n]+s_rate_all[_n+1])/3
 bysort disease measure (mo_year_diagn): gen s_rate_male_ma =(s_rate_male[_n-1]+s_rate_male[_n]+s_rate_male[_n+1])/3
@@ -218,14 +219,17 @@ foreach disease_ of local levels {
 	else if "`disease_'" == "depression_broad" {
 		local disease_title "Depression and depressive symptoms"
 	}
+	else if "`disease_'" == "stroke" {
+		local disease_title "Stroke and TIA"
+	}
 	else {
 		local disease_title = strproper(subinstr("`disease_'", "_", " ",.))
 	}
 
 	*Label y-axis incidence
 	if `index' == 1 | `index' == 6 | `index' == 11 | `index' == 16 {
-		local ytitle "Monthly incidence"
-		local ytitleprev "Annual prevalence"
+		local ytitle "Monthly incidence rate per 100,000"
+		local ytitleprev "Annual prevalence per 100,000"
 	}
 	else {
 		local ytitle ""
@@ -420,13 +424,16 @@ foreach disease_ of local levels {
 	else if "`disease_'" == "depression_broad" {
 		local disease_title "Depression and depressive symptoms"
 	}
+	else if "`disease_'" == "stroke" {
+		local disease_title "Stroke and TIA"
+	}
 	else {
 		local disease_title = strproper(subinstr("`disease_'", "_", " ",.))
 	}
 
 	*Label y-axis
 	if `index' == 1 | `index' == 5 | `index' == 9 {
-		local ytitle "Monthly incidence"
+		local ytitle "Monthly incidence rate per 100,000"
 	}
 	else {
 		local ytitle ""
