@@ -42,7 +42,7 @@ dir_create(here::here("output/tables"), showWarnings = FALSE, recurse = TRUE)
 sink("logs/sarima_log.txt")
 
 # Incidence data - use age and sex-standardised rates for incidence rates
-df <-read.csv("output/tables/arima_standardised-real.csv")
+df <-read.csv("output/tables/arima_standardised.csv")
 
 # Rename variables in the data 
 names(df)[names(df) == "numerator"] <- "count"
