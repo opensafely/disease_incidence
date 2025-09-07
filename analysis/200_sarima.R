@@ -264,50 +264,74 @@ for (j in 1:length(disease_list)) {
     ggsave(sprintf("output/figures/auto_residuals_%s_%s.svg", var, as.character(dis)[1]),
            plot = g, width = 8, height = 6, device = "svg")
     
-    # Bai–Perron test for structural breaks; set a minimum segment size to avoid spurious breaks
-    if (requireNamespace("strucchange", quietly = TRUE)) {
-      
-      library(strucchange)
-
-      bp_full <- breakpoints(df_obs_rate ~ 1, h = max(12, frequency(df_obs_rate)))
-      
-      bp_test <- sctest(df_obs_rate ~ 1, type = "supF", h = max(12, frequency(df_obs_rate)))
-      
-      print(bp_test)
-
-      # Pick number of breaks by BIC
-      bic_vals <- BIC(bp_full)
-      k_grid <- 0:(length(bic_vals) - 1)
-      k <- k_grid[which.min(bic_vals)]
-
-      # Extract break indices and times
-      bp_k <- breakpoints(bp_full, breaks = k)
-      bd_idx <- if (k > 0) bp_k$breakpoints else integer(0)
-      bd_times <- if (k > 0) breakdates(bp_k) else numeric(0)
-
-      # Map to date column
-      if (k > 0) {
-        tt <- time(df_obs_rate)
-        bd_row   <- sapply(bd_times, function(bt) which.min(abs(tt - bt)))
-        bd_dates <- df_obs$mo_year_diagn[bd_row]
-        message("Bai–Perron breaks (k=", k, "): ", paste(as.character(bd_dates), collapse=", "))
-      } else {
-        message("Bai–Perron selected no breaks (k=0).")
-      }
-
-      # Save plots
-      svg(filename = paste0("output/figures/breakpoints_", var, "_", dis, ".svg"), width = 8, height = 6)
-      plot(df_obs_rate, main = sprintf("Bai–Perron breaks (k=%d)", k))
-      if (k > 0) {
-        lines(fitted(bp_k), col = "red")
-        abline(v = bd_times, lty = 2)
-      }
-      dev.off()
-      
-    } else {
-      message("Strucchange package not installed, skipping Bai–Perron")
-    }
-
+    # # CUSUM (instability test on the residuals)
+    # cusum_pre <- sctest(df_obs_rate ~ 1, type = "OLS-CUSUM")
+    # print(cusum_pre)
+    # 
+    # # CUSUM (instability test on the residuals)
+    # cusum_fit <- sctest(res ~ 1, type = "OLS-CUSUM")
+    # print(cusum_fit)
+    # 
+    # # Bai–Perron test for structural breaks; set a minimum segment size to avoid spurious breaks
+    # if (requireNamespace("strucchange", quietly = TRUE)) {
+    #   
+    #   library(strucchange)
+    # 
+    #   bp_full <- breakpoints(df_obs_rate ~ 1, h = max(12, frequency(df_obs_rate)))
+    #   
+    #   bp_test_supF <- sctest(df_obs_rate ~ 1, type = "supF", h = 24)
+    #   
+    #   print(bp_test_supF)
+    #   
+    #   bp_test_expF <- sctest(df_obs_rate ~ 1, type = "expF", h = 24)
+    #   
+    #   print(bp_test_expF)
+    #   
+    #   bp_test_aveF <- sctest(df_obs_rate ~ 1, type = "aveF", h = 24)
+    #   
+    #   print(bp_test_aveF)
+    # 
+    #   # Pick number of breaks by BIC
+    #   bic_vals <- BIC(bp_full)
+    #   k_grid <- 0:(length(bic_vals) - 1)
+    #   k <- k_grid[which.min(bic_vals)]
+    # 
+    #   # Extract break indices and times
+    #   bp_k <- breakpoints(bp_full, breaks = k)
+    #   bd_idx <- if (k > 0) bp_k$breakpoints else integer(0)
+    #   bd_times <- if (k > 0) breakdates(bp_k) else numeric(0)
+    # 
+    #   # Map to date column
+    #   if (k > 0) {
+    #     tt <- time(df_obs_rate)
+    #     bd_row   <- sapply(bd_times, function(bt) which.min(abs(tt - bt)))
+    #     bd_dates <- df_obs$mo_year_diagn[bd_row]
+    #     message("Bai–Perron breaks (k=", k, "): ", paste(as.character(bd_dates), collapse=", "))
+    #   } else {
+    #     message("Bai–Perron selected no breaks (k=0).")
+    #   }
+    # 
+    #   # Save plots
+    #   svg(filename = paste0("output/figures/breakpoints_", var, "_", dis, ".svg"), width = 8, height = 6)
+    #   plot(df_obs_rate, main = sprintf("Bai–Perron breaks (k=%d)", k))
+    #   if (k > 0) {
+    #     lines(fitted(bp_k), col = "red")
+    #     abline(v = bd_times, lty = 2)
+    #   }
+    #   dev.off()
+    #   
+    # } else {
+    #   message("Strucchange package not installed, skipping Bai–Perron")
+    # }
+    # 
+    # # BFAST
+    # library(bfast)
+    # bf <- bfast(df_obs_rate, h = 0.5)
+    # summary(bf)
+    # trend_out <- bf$output[[1]]
+    # pval <- trend_out$p.value
+    # print(pval)
+    
     # Forecast from March 2020 and convert to time series object
     fc.rate  <- forecast(m1.rate, h = (max_index - n_preintervention), level = 95, bootstrap=TRUE, npaths=10000)
   
