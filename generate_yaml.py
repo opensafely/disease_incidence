@@ -73,6 +73,14 @@ yaml_footer_template = f"""
         figure2: output/figures/count_inc_p_*.svg
         figure3: output/figures/count_inc_s_*.svg
 
+  run_baseline_data_diseases:
+    run: stata-mp:latest analysis/004_baseline_data_diseases.do
+    needs: [generate_dataset_demographics_disease]
+    outputs:
+      moderately_sensitive:
+        log1: logs/baseline_data_diseases.log   
+        table1: output/tables/baseline_table_round.csv
+
   run_data_processing:
     run: stata-mp:latest analysis/002_processing_data.do
     needs: [generate_dataset, {needs_list}]
