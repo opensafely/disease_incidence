@@ -1,10 +1,9 @@
 version 16
 
 /*==============================================================================
-DO FILE NAME:			Incidence graphs
+DO FILE NAME:			Baseline data reference all
 PROJECT:				OpenSAFELY Disease Incidence project
-DATE: 					23/08/2024
-AUTHOR:					J Galloway / M Russell									
+AUTHOR:					M Russell / J Galloway											
 DESCRIPTION OF FILE:	Baseline data for full cohort
 DATASETS USED:			Dataset definition
 OTHER OUTPUT: 			logfiles, printed to folder $Logdir
@@ -13,8 +12,6 @@ USER-INSTALLED ADO:
 ==============================================================================*/
 
 *Set filepaths
-*global projectdir "C:\Users\Mark\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
-*global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 global projectdir `c(pwd)'
 di "$projectdir"
 
@@ -141,29 +138,8 @@ replace imd = 6 if imd_quintile == "Unknown"
 
 label define imd 1 "1 (most deprived)" 2 "2" 3 "3" 4 "4" 5 "5 (least deprived)" 6 "Unknown", modify
 label values imd imd 
-lab var imd "Index of multiple deprivation"
-tab imd, missing
-drop imd_quintile
 
-save "$projectdir/output/data/reference_data_processed_all.dta", replace
-
-/*Tables================================================================*/
-
-**Baseline table
-use "$projectdir/output/data/reference_data_processed_all.dta", clear
-	preserve
-	table1_mc, total(before) onecol nospacelowpercent missing iqrmiddle(",")  ///
-		vars(age_index contn %5.1f \ ///
-			 ageband_index cat %5.1f \ ///
-			 age_midpoint contn %5.1f \ ///
-			 ageband_midpoint cat %5.1f \ ///
-			 gender cat %5.1f \ ///
-			 ethnicity cat %5.1f \ ///
-			 imd cat %5.1f \ ///
-			 )
-	restore
-
-*Table of mean age and demographics for reference population, with counts rounded and redacted
+*Table of mean age and demographics for reference population, with counts rounded and redacted===============================================*
 
 use "$projectdir/output/data/reference_data_processed_all.dta", clear
 

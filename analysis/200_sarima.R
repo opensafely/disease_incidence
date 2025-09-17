@@ -1,3 +1,5 @@
+# Adapted from the approaches used by Qi et al. Br J Gen Pract. 2023 Apr 27;73(730):e332-e339; and Schaffer et al. BMC Med Res Methodol 2021;21(1): 58.
+
 # install.packages("doBy")
 # install.packages("astsa")
 # install.packages("ggplot2")
@@ -31,20 +33,16 @@ library(lubridate)
 
 sessionInfo()
 
-#For running locally
-#setwd("C:/Users/k1754142/OneDrive/PhD Project/OpenSAFELY Incidence/disease_incidence/")
-#setwd("C:/Users/Mark/OneDrive/PhD Project/OpenSAFELY Incidence/disease_incidence/")
-
-## Create directories if needed
+# Create directories if needed
 dir_create(here::here("output/figures"), showWarnings = FALSE, recurse = TRUE)
 dir_create(here::here("output/tables"), showWarnings = FALSE, recurse = TRUE)
 
 sink("logs/sarima_log.txt")
 
-# Incidence data - use age and sex-standardised rates for incidence rates
+# Incidence data - use rounded age and sex-standardised rates for incidence rates
 df <-read.csv("output/tables/arima_standardised.csv")
 
-# Rename variables in the data 
+# Rename variables in the data and ensure dates in correct format
 names(df)[names(df) == "numerator"] <- "count"
 df<- df %>% select(disease, year, mo_year_diagn, incidence, count) 
 df$month <- substr(df$mo_year_diagn, 1, 3)
@@ -67,7 +65,7 @@ end_date   <- max(df$mo_year_diagn, na.rm = TRUE)
 start <- c(year(start_date), month(start_date))
 end <- c(year(end_date), month(end_date))
 
-# Define intervention data (March 2020)
+# Define intervention date (March 2020)
 intervention <- c(2020, 3)
 intervention_date <- as.Date(paste0(intervention[1], "-", intervention[2], "-01"), format = "%Y-%m-%d")
 
@@ -81,8 +79,6 @@ print(max_index)
 max_years <- ceiling(max_index / 12)
 
 # Define the variables to loop over
-#variables <- c("incidence", "count")
-#y_labels <- c("Monthly incidence rate per 100,000 population", "Number of diagnoses per month")
 variables <- c("incidence")
 
 # Loop through diseases
@@ -117,74 +113,109 @@ for (j in 1:length(disease_list)) {
     dis_title <- str_to_title(str_replace_all(dis, "_", " "))
   }
   
-  # Label y-axis
+  # Label y-axis (for combined graph)
   if (index_axis %in% c(1, 6, 11, 16)) {
     y_label <- "Monthly incidence rate per 100,000"
   } else {
     y_label <- ""
   }
   
-  # Label x-axis
+  # Label x-axis (for combined graph)
   if (index_axis %in% c(16, 17, 18, 19)) {
-    x_label <- "Year"
+    #x_label <- "Year"
+    x_label <- ""
   } else {
     x_label <- ""
   }
 
-  # Keep data from before March 2020
+  # Keep data from before intervention date (March 2020)
   df_obs <- df_dis[which(df_dis$index<=n_preintervention),]
   
   # Loop through incidence (+/- counts if needed)
   for (i in 1:length(variables)) {
     var <- variables[i]
-    #y_label <- y_labels[i]
 
     # Convert to time series object 
     df_obs_rate <- ts(df_obs[[var]], frequency=12, start=start)
     assign(paste0("ts_", var), df_obs_rate)
     
-    # Plot time series for: 1) raw data; 2) 1st order difference; 3) 1st order seasonal difference; checking for stationarity
+    # Plot time series for raw data; 1st order difference; 1st order seasonal difference
     svg(filename = paste0("output/figures/raw_pre_covid_", var, "_", dis, ".svg"), width = 8, height = 6)
     plot(df_obs_rate, ylim=c(), type='l', col="blue", xlab="Year", ylab=y_label)
     dev.off()
     svg(filename = paste0("output/figures/differenced_pre_covid_", var, "_", dis, ".svg"), width = 8, height = 6)
-    plot(diff(df_obs_rate),type = "l");abline(h=0,col = "red") #1st order difference data
+    plot(diff(df_obs_rate),type = "l");abline(h=0,col = "red")
     dev.off()
     svg(filename = paste0("output/figures/seasonal_pre_covid_", var, "_", dis, ".svg"), width = 8, height = 6)
-    plot(diff(diff(df_obs_rate),12),type = "l");abline(h=0,col = "red") #seasonal difference of 1st order difference data 
+    plot(diff(diff(df_obs_rate),12),type = "l");abline(h=0,col = "red")
     dev.off()
 
-    # Use auto.arima to fit SARIMA model (identifying terms that optimise BIC/AIC); Nb. for models with poor fit on visual inspection/diagnostics, explore different models model
+    # Use auto.arima to fit the initial SARIMA model (identifying terms that optimise BIC/AIC); then for models with sub-optimal fit on visual inspection/diagnostics, explore different terms (optimal terms shown)
     if (dis == "asthma") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1))
     } else if (dis == "atopic_dermatitis") {
-      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1), include.drift=TRUE)
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,1,1), seasonal = c(0,1,1))
     } else if (dis == "chd") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(1,0,0), seasonal = c(0,1,1), include.drift = TRUE)
     } else if (dis == "ckd") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,1), seasonal = c(0,1,2))
+    } else if (dis == "coeliac") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(1,1,1), include.drift = TRUE)
+    } else if (dis == "copd") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1), include.drift = TRUE)
     } else if (dis == "crohns_disease") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1), include.drift = TRUE)
-      #suggested.rate <- forecast::Arima(df_obs_rate, order = c(1,0,2), seasonal = c(0,1,1))
-      #suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,1,2), seasonal = c(0,1,1))
+    } else if (dis == "dementia") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(3,0,0), seasonal = c(0,1,1))
+    } else if (dis == "depression") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1), include.drift = TRUE)
     } else if (dis == "dm_type2") {
-      suggested.rate <- forecast::Arima(df_obs_rate, order = c(4,0,1), seasonal = c(0,1,1), include.drift=TRUE)
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(4,0,1), seasonal = c(0,1,1), include.drift = TRUE)
     } else if (dis == "epilepsy") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(1,1,1))
     } else if (dis == "heart_failure") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(3,0,0), seasonal = c(0,1,1), include.drift = TRUE)
+    } else if (dis == "multiple_sclerosis") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(1,0,0), seasonal = c(1,1,0))
+    } else if (dis == "osteoporosis") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1))
     } else if (dis == "pmr") {
-      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,1), seasonal = c(0,1,1), include.drift = TRUE)
-    } else if (dis == "ulcerative_colitis") {      
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,1), seasonal = c(1,1,0), include.drift = TRUE)
+    } else if (dis == "psoriasis") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1), include.drift = TRUE)
+    } else if (dis == "rheumatoid") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1))
+    } else if (dis == "stroke") {
+      suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,2), seasonal = c(1,1,0))
+    } else if (dis == "ulcerative_colitis") {
       suggested.rate <- forecast::Arima(df_obs_rate, order = c(0,0,0), seasonal = c(0,1,1))
     } else {
-      suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE)
+     suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE)
     }
+      
+    print(dis)  
     print(suggested.rate)
+    
+    # Non-seasonal differences suggested by KPSS; then explore diagnostics to see if this is appropriate; also explore alternative models that include drift constants
+    d <- ndiffs(df_obs_rate) 
+    print(paste("Non-seasonal differences:", d))
+
+    # AIC
     aic_value <- AIC(suggested.rate)
-    print(paste("AIC:", aic_value))
+    print(paste("AIC:", round(aic_value, 2)))
+    
+    # BIC
     bic_value <- BIC(suggested.rate)
-    print(paste("BIC:", bic_value))
+    print(paste("BIC:", round(bic_value, 2)))
+    
+    # Sigma2 (residual variance)
+    sigma2_value <- suggested.rate$sigma2
+    print(paste("Sigma^2:", round(sigma2_value, 2)))
+    
+    # Log-likelihood
+    loglik_value <- logLik(suggested.rate)
+    print(paste("Log Likelihood:", round(as.numeric(loglik_value), 2)))
+    
     m1.rate <-suggested.rate
     m1.rate
 
@@ -216,9 +247,7 @@ for (j in 1:length(disease_list)) {
     
     p4 <- ggplot(data.frame(res = res), aes(x = res)) +
       geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgray", color = "black") +
-      stat_function(fun = dnorm,
-                    args = list(mean = mean(res), sd = sd(res)),
-                    color = "red", size = 0.5) +
+      stat_function(fun = dnorm, args = list(mean = mean(res), sd = sd(res)), color = "red", size = 0.5) +
       ggtitle("Residuals Histogram") +
       xlab("Residuals") + ylab("Density") +
       theme_centered
@@ -235,7 +264,7 @@ for (j in 1:length(disease_list)) {
     }
     
     # RMSE
-    y     <- as.numeric(df_obs_rate)
+    y <- as.numeric(df_obs_rate)
     y_hat <- as.numeric(fitted(m1.rate))
     
     # RMSE (absolute)
@@ -244,6 +273,39 @@ for (j in 1:length(disease_list)) {
     # Normalized RMSE as % of the mean
     nrmse <- rmse / mean(y, na.rm = TRUE) * 100
     
+    # Bai–Perron and CUSUM tests
+    bp_str <- NULL
+    cusum_str <- NULL
+    
+    if (requireNamespace("strucchange", quietly = TRUE)) {
+      library(strucchange)
+      
+      # Bai–Perron test on the series with a minimum segment size
+      bp_full <- breakpoints(df_obs_rate ~ 1, h = max(12, frequency(df_obs_rate)))
+      
+      # Selects optimal number of structural breaks by BIC
+      bic_vals <- BIC(bp_full)
+      k_grid <- 0:(length(bic_vals) - 1)
+      k_bp <- k_grid[which.min(bic_vals)]
+      
+      # Extract break dates (if any)
+      if (k_bp > 0) {
+        bp_k <- breakpoints(bp_full, breaks = k_bp)
+        tt <- time(df_obs_rate)
+        bd_times <- breakdates(bp_k)
+        bd_row   <- sapply(bd_times, function(bt) which.min(abs(tt - bt)))
+        bd_dates <- df_obs$mo_year_diagn[bd_row]
+        bp_str <- sprintf("Bai–Perron: k=%d; breaks=%s",
+                          k_bp, paste(as.character(bd_dates), collapse = ", "))
+      } else {
+        bp_str <- "Bai–Perron: k=0 (no breaks)"
+      }
+      
+      # CUSUM test on residuals
+      cusum_fit <- sctest(res ~ 1, type = "OLS-CUSUM")
+      cusum_str <- sprintf("CUSUM: p = %s", formatC(cusum_fit$p.value, format = "f", digits = 2))
+    }
+    
     cap <- paste0(
       "RMSE = ", formatC(rmse, format = "f", digits = 2),
       " (", formatC(nrmse, format = "f", digits = 1), "% of mean) | ",
@@ -251,9 +313,15 @@ for (j in 1:length(disease_list)) {
       paste(vapply(lags, mk_lb_str, character(1)), collapse = " | ")
     )
     
+    # Append Bai–Perron and CUSUM strings when computed
+    bp_cusum <- paste(na.omit(c(bp_str, cusum_str)), collapse = " | ")
+    if (nzchar(bp_cusum)) {
+      cap <- paste(cap, bp_cusum, sep = "\n")
+    }
+    
     caption_grob <- grid::textGrob(
       cap, x = 0.5, hjust = 0.5,
-      gp = grid::gpar(fontsize = 12)
+      gp = grid::gpar(fontsize = 12, lineheight = 1.1)
     )
     
     g <- gridExtra::arrangeGrob(
@@ -261,97 +329,29 @@ for (j in 1:length(disease_list)) {
       bottom = caption_grob
     )
     
-    ggsave(sprintf("output/figures/auto_residuals_%s_%s.svg", var, as.character(dis)[1]),
-           plot = g, width = 8, height = 6, device = "svg")
-    
-    # # CUSUM (instability test on the residuals)
-    # cusum_pre <- sctest(df_obs_rate ~ 1, type = "OLS-CUSUM")
-    # print(cusum_pre)
-    # 
-    # # CUSUM (instability test on the residuals)
-    # cusum_fit <- sctest(res ~ 1, type = "OLS-CUSUM")
-    # print(cusum_fit)
-    # 
-    # # Bai–Perron test for structural breaks; set a minimum segment size to avoid spurious breaks
-    # if (requireNamespace("strucchange", quietly = TRUE)) {
-    #   
-    #   library(strucchange)
-    # 
-    #   bp_full <- breakpoints(df_obs_rate ~ 1, h = max(12, frequency(df_obs_rate)))
-    #   
-    #   bp_test_supF <- sctest(df_obs_rate ~ 1, type = "supF", h = 24)
-    #   
-    #   print(bp_test_supF)
-    #   
-    #   bp_test_expF <- sctest(df_obs_rate ~ 1, type = "expF", h = 24)
-    #   
-    #   print(bp_test_expF)
-    #   
-    #   bp_test_aveF <- sctest(df_obs_rate ~ 1, type = "aveF", h = 24)
-    #   
-    #   print(bp_test_aveF)
-    # 
-    #   # Pick number of breaks by BIC
-    #   bic_vals <- BIC(bp_full)
-    #   k_grid <- 0:(length(bic_vals) - 1)
-    #   k <- k_grid[which.min(bic_vals)]
-    # 
-    #   # Extract break indices and times
-    #   bp_k <- breakpoints(bp_full, breaks = k)
-    #   bd_idx <- if (k > 0) bp_k$breakpoints else integer(0)
-    #   bd_times <- if (k > 0) breakdates(bp_k) else numeric(0)
-    # 
-    #   # Map to date column
-    #   if (k > 0) {
-    #     tt <- time(df_obs_rate)
-    #     bd_row   <- sapply(bd_times, function(bt) which.min(abs(tt - bt)))
-    #     bd_dates <- df_obs$mo_year_diagn[bd_row]
-    #     message("Bai–Perron breaks (k=", k, "): ", paste(as.character(bd_dates), collapse=", "))
-    #   } else {
-    #     message("Bai–Perron selected no breaks (k=0).")
-    #   }
-    # 
-    #   # Save plots
-    #   svg(filename = paste0("output/figures/breakpoints_", var, "_", dis, ".svg"), width = 8, height = 6)
-    #   plot(df_obs_rate, main = sprintf("Bai–Perron breaks (k=%d)", k))
-    #   if (k > 0) {
-    #     lines(fitted(bp_k), col = "red")
-    #     abline(v = bd_times, lty = 2)
-    #   }
-    #   dev.off()
-    #   
-    # } else {
-    #   message("Strucchange package not installed, skipping Bai–Perron")
-    # }
-    # 
-    # # BFAST
-    # library(bfast)
-    # bf <- bfast(df_obs_rate, h = 0.5)
-    # summary(bf)
-    # trend_out <- bf$output[[1]]
-    # pval <- trend_out$p.value
-    # print(pval)
-    
+    ggsave(sprintf("output/figures/auto_residuals_%s_%s.svg", var, as.character(dis)[1]), plot = g, width = 8, height = 6, device = "svg")
+    #ggsave(sprintf("output/figures/auto_residuals_%s_%s.png", var, as.character(dis)[1]), plot = g, width = 8, height = 6, device = "png")
+
     # Forecast from March 2020 and convert to time series object
     fc.rate  <- forecast(m1.rate, h = (max_index - n_preintervention), level = 95, bootstrap=TRUE, npaths=10000)
   
     # Forecasted rates 
     fc.ratemean <- ts(as.numeric(fc.rate$mean), start=intervention, frequency=12)
-    fc.ratelower <- ts(as.numeric(fc.rate$lower), start=intervention, frequency=12) #lower 95% prediction interval
-    fc.rateupper <- ts(as.numeric(fc.rate$upper), start=intervention, frequency=12) #upper 95% prediction interval
+    fc.ratelower <- ts(as.numeric(fc.rate$lower), start=intervention, frequency=12) # Lower 95% prediction interval
+    fc.rateupper <- ts(as.numeric(fc.rate$upper), start=intervention, frequency=12) # Upper 95% prediction interval
     
     # Flatten the matrix into a vector
     fc_rate<- data.frame(
-      YearMonth = as.character(as.yearmon(time(fc.rate$mean))), # Year and month
+      YearMonth = as.character(as.yearmon(time(fc.rate$mean))),
       mean = as.numeric(as.matrix(fc.rate$mean)),
       lower = as.numeric(as.matrix(fc.rate$lower)),
       upper = as.numeric(as.matrix(fc.rate$upper))
     )
   
     df_new <- df_dis %>% left_join(fc_rate, by = c("mon_year" = "YearMonth"))
-    df_new$mean <- ifelse(is.na(df_new$mean), df_new[[var]], df_new$mean) #If NA (i.e. pre-forecast), replace as = observed incidence
-    df_new$lower <- ifelse(is.na(df_new$lower), df_new[[var]], df_new$lower) #If NA (i.e. pre-forecast), replace as = observed incidence
-    df_new$upper <- ifelse(is.na(df_new$upper), df_new[[var]], df_new$upper) #If NA (i.e. pre-forecast), replace as = observed incidence
+    df_new$mean <- ifelse(is.na(df_new$mean), df_new[[var]], df_new$mean) #If NA (i.e. pre-forecast), replace as observed incidence
+    df_new$lower <- ifelse(is.na(df_new$lower), df_new[[var]], df_new$lower) #If NA (i.e. pre-forecast), replace as observed incidence
+    df_new$upper <- ifelse(is.na(df_new$upper), df_new[[var]], df_new$upper) #If NA (i.e. pre-forecast), replace as observed incidence
     
     df_new <- df_new %>%
       arrange(index) %>%
@@ -374,10 +374,6 @@ for (j in 1:length(disease_list)) {
       geom_ribbon(data = df_new %>% filter(mo_year_diagn >= intervention_date), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
       geom_vline(xintercept = as.numeric(intervention_date), linetype = "dashed", color = "grey")+
       scale_x_date(breaks = seq(as.Date(paste0(start[1], "-01-01")), as.Date(paste0(end[1] + 1, "-01-01")), by = "2 years"), date_labels = "%Y")+
-      # scale_y_continuous(limits = c(min(df_new[[var]], na.rm = TRUE) * 0.85, 
-      #                               max(df_new[[var]], na.rm = TRUE) * 1.15),
-      #                    breaks = pretty(df_new[[var]], n = 4),
-      #                    expand = expansion(mult = c(0.05, 0.05)))+
       theme_minimal()+
       xlab(x_label)+
       ylab(y_label)+
@@ -400,14 +396,14 @@ for (j in 1:length(disease_list)) {
     
     print(c1)
     
-    # Store y-axis values for Prophet plots
+    # Store y-axis values for Prophet sensitivity analyses
     gb <- ggplot_build(c1)
     pp <- gb$layout$panel_params[[1]]
     
     y_limits <- if (!is.null(pp$y.range)) pp$y.range else pp$y$range$range
     y_breaks <- if (!is.null(pp$y.major)) pp$y.major else pp$y$breaks
 
-    # Calculate absolute and relative differences between observed and expected values
+    # Calculate absolute and relative differences between observed and expected values at different time intervals
     a<- c(n_preintervention, (n_preintervention + 12), (n_preintervention + 24), (n_preintervention + 36), n_preintervention)
     b<- c((n_preintervention + 12), (n_preintervention + 24), (n_preintervention + 36), max_index, max_index)
     
@@ -444,16 +440,16 @@ for (j in 1:length(disease_list)) {
       # Store the result for this iteration in the list
       results_list[[i]] <- observed_predicted_rate %>%
         mutate(
-          observed = round(observed, 3),
-          sum_pred_rate = round(sum_pred_rate, 3),
-          sum_pred_rate_l = round(sum_pred_rate_l, 3),
-          sum_pred_rate_u = round(sum_pred_rate_u, 3),
-          change_rate = round(change_rate, 3),
-          change_ratelow = round(change_ratelow, 3),
-          change_ratehigh = round(change_ratehigh, 3),
-          change_rate_per = round(change_rate_per, 3),
-          change_rate_per_low = round(change_rate_per_low, 3),
-          change_rate_per_high = round(change_rate_per_high, 3)
+          observed = round(observed, 2),
+          sum_pred_rate = round(sum_pred_rate, 2),
+          sum_pred_rate_l = round(sum_pred_rate_l, 2),
+          sum_pred_rate_u = round(sum_pred_rate_u, 2),
+          change_rate = round(change_rate, 2),
+          change_ratelow = round(change_ratelow, 2),
+          change_ratehigh = round(change_ratehigh, 2),
+          change_rate_per = round(change_rate_per, 2),
+          change_rate_per_low = round(change_rate_per_low, 2),
+          change_rate_per_high = round(change_rate_per_high, 2)
         )
       
       if (i == 1) {
@@ -519,7 +515,7 @@ for (j in 1:length(disease_list)) {
       write.csv(new_row, file_name, row.names = FALSE)
     }
     
-    # Sensitivity using Prophet forecasting method
+    # Sensitivity analysis using Prophet forecasting method
     if (requireNamespace("prophet", quietly = TRUE)) {
     
       library(prophet)
@@ -572,12 +568,9 @@ for (j in 1:length(disease_list)) {
         geom_line(data = df_new2 %>% dplyr::filter(mo_year_diagn >= intervention_date), aes(y = mean_ma), color = "#2c7fb8", linewidth = 0.7)+
         geom_vline(xintercept = as.numeric(intervention_date), linetype = "dashed", color = "grey")+
         scale_x_date(breaks = seq(as.Date(paste0(start[1], "-01-01")), as.Date(paste0(end[1] + 1, "-01-01")), by = "2 years"), date_labels = "%Y")+
-        # scale_y_continuous(
-        #   limits = c(min(df_new2[[var]], na.rm = TRUE) * 0.85, max(df_new2[[var]], na.rm = TRUE) * 1.15),
-        #   breaks = pretty(df_new2[[var]], n = 4),
-        #   expand = expansion(mult = c(0.05, 0.05))) +
         coord_cartesian(ylim = y_limits) +
         scale_y_continuous(breaks = y_breaks) +
+        scale_color_manual(values = c("Observed" = "#5E716A", "Expected" = "#2c7fb8")) +
         theme_minimal() +
         xlab("") + ylab("") +
         theme(
@@ -599,7 +592,7 @@ for (j in 1:length(disease_list)) {
       
       print(c_prophet)
       
-      # Calculate absolute and relative differences between observed and expected values (Prophet via df_new2)
+      # Calculate absolute and relative differences between observed and expected values for Prophet at different time intervals
       a<- c(n_preintervention, (n_preintervention + 12), (n_preintervention + 24), (n_preintervention + 36), n_preintervention)
       b<- c((n_preintervention + 12), (n_preintervention + 24), (n_preintervention + 36), max_index, max_index)
       
@@ -636,16 +629,16 @@ for (j in 1:length(disease_list)) {
         # Store the result for this iteration in the list
         results_list[[i]] <- observed_predicted_rate %>%
           mutate(
-            observed = round(observed, 3),
-            sum_pred_rate = round(sum_pred_rate, 3),
-            sum_pred_rate_l = round(sum_pred_rate_l, 3),
-            sum_pred_rate_u = round(sum_pred_rate_u, 3),
-            change_rate = round(change_rate, 3),
-            change_ratelow = round(change_ratelow, 3),
-            change_ratehigh = round(change_ratehigh, 3),
-            change_rate_per = round(change_rate_per, 3),
-            change_rate_per_low = round(change_rate_per_low, 3),
-            change_rate_per_high = round(change_rate_per_high, 3)
+            observed = round(observed, 2),
+            sum_pred_rate = round(sum_pred_rate, 2),
+            sum_pred_rate_l = round(sum_pred_rate_l, 2),
+            sum_pred_rate_u = round(sum_pred_rate_u, 2),
+            change_rate = round(change_rate, 2),
+            change_ratelow = round(change_ratelow, 2),
+            change_ratehigh = round(change_ratehigh, 2),
+            change_rate_per = round(change_rate_per, 2),
+            change_rate_per_low = round(change_rate_per_low, 2),
+            change_rate_per_high = round(change_rate_per_high, 2)
           )
         
         if (i == 1) {
@@ -720,7 +713,7 @@ for (j in 1:length(disease_list)) {
   index_axis <- index_axis + 1
 }    
 
-# # The below won't run in OpenSAFELY console
+# # Generate combined graphs for each disease - Nb. the below doesn't run in the OpenSAFELY console
 # dis_vec <- as.character(disease_list)
 # 
 # # List and read all RDS files that match the pattern (for SARIMA)
@@ -739,7 +732,7 @@ for (j in 1:length(disease_list)) {
 # do.call(grid.arrange, c(plot_list, ncol = 5))
 # dev.off()
 # 
-# # List and read all RDS files that match the pattern (Prophet sensitivity)
+# # List and read all RDS files that match the pattern (for Prophet sensitivity)
 # rds_files_p <- list.files(path = "output/figures/", pattern = "^prophet_incidence.*_.*\\.rds$", full.names = TRUE)
 # fnames_p <- basename(rds_files_p)
 # file_dis_p <- sub("^prophet_incidence_(.*)\\.rds$", "\\1", fnames_p)
@@ -758,314 +751,3 @@ for (j in 1:length(disease_list)) {
 dev.off()
 graphics.off()
 sink()
-
-######################### Manual checks for diseases with poor fitting on visual inspection
-# 
-#   # Incidence data - use age and sex-standardised rates for incidence rates and unadjusted for counts
-#   df <-read.csv("output/tables/arima_standardised.csv")
-# 
-#   #Rename variables in the datafile
-#   names(df)[names(df) == "numerator"] <- "count"
-#   df<- df %>% select(disease, year, mo_year_diagn, incidence, count)
-#   df$month <- substr(df$mo_year_diagn, 1, 3)
-#   df$mo_year_diagn <- gsub("-", " ", df$mo_year_diagn)
-#   df$mon_year <- df$mo_year_diagn
-#   df$mo_year_diagn <- as.Date(paste0("01 ", df$mo_year_diagn), format = "%d %b %Y")
-#   month_lab <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
-# 
-#   disease_list <- unique(df$disease[df$disease == "heart_failure"])
-# 
-#   # Define the variables to loop over
-#   variables <- c("incidence")
-#   y_labels <- c("Incidence per 100,000 population")
-# 
-#   # Loop through diseases
-#   for (j in 1:length(disease_list)) {
-# 
-#     dis <- disease_list[j]
-#     df_dis <- df[df$disease == dis, ]
-#     df_dis <- df_dis %>%  mutate(index=1:n()) #create an index variable 1,2,3...
-# 
-#     # Manually set titles based on the disease
-#     if (dis == "rheumatoid") {
-#       dis_title <- "Rheumatoid Arthritis"
-#     } else if (dis == "copd") {
-#       dis_title <- "COPD"
-#     } else if (dis == "crohns_disease") {
-#       dis_title <- "Crohn's Disease"
-#     } else if (dis == "dm_type2") {
-#       dis_title <- "Diabetes Mellitus Type 2"
-#     } else if (dis == "chd") {
-#       dis_title <- "Coronary Heart Disease"
-#     } else if (dis == "ckd") {
-#       dis_title <- "Chronic Kidney Disease"
-#     } else if (dis == "coeliac") {
-#       dis_title <- "Coeliac Disease"
-#     } else if (dis == "pmr") {
-#       dis_title <- "Polymyalgia Rheumatica"
-#     } else {
-#       dis_title <- str_to_title(str_replace_all(dis, "_", " "))
-#     }
-# 
-#     max_index <- max(df_dis$index)
-# 
-#     #Keep only data from before March 2020 and save to separate df
-#     df_obs <- df_dis[which(df_dis$index<48),]
-# 
-#     # Loop through incidence and count
-#     for (i in 1:length(variables)) {
-#       var <- variables[i]
-#       y_label <- y_labels[i]
-# 
-#       #Convert to time series object
-#       df_obs_rate <- ts(df_obs[[var]], frequency=12, start=c(2016,4))
-#       assign(paste0("ts_", var), df_obs_rate)
-#       
-#       #Check suggested differencing 
-#       d <- ndiffs(df_obs_rate) # non-seasonal differences suggested by KPSS
-#       D <- nsdiffs(df_obs_rate) # seasonal differences suggested by KPSS
-#       print(d); print(D)
-#       
-#       # Use auto.arima to fit SARIMA model - will identify p/q parameters that optimise AIC - for models with poor fit on visual inspection, explore different models
-#       if (dis == "heart_failure") {
-#         #suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE)
-#         #suggested.rate<- auto.arima(df_obs_rate, d=0, D=1, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE)
-#         #suggested.rate<- arima(df_obs_rate, order=c(0,1,1),  seasonal=list(order=c(0,1,1), period=12)) 
-#         suggested.rate <- forecast::Arima(df_obs_rate, order = c(3,0,0), seasonal = c(0,1,1), include.drift = TRUE)
-#         #suggested.rate<- arima(df_obs_rate, order=c(0,0,0),  seasonal=list(order=c(0,1,1), period=12))      } else {
-#         #suggested.rate<- auto.arima(df_obs_rate, max.p = 5, max.q = 5,  max.P = 2,  max.Q = 2, stepwise=FALSE, trace=TRUE)
-#         }
-#     
-#       print(suggested.rate)
-#       aic_value <- AIC(suggested.rate)
-#       print(paste("AIC:", aic_value))
-#       bic_value <- BIC(suggested.rate)
-#       print(paste("BIC:", bic_value))
-#       m1.rate <-suggested.rate
-#       m1.rate
-#       
-#       #Check residuals
-#       res <- residuals(m1.rate)
-#       
-#       par(mfrow = c(2,2))
-#       plot(res, main = "Residuals", ylab = "Residuals")
-#       acf(res, main = "Residuals ACF", ylab = "ACF")
-#       pacf(res, main = "Residuals PACF", ylab = "PACF")
-#       hist(res, main = "Residuals Histogram", xlab = "Residuals", ylab = "Density", col = "lightgray")
-#       par(mfrow = c(1,1))
-#       dev.off()
-#       
-#       theme_centered <- theme(plot.title = element_text(hjust = 0.5))
-#       
-#       p1 <- autoplot(ts(res)) +
-#         ggtitle("Residuals") +
-#         xlab("Time (months)") + ylab("Residuals") +
-#         theme_centered
-#       
-#       p2 <- ggAcf(res, lag.max = 36) +
-#         ggtitle("Residuals ACF") + ylab("ACF") +
-#         theme_centered
-#       
-#       p3 <- ggPacf(res, lag.max = 36) +
-#         ggtitle("Residuals PACF") + ylab("PACF") +
-#         theme_centered
-#       
-#       p4 <- ggplot(data.frame(res = res), aes(x = res)) +
-#         geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgray", color = "black") +
-#         stat_function(fun = dnorm,
-#                       args = list(mean = mean(res), sd = sd(res)),
-#                       color = "red", size = 0.5) +
-#         ggtitle("Residuals Histogram") +
-#         xlab("Residuals") + ylab("Density") +
-#         theme_centered
-#       
-#       n <- length(res)
-#       k <- length(coef(m1.rate))
-#       lags <- unique(pmin(c(12, 24), n - 1))
-#       
-#       k_eff <- function(m) max(0, min(k, m - 1))
-#       
-#       mk_lb_str <- function(m) {
-#         lb <- Box.test(res, lag = m, type = "Ljung-Box", fitdf = k_eff(m))
-#         sprintf("Q(%d): p = %s", m, formatC(lb$p.value, format = "f", digits = 2))
-#       }
-#       
-#       cap <- paste("Ljung–Box:", paste(vapply(lags, mk_lb_str, character(1)), collapse = " | "))
-#       
-#       caption_grob <- grid::textGrob(
-#         cap, x = 0.5, hjust = 0.5,
-#         gp = grid::gpar(fontsize = 12)
-#       )
-#       
-#       g <- gridExtra::arrangeGrob(
-#         p1, p2, p3, p4, ncol = 2,
-#         bottom = caption_grob
-#       )
-#       
-#       ggsave(sprintf("output/figures/auto_residuals_%s_%s.svg", var, as.character(dis)[1]),
-#              plot = g, width = 8, height = 6, device = "svg")
-# 
-#       #Forecast from March 2020 and convert to time series object - could change h to max_index - pre-March 2020
-#       fc.rate  <- forecast(m1.rate, h= (max_index - n_preintervention), level = 95, bootstrap = TRUE, npaths = 10000)
-# 
-#       #Forecasted rates
-#       fc.ratemean <- ts(as.numeric(fc.rate$mean), start=c(2020,3), frequency=12)
-#       fc.ratelower <- ts(as.numeric(fc.rate$lower), start=c(2020,3), frequency=12) #lower 95% CI
-#       fc.rateupper <- ts(as.numeric(fc.rate$upper), start=c(2020,3), frequency=12) #upper 95% CI
-# 
-#       fc_rate<- data.frame(
-#         YearMonth = as.character(as.yearmon(time(fc.rate$mean))), # Year and month
-#         mean = as.numeric(as.matrix(fc.rate$mean)),
-#         lower = as.numeric(as.matrix(fc.rate$lower)),
-#         upper = as.numeric(as.matrix(fc.rate$upper))
-#         # Flatten the matrix into a vector
-#       )
-# 
-#       df_new <- df_dis %>% left_join(fc_rate, by = c("mon_year" = "YearMonth"))
-#       df_new$mean <- ifelse(is.na(df_new$mean), df_new[[var]], df_new$mean) #If NA (i.e. pre-forecast), replace as = observed incidence
-#       df_new$lower <- ifelse(is.na(df_new$lower), df_new[[var]], df_new$lower) #If NA (i.e. pre-forecast), replace as = observed incidence
-#       df_new$upper <- ifelse(is.na(df_new$upper), df_new[[var]], df_new$upper) #If NA (i.e. pre-forecast), replace as = observed incidence
-# 
-#       df_new <- df_new %>%
-#         arrange(index) %>%
-#         mutate(moving_average = rollmean(get(var), k = 3, fill = NA, align = "center"))
-# 
-#       df_new <- df_new %>%
-#         arrange(index) %>%
-#         mutate(mean_ma = rollmean(mean, k = 3, fill = NA, align = "center"))
-# 
-#       #observed and predicted graphs to check model predictions against observed values
-#       c1<-
-#         ggplot(data = df_new,aes(x = mo_year_diagn))+
-#         geom_point(aes(y = .data[[var]]), color="#5E716A", alpha = 0.25, size=1.5)+
-#         geom_line(aes(y = moving_average), color = "#5E716A", linetype = "solid", size=0.70)+
-#         geom_point(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean), color="orange", alpha = 0.25, size=1.5)+
-#         geom_line(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(y = mean_ma), color = "orange", linetype = "solid", size=0.65)+
-#         geom_ribbon(data = df_new %>% filter(mo_year_diagn > as.Date("2020-02-01")), aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "grey")+
-#         geom_segment(x = as.Date("2020-03-01"),
-#                      xend = as.Date("2020-03-01"),
-#                      y = min(df_new[[var]], na.rm = TRUE) * 0.85,
-#                      yend = max(df_new[[var]], na.rm = TRUE) * 1.15,
-#                      linetype = "dashed",
-#                      color = "grey")+
-#         scale_x_date(breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "2 years"),
-#                      date_labels = "%Y")+
-#         # scale_y_continuous(limits = c(min(df_new[[var]], na.rm = TRUE) * 0.85,
-#         #                               max(df_new[[var]], na.rm = TRUE) * 1.15),
-#         #                    breaks = pretty(df_new[[var]], n = 4),
-#         #                    expand = expansion(mult = c(0.05, 0.05)))+
-#         theme_minimal()+
-#         #xlab("Year of diagnosis")+
-#         #ylab(y_label)+
-#         xlab("")+
-#         ylab("")+
-#         theme(
-#           legend.title = element_blank(),
-#           panel.grid.major = element_blank(),
-#           panel.grid.minor = element_blank(),
-#           axis.line = element_line(color = "grey"),
-#           axis.ticks = element_line(color = "grey"),
-#           axis.text = element_text(size = 10, color = "black"),
-#           axis.title.x = element_text(size = 10, margin = margin(t = 10)),
-#           axis.title.y = element_text(size = 10, margin = margin(r = 10)),
-#           plot.title = element_text(size = 14, hjust = 0.5, face = "plain")
-#         ) +
-#         ggtitle(dis_title)
-# 
-#       saveRDS(c1, file = paste0("output/figures/test_", var, "_", dis, ".rds"))
-#       ggsave(filename = paste0("output/figures/test_", var, "_", dis, ".svg"), plot = c1, width = 8, height = 6, device = "svg")
-# 
-#       print(c1)
-#       
-#       # Sensitivity using Prophet forecasting method
-#       df_prop_train <- df_obs %>%
-#         dplyr::transmute(ds = as.Date(mo_year_diagn), y = .data[[var]])
-#       
-#       m.prophet <- prophet(
-#         df_prop_train,
-#         yearly.seasonality = TRUE,
-#         weekly.seasonality = FALSE,
-#         daily.seasonality = FALSE,
-#         seasonality.mode = "additive",
-#         interval.width = 0.95
-#       )
-#       
-#       future <- make_future_dataframe(m.prophet, periods = 57, freq = "month")
-#       
-#       cut <- as.POSIXct("2020-03-01", tz = "UTC")
-#       
-#       fc_prophet <- predict(m.prophet, future) %>%
-#         dplyr::mutate(ds = as.POSIXct(ds, tz = "UTC")) %>%
-#         dplyr::filter(ds >= cut) %>%
-#         dplyr::transmute(
-#           YearMonth = format(ds, "%b %Y"),
-#           mean_prophet = yhat,
-#           lower_prophet = yhat_lower,
-#           upper_prophet = yhat_upper
-#         )
-#       
-#       df_new2 <- df_dis %>%
-#         dplyr::left_join(fc_prophet, by = c("mon_year" = "YearMonth")) %>%
-#         dplyr::mutate(
-#           #Fill pre-forecast periods with observed values
-#           mean = ifelse(is.na(mean_prophet), .data[[var]], mean_prophet),
-#           lower = ifelse(is.na(lower_prophet), .data[[var]], lower_prophet),
-#           upper = ifelse(is.na(upper_prophet), .data[[var]], upper_prophet)
-#         ) %>%
-#         dplyr::arrange(index) %>%
-#         dplyr::mutate(
-#           moving_average = zoo::rollmean(.data[[var]], k = 3, fill = NA, align = "center"),
-#           mean_ma = zoo::rollmean(mean, k = 3, fill = NA, align = "center")
-#         )
-#       
-#       #observed and predicted graphs to check model predictions against observed values
-#       c_prophet <-
-#         ggplot(df_new2, aes(x = mo_year_diagn)) +
-#         geom_point(aes(y = .data[[var]]), color = "#5E716A", alpha = 0.25, size = 1.5) +
-#         geom_line(aes(y = moving_average), color = "#5E716A", linewidth = 0.7) +
-#         geom_ribbon(data = df_new2 %>% dplyr::filter(mo_year_diagn >= as.Date("2020-03-01")),
-#           aes(ymin = lower, ymax = upper), alpha = 0.18, fill = "#2c7fb8") +
-#         geom_point(data = df_new2 %>% dplyr::filter(mo_year_diagn >= as.Date("2020-03-01")),
-#           aes(y = mean), color = "#2c7fb8", alpha = 0.25, size = 1.2) +
-#         geom_line(data = df_new2 %>% dplyr::filter(mo_year_diagn >= as.Date("2020-03-01")),
-#           aes(y = mean_ma), color = "#2c7fb8", linewidth = 0.7) +
-#         geom_segment(x = as.Date("2020-03-01"), xend = as.Date("2020-03-01"),
-#           y = min(df_new2[[var]], na.rm = TRUE) * 0.85,
-#           yend = max(df_new2[[var]], na.rm = TRUE) * 1.15,
-#           linetype = "dashed", color = "grey") +
-#         scale_x_date(
-#           breaks = seq(as.Date("2016-01-01"), as.Date("2025-01-01"), by = "2 years"),
-#           date_labels = "%Y"
-#         ) +
-#         scale_y_continuous(
-#           limits = c(min(df_new2[[var]], na.rm = TRUE) * 0.85,
-#                      max(df_new2[[var]], na.rm = TRUE) * 1.15),
-#           breaks = pretty(df_new2[[var]], n = 4),
-#           expand = expansion(mult = c(0.05, 0.05))
-#         ) +
-#         theme_minimal() +
-#         xlab("") + ylab("") +
-#         theme(
-#           legend.title = element_blank(),
-#           panel.grid.major = element_blank(),
-#           panel.grid.minor = element_blank(),
-#           axis.line = element_line(color = "grey"),
-#           axis.ticks = element_line(color = "grey"),
-#           axis.text  = element_text(size = 10, color = "black"),
-#           axis.title.x = element_text(size = 10, margin = margin(t = 10)),
-#           axis.title.y = element_text(size = 10, margin = margin(r = 10)),
-#           plot.title   = element_text(size = 14, hjust = 0.5, face = "plain")
-#         ) +
-#         ggtitle(paste0(dis_title, " — Sensitivity"))
-#       
-#       saveRDS(c_prophet, file = paste0("output/figures/test_prophet_", var, "_", dis, ".rds"))
-#       ggsave(filename = paste0("output/figures/test_prophet_", var, "_", dis, ".svg"),
-#              plot = c_prophet, width = 8, height = 6, device = "svg")
-#       
-#       print(c_prophet)
-#     }
-#   }
-# 
-#   dev.off()
-#   graphics.off()
-#   sink()

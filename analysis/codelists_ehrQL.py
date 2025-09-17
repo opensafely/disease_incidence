@@ -1,14 +1,14 @@
 # ehrQL codelists
 from ehrql import codelist_from_csv
 
-# DEMOGRAPHIC CODELIST
+# Ethncity codelist (SNOMED)
 ethnicity_codes = codelist_from_csv(
     "codelists/opensafely-ethnicity-snomed-0removed.csv",
     column="code",
     category_column="Grouping_6",
 )
 
-# CLINICAL CONDITIONS CODELISTS
+# Condition codelists
 asthma_diag = codelist_from_csv(
     "codelists/nhsd-primary-care-domain-refsets-ast_cod.csv", column="code",
 )
@@ -161,7 +161,6 @@ dm_type1_icd = codelist_from_csv(
     "codelists/user-markdrussell-type-1-diabetes-secondary-care.csv", column="code",
 )
 
-## The following NHSD ref set includes ESRF, dialysis and transplant codes
 ckd_snomed = codelist_from_csv(
     "codelists/nhsd-primary-care-domain-refsets-ckdatrisk2_cod.csv", column="code",
 )

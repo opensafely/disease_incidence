@@ -1,11 +1,10 @@
 version 16
 
 /*==============================================================================
-DO FILE NAME:			Incidence graphs
+DO FILE NAME:			Baseline data disease
 PROJECT:				OpenSAFELY Disease Incidence project
-DATE: 					23/08/2024
-AUTHOR:					J Galloway / M Russell									
-DESCRIPTION OF FILE:	Baseline data for full cohort
+AUTHOR:					M Russell / J Galloway									
+DESCRIPTION OF FILE:	Baseline data by disease
 DATASETS USED:			Dataset definition
 OTHER OUTPUT: 			logfiles, printed to folder $Logdir
 USER-INSTALLED ADO: 	 
@@ -13,8 +12,6 @@ USER-INSTALLED ADO:
 ==============================================================================*/
 
 *Set filepaths
-*global projectdir "C:\Users\Mark\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
-*global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 global projectdir `c(pwd)'
 di "$projectdir"
 
@@ -34,7 +31,6 @@ adopath + "$projectdir/analysis/extra_ados"
 
 *Set disease list
 global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
-*global diseases "depression"
 
 set type double
 
@@ -95,22 +91,7 @@ lab var imd "Index of multiple deprivation"
 tab imd, missing
 drop imd_quintile
 
-foreach disease in $diseases {
-	rename `disease'_inc_date `disease'_inc_date_s
-	gen `disease'_inc_date = date(`disease'_inc_date_s, "YMD") 
-	format `disease'_inc_date %td
-	drop `disease'_inc_date_s
-	rename `disease'_prim_date `disease'_prim_date_s
-	gen `disease'_prim_date = date(`disease'_prim_date_s, "YMD") 
-	format `disease'_prim_date %td
-	drop `disease'_prim_date_s
-	rename `disease'_sec_date `disease'_sec_date_s
-	gen `disease'_sec_date = date(`disease'_sec_date_s, "YMD") 
-	format `disease'_sec_date %td
-	drop `disease'_sec_date_s
-}
-
-**Age at diagnosis - combined primary and secondary care date
+**Age at diagnosis
 foreach disease in $diseases {
 	lab var `disease'_age "Age at diagnosis"
 	codebook `disease'_age
@@ -137,42 +118,10 @@ foreach disease in $diseases {
 	lab val `disease'_age_band `disease'_age_band
 }
 
-**Gen incident disease cohorts during study period, and shorten variable names - too long for Stata
+**Gen incident disease cohorts during study period
 foreach disease in $diseases {
 	gen `disease' = 1 if `disease'_inc_case=="T" & (`disease'_age >=0 & `disease'_age!=.) & `disease'_pre_reg=="T" & `disease'_alive_inc=="T"
 	recode `disease' .=0
-	gen `disease'_p = 1 if `disease'_inc_case_p=="T" & (`disease'_age_p >=0 & `disease'_age_p!=.) & `disease'_pre_reg_p=="T" & `disease'_alive_inc_p=="T"
-	recode `disease'_p .=0
-	gen `disease'_s = 1 if `disease'_inc_case_s=="T" & (`disease'_age_s >=0 & `disease'_age_s!=.) & `disease'_pre_reg_s=="T" & `disease'_alive_inc_s=="T"
-	recode `disease'_s .=0
-}
-
-**Format dates
-foreach disease in $diseases {
-    gen `disease'_year = year(`disease'_inc_date)
-	format `disease'_year %ty
-	gen `disease'_mon = month(`disease'_inc_date)
-	gen `disease'_moyear = ym(`disease'_year, `disease'_mon)
-	format `disease'_moyear %tmMon-CCYY
-	generate str16 `disease'_moyear_st = strofreal(`disease'_moyear,"%tmCCYY!mNN")
-	lab var `disease'_moyear "Month/Year of Diagnosis"
-	lab var `disease'_moyear_st "Month/Year of Diagnosis"
-	gen `disease'_year_p = year(`disease'_prim_date)
-	format `disease'_year_p %ty
-	gen `disease'_mon_p = month(`disease'_prim_date)
-	gen `disease'_moyear_p = ym(`disease'_year_p, `disease'_mon_p)
-	format `disease'_moyear_p %tmMon-CCYY
-	generate str16 `disease'_moyear_pst = strofreal(`disease'_moyear_p,"%tmCCYY!mNN")
-	lab var `disease'_moyear_p "Month/Year of Diagnosis"
-	lab var `disease'_moyear_pst "Month/Year of Diagnosis"
-	gen `disease'_year_s = year(`disease'_sec_date)
-	format `disease'_year_s %ty
-	gen `disease'_mon_s = month(`disease'_sec_date)
-	gen `disease'_moyear_s = ym(`disease'_year_s, `disease'_mon_s)
-	format `disease'_moyear_s %tmMon-CCYY
-	generate str16 `disease'_moyear_sst = strofreal(`disease'_moyear_s,"%tmCCYY!mNN")
-	lab var `disease'_moyear_s "Month/Year of Diagnosis"
-	lab var `disease'_moyear_sst "Month/Year of Diagnosis"
 }
 
 save "$projectdir/output/data/baseline_data_process.dta", replace
@@ -183,7 +132,7 @@ use "$projectdir/output/data/baseline_data_process.dta", clear
 
 **Rounded and redacted baseline tables for each disease
 clear *
-save "$projectdir/output/data/baseline_table_round.dta", replace emptyok
+save "$projectdir/output/data/baseline_table_rounded.dta", replace emptyok
 
 foreach disease in $diseases {
 	use "$projectdir/output/data/baseline_data_process.dta", clear
@@ -207,8 +156,8 @@ foreach disease in $diseases {
 		format count total %14.0f
 		list cohort variable categories count total percent
 		keep cohort variable categories count total percent
-		append using "$projectdir/output/data/baseline_table_round.dta"
-		save "$projectdir/output/data/baseline_table_round.dta", replace
+		append using "$projectdir/output/data/baseline_table_rounded.dta"
+		save "$projectdir/output/data/baseline_table_rounded.dta", replace
 		restore
 	}
 
@@ -234,11 +183,11 @@ foreach disease in $diseases {
 	format count %14.0f
 	list cohort variable categories mean_age stdev_age count total
 	keep cohort variable categories mean_age stdev_age count total
-	append using "$projectdir/output/data/baseline_table_round.dta"
-	save "$projectdir/output/data/baseline_table_round.dta", replace	
+	append using "$projectdir/output/data/baseline_table_rounded.dta"
+	save "$projectdir/output/data/baseline_table_rounded.dta", replace	
 	restore
 }	
-use "$projectdir/output/data/baseline_table_round.dta", clear
-export delimited using "$projectdir/output/tables/baseline_table_round.csv", datafmt replace
+use "$projectdir/output/data/baseline_table_rounded.dta", clear
+export delimited using "$projectdir/output/tables/baseline_table_rounded.csv", datafmt replace
 
 log close	

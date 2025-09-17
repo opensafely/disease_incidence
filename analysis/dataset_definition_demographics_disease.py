@@ -1,11 +1,10 @@
-from ehrql import create_dataset, days, months, years, case, when, INTERVAL, minimum_of, maximum_of
-from ehrql.tables.tpp import patients, medications, practice_registrations, clinical_events, apcs, addresses, ethnicity_from_sus
+from ehrql import create_dataset, months, years, case, when, minimum_of, maximum_of
+from ehrql.tables.tpp import patients, practice_registrations, clinical_events, apcs, addresses, ethnicity_from_sus
 from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
 diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
-#diseases = ["depression"]
 codelist_types = ["snomed", "icd"]
 
 index_date = "2016-04-01"
@@ -14,7 +13,7 @@ end_date = "2024-11-30"
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
 
-# Incident diagnostic code in primary care record (SNOMED) (assuming before study end date)
+# Incident diagnostic code in primary care record (SNOMED) assuming before study end date
 def first_code_in_period_snomed(dx_codelist):
     return clinical_events.where(
         clinical_events.snomedct_code.is_in(dx_codelist)
@@ -24,7 +23,7 @@ def first_code_in_period_snomed(dx_codelist):
         clinical_events.date
     ).first_for_patient()
 
-# Incident diagnostic code in secondary care record (ICD10 primary diagnoses) (assuming before study end date)
+# Incident diagnostic code in secondary care record (ICD10 primary diagnoses) assuming before study end date
 def first_code_in_period_icd(dx_codelist):
     return apcs.where(
         apcs.primary_diagnosis.is_in(dx_codelist)
@@ -116,9 +115,6 @@ dataset.define_population(
 
 for disease in diseases:
 
-    #snomed_inc_date = {}  # Dictionary to store dates
-    #icd_inc_date = {}
-
     for codelist_type in codelist_types:
 
         if (f"{codelist_type}" == "snomed"):
@@ -137,7 +133,7 @@ for disease in diseases:
         else:
             dataset.add_column(f"{disease}_{codelist_type}_inc_date", None)
 
-    # Incident date for each disease - combined primary and secondary care 
+    # Incident date for each disease 
     dataset.add_column(f"{disease}_inc_date",
         minimum_of(*[date for date in [
             (getattr(dataset, f"{disease}_prim_date", None)),
@@ -145,80 +141,28 @@ for disease in diseases:
             ] if date is not None]),
     )
 
-    # Incident date within window - combined primary and secondary care 
+    # Incident date within window
     dataset.add_column(f"{disease}_inc_case",
         (getattr(dataset, disease + "_inc_date").is_on_or_between(index_date, end_date)
         ).when_null_then(False)
     )
 
-    # 12 months registration preceding incident diagnosis date - combined primary and secondary care
+    # 12 months registration preceding incident diagnosis date
     dataset.add_column(f"{disease}_pre_reg", 
         preceding_registration(getattr(dataset, f"{disease}_inc_date")
         ).exists_for_patient()
     )
 
-    # Age at diagnosis - combined primary and secondary care
+    # Age at diagnosis
     dataset.add_column(f"{disease}_age",
         (patients.age_on(getattr(dataset, f"{disease}_inc_date"))
         )               
     )
 
-    # Alive at incident diagnosis date - combined primary and secondary care
+    # Alive at incident diagnosis date
     dataset.add_column(f"{disease}_alive_inc",
         (
             (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_inc_date"))) |
-            dataset.date_of_death.is_null()
-        ).when_null_then(False)
-    )
-
-    # Incident date within window - primary care only
-    dataset.add_column(f"{disease}_inc_case_p",
-        (getattr(dataset, disease + "_prim_date").is_on_or_between(index_date, end_date)
-        ).when_null_then(False)
-    )
-
-    # 12 months registration preceding incident diagnosis date - primary care only
-    dataset.add_column(f"{disease}_pre_reg_p", 
-        preceding_registration(getattr(dataset, f"{disease}_prim_date")
-        ).exists_for_patient()
-    )
-
-    # Age at diagnosis - primary care only
-    dataset.add_column(f"{disease}_age_p",
-        (patients.age_on(getattr(dataset, f"{disease}_prim_date"))
-        )               
-    )
-
-    # Alive at incident diagnosis date - primary care only
-    dataset.add_column(f"{disease}_alive_inc_p",
-        (
-            (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_prim_date"))) |
-            dataset.date_of_death.is_null()
-        ).when_null_then(False)
-    )
-
-    # Incident date within window - secondary care only
-    dataset.add_column(f"{disease}_inc_case_s",
-        (getattr(dataset, disease + "_sec_date").is_on_or_between(index_date, end_date)
-        ).when_null_then(False)
-    )
-
-    # 12 months registration preceding incident diagnosis date - secondary care only
-    dataset.add_column(f"{disease}_pre_reg_s", 
-        preceding_registration(getattr(dataset, f"{disease}_sec_date")
-        ).exists_for_patient()
-    )
-
-    # Age at diagnosis - secondary care only
-    dataset.add_column(f"{disease}_age_s",
-        (patients.age_on(getattr(dataset, f"{disease}_sec_date"))
-        )               
-    )
-
-    # Alive at incident diagnosis date - secondary care only
-    dataset.add_column(f"{disease}_alive_inc_s",
-        (
-            (dataset.date_of_death.is_after(getattr(dataset, f"{disease}_sec_date"))) |
             dataset.date_of_death.is_null()
         ).when_null_then(False)
     )

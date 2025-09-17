@@ -1,10 +1,9 @@
 version 16
 
 /*==============================================================================
-DO FILE NAME:			Incidence graphs
+DO FILE NAME:			Processing data
 PROJECT:				OpenSAFELY Disease Incidence project
-DATE: 					23/08/2024
-AUTHOR:					J Galloway / M Russell									
+AUTHOR:					M Russell / J Galloway										
 DESCRIPTION OF FILE:	Processing of measures data
 DATASETS USED:			Measures files
 OTHER OUTPUT: 			logfiles, printed to folder $Logdir
@@ -13,8 +12,6 @@ USER-INSTALLED ADO:
 ==============================================================================*/
 
 *Set filepaths
-*global projectdir "C:\Users\Mark\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
-*global projectdir "C:\Users\k1754142\OneDrive\PhD Project\OpenSAFELY Incidence\disease_incidence"
 global projectdir `c(pwd)'
 di "$projectdir"
 
@@ -32,9 +29,8 @@ log using "$logdir/processing_data.log", replace
 *Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
-*Import and append measures datasets for diseases
+*Define diseases and years
 global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression depression_broad coeliac pmr"
-*global diseases "depression"
 
 set type double
 
@@ -43,7 +39,7 @@ local first_disease: word 1 of $diseases
 di "`first_disease'"
 local first_year: word 1 of `years'
 
-**Import first file as base dataset
+**Import first measures file as base dataset
 import delimited "$projectdir/output/measures/measures_dataset_`first_disease'_`first_year'.csv", clear
 save "$projectdir/output/data/measures_appended.dta", replace
 
@@ -82,10 +78,6 @@ format mo_year_diagn %tmMon-CCYY
 generate str16 mo_year_diagn_s = strofreal(mo_year_diagn,"%tmCCYY!mNN")
 lab var mo_year_diagn "Month/Year of Diagnosis"
 lab var mo_year_diagn_s "Month/Year of Diagnosis"
-
-**Check age and sex categories
-codebook sex
-codebook age
 
 **Code incidence and prevalence
 gen measure_inc = 1 if substr(measure,-10,.) == "_incidence"
@@ -133,7 +125,7 @@ sort disease mo_year_diagn measure
 bys disease mo_year_diagn measure: egen numerator_all = sum(numerator)
 bys disease mo_year_diagn measure: egen denominator_all = sum(denominator)
 
-*Redact and round
+**Redact and round counts
 replace numerator_all =. if numerator_all<=7 | denominator_all<=7
 replace denominator_all =. if numerator_all<=7 | numerator_all==. | denominator_all<=7
 replace numerator_all = round(numerator_all, 5)
@@ -147,7 +139,7 @@ gen ratio_all_100000 = ratio_all*100000
 bys disease mo_year_diagn measure: egen numerator_male = sum(numerator) if sex=="male"
 bys disease mo_year_diagn measure: egen denominator_male = sum(denominator) if sex=="male"
 
-*Redact and round
+**Redact and round
 replace numerator_male =. if numerator_male<=7 | denominator_male<=7
 replace denominator_male =. if numerator_male<=7 | numerator_male==. | denominator_male<=7
 replace numerator_male = round(numerator_male, 5)
@@ -168,7 +160,7 @@ by disease mo_year_diagn measure_prev measure_inc_any (denominator_male): replac
 bys disease mo_year_diagn measure: egen numerator_female = sum(numerator) if sex=="female"
 bys disease mo_year_diagn measure: egen denominator_female = sum(denominator) if sex=="female"
 
-*Redact and round
+**Redact and round
 replace numerator_female =. if numerator_female<=7 | denominator_female<=7
 replace denominator_female =. if numerator_female<=7 | numerator_female==. | denominator_female<=7
 replace numerator_female = round(numerator_female, 5)
@@ -190,7 +182,7 @@ foreach var in 0_9 10_19 20_29 30_39 40_49 50_59 60_69 70_79 {
 bys disease mo_year_diagn measure: egen numerator_`var' = sum(numerator) if age=="age_`var'"
 bys disease mo_year_diagn measure: egen denominator_`var' = sum(denominator) if age=="age_`var'"
 
-*Redact and round
+**Redact and round
 replace numerator_`var' =. if numerator_`var'<=7 | denominator_`var'<=7
 replace denominator_`var' =. if numerator_`var'<=7 | numerator_`var'==. | denominator_`var'<=7
 replace numerator_`var' = round(numerator_`var', 5)
@@ -212,7 +204,7 @@ by disease mo_year_diagn measure_prev measure_inc_any (denominator_`var'): repla
 bys disease mo_year_diagn measure: egen numerator_80 = sum(numerator) if age=="age_greater_equal_80"
 bys disease mo_year_diagn measure: egen denominator_80 = sum(denominator) if age=="age_greater_equal_80"
 
-*Redact and round
+**Redact and round
 replace numerator_80 =. if numerator_80<=7 | denominator_80<=7
 replace denominator_80 =. if numerator_80<=7 | numerator_80==. | denominator_80<=7
 replace numerator_80 = round(numerator_80, 5)
@@ -248,7 +240,7 @@ bys disease mo_year_diagn measure: egen denominator_other = sum(denominator) if 
 bys disease mo_year_diagn measure: egen numerator_ethunk = sum(numerator) if ethnicity=="Unknown"
 bys disease mo_year_diagn measure: egen denominator_ethunk = sum(denominator) if ethnicity=="Unknown"
 
-*Redact and round
+**Redact and round
 foreach var in white mixed black asian other ethunk {
 replace numerator_`var' =. if numerator_`var'<=7 | denominator_`var'<=7
 replace denominator_`var' =. if numerator_`var'<=7 | numerator_`var'==. | denominator_`var'<=7
@@ -286,7 +278,7 @@ bys disease mo_year_diagn measure: egen denominator_imd5 = sum(denominator) if i
 bys disease mo_year_diagn measure: egen numerator_imdunk = sum(numerator) if imd=="Unknown"
 bys disease mo_year_diagn measure: egen denominator_imdunk = sum(denominator) if imd=="Unknown"
 
-*Redact and round
+**Redact and round
 foreach var in imd1 imd2 imd3 imd4 imd5 imdunk {
 replace numerator_`var' =. if numerator_`var'<=7 | denominator_`var'<=7
 replace denominator_`var' =. if numerator_`var'<=7 | numerator_`var'==. | denominator_`var'<=7
@@ -307,10 +299,10 @@ by disease mo_year_diagn measure_prev measure_inc_any (denominator_`var'): repla
 
 save "$projectdir/output/data/processed_nonstandardised.dta", replace
 
-*Calculate the age-standardized incidence rate (ASIR): use age specific incidence data - European Standard Population 2013
+*Calculate the age-standardized incidence rate using age specific incidence data - European Standard Population 2013
 use "$projectdir/output/data/processed_nonstandardised.dta", clear
 
-*Append includes the European Standard Population 2013
+*Append European Standard Population 2013
 gen prop=10500 if age=="age_0_9"
 replace prop=11000 if age=="age_10_19"
 replace prop=12000 if age=="age_20_29"
@@ -321,10 +313,9 @@ replace prop=11500 if age=="age_60_69"
 replace prop=9000 if age=="age_70_79"
 replace prop=5000 if age=="age_greater_equal_80"
 
-*Apply the Standard Population Weights: multiply crude age-specific incidence rates by corresponding standard population weights
+*Apply standard population weights and generate standardised incidence and prevalence, overall and by sex
 gen ratio_100000 = ratio*100000
 
-*Generate standardised incidence and prevalence, overall and by sex
 gen new_value = prop*ratio_100000
 bys disease mo_year_diagn measure: egen sum_new_value_male=sum(new_value) if sex=="male"
 gen asr_male = sum_new_value_male/100000
@@ -402,22 +393,7 @@ drop n
 
 save "$projectdir/output/data/processed_standardised.dta", replace
 
-/*
-gen asr_lci = asr-1.96*(asr/sqrt(denominator_all))
-gen asr_uci = asr+1.96*(asr/sqrt(denominator_all))
-gen asr_esp = Prop*calc_pyr_
-bys year: egen sum_asr_esp=sum(asr_esp)
-gen asir = sum_asr_esp/sum_prop
-gen total_pyr = pyr_ if Age=="all_"
-bys year_cal: ereplace total_pyr = max(total_pyr)
-gen ci_95 = (calc_pyr_*Prop*Prop*100000/pyr_)
-gen sum_ci_95 = sum(ci_95)/(sum_prop*sum_prop)
-gen standerror = sqrt(sum_ci_95)
-gen asir_lci = asir-1.96*standerror
-gen asir_uci = asir+1.96*standerror
-*/
-
-*Output string version of incidence and prevalence (to stop conversion for big numbers)
+*Output string version of incidence and prevalence (to stop conversion in excel for big numbers)
 use "$projectdir/output/data/processed_standardised.dta", clear
 
 keep if measure_inc==1 | measure_prev==1

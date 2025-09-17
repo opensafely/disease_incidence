@@ -1,5 +1,5 @@
-from ehrql import create_dataset, days, months, years, case, when, create_measures, INTERVAL, minimum_of, maximum_of
-from ehrql.tables.tpp import patients, medications, practice_registrations, clinical_events, apcs, addresses, ons_deaths, appointments
+from ehrql import months, years, case, when, create_measures, INTERVAL, minimum_of, maximum_of
+from ehrql.tables.tpp import patients, practice_registrations
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 from analysis.dataset_definition import dataset
@@ -22,7 +22,7 @@ disease = args.disease
 index_date = INTERVAL.start_date
 end_date = INTERVAL.end_date
 
-# Currently registered
+# Currently registered with a practice
 curr_registered = practice_registrations.for_patient_on(index_date).exists_for_patient()
 
 # Registration for at least 12 months before index date
@@ -63,7 +63,7 @@ prev_denominator = (
     & curr_registered
 )
 
-# Dictionaries to store the values
+# Dictionaries to store values
 prev = {}
 prev_numerators = {} 
 inc_case = {}
@@ -77,7 +77,7 @@ prev[disease + "_prev"] = (
     & ((~getattr(dataset, disease + "_resolved")) | (getattr(dataset, disease + "_resolved") & (getattr(dataset, disease + "_resolved_date") > index_date)))
 ).when_null_then(False)
 
-# Prevalence numerator - people registered for more than one year on index date who have an Dx code on or before index date
+# Prevalence numerator - people registered for more than one year on index date who have an diagnostic code on or before index date
 prev_numerators[disease + "_prev_num"] = (
     prev[disease + "_prev"] & prev_denominator
 )
@@ -94,14 +94,14 @@ inc_case_12m_alive[disease + "_inc_case_12m_alive"] = (
     & getattr(dataset, disease + "_alive_inc")
 ).when_null_then(False)
 
-# Incidence numerator - people with new diagnostic codes in the 1 month after index date who have 12m+ prior registration and alive 
+# Incidence numerator - people with new diagnostic codes in the 1 month after index date who have 12m+ preceding registration and alive 
 incidence_numerators[disease + "_inc_num"] = (
     inc_case_12m_alive[disease + "_inc_case_12m_alive"]
     & age_band.is_not_null()
     & dataset.sex.is_in(["male", "female"])
 )
 
-# Incidence denominator - people with 12m+ registration prior to index date who do not have a Dx code on or before index date
+# Incidence denominator - people with 12m+ registration prior to index date who do not have a diagnostic code on or before index date
 incidence_denominators[disease + "_inc_denom"] = (
     (~prev[disease + "_prev"])
     & age_band.is_not_null()

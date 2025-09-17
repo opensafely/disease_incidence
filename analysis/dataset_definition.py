@@ -1,19 +1,10 @@
-from ehrql import create_dataset, days, months, years, case, when, INTERVAL, minimum_of, maximum_of
-from ehrql.tables.tpp import patients, medications, practice_registrations, clinical_events, apcs, addresses, ethnicity_from_sus
+from ehrql import create_dataset, months, years, case, when, minimum_of, maximum_of
+from ehrql.tables.tpp import patients, practice_registrations, clinical_events, apcs, addresses, ethnicity_from_sus
 from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
-# # Arguments (from project.yaml)
-# from argparse import ArgumentParser
-
-# parser = ArgumentParser()
-# parser.add_argument("--diseases", type=str)
-# args = parser.parse_args()
-# diseases = args.diseases.split(", ")
-
 diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "depression_broad", "coeliac", "pmr"]
-#diseases = ["depression"]
 codelist_types = ["snomed", "icd", "resolved"]
 
 dataset = create_dataset()
@@ -85,7 +76,7 @@ any_registration = practice_registrations.where(
             practice_registrations.end_date < index_date    
         ).exists_for_patient()
 
-# Registration start date (for purposes of calculating age)
+# Registration start date (to calculate age at diagnosis)
 dataset.registration_start = practice_registrations.where(
             practice_registrations.start_date <= end_date
         ).except_where(
@@ -105,7 +96,7 @@ latest_ethnicity_code = (
     .last_for_patient().snomedct_code.to_category(codelists.ethnicity_codes)
 )
 
-## Extract ethnicity from SUS records if it isn't present in primary care data 
+# Extract ethnicity from SUS records if it isn't present in primary care data 
 ethnicity_sus = ethnicity_from_sus.code
 
 dataset.ethnicity = case(
@@ -129,14 +120,14 @@ dataset.imd_quintile = case(
     otherwise="Unknown",
 )
 
-# Define population as any registered patient after index date - then apply further restrictions later
+# Define population as any registered patient after index date, then apply further restrictions in later processing steps
 dataset.define_population(
     any_registration & dataset.sex.is_in(["male", "female"])
 )  
 
 for disease in diseases:
-
-    snomed_inc_date = {}  # Dictionary to store dates
+    # Dictionaries to store dates
+    snomed_inc_date = {}  
     snomed_last_date = {}
     icd_inc_date = {}
     icd_last_date = {}
