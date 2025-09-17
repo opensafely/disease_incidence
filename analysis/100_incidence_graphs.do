@@ -322,7 +322,7 @@ foreach disease_ of local levels {
 	twoway connected rate_all year, ytitle("", size(med)) color(gold%30) msymbol(circle) lstyle(solid) lcolor(gold) ytitle("", size(medsmall)) || connected s_rate_all year, color(emerald%30) msymbol(circle) lstyle(solid) lcolor(emerald) ylabel("`ylab'", nogrid labsize(small)) xtitle("`xtitle'", size(medsmall) margin(medsmall)) xlabel(2016(1)2023, nogrid) xline(2020) title("`disease_title'", size(medium) margin(b=2)) legend(off) name(prev_comp_`index', replace) saving("$projectdir/output/figures/prev_comp_`disease_'.gph", replace)
 		*graph export "$projectdir/output/figures/prev_comp_`disease_'.png", replace
 		graph export "$projectdir/output/figures/prev_comp_`disease_'.svg", replace
-		legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted"))
+		*legend(region(fcolor(white%0)) order(1 "Crude" 2 "Adjusted"))
 
 		restore			
 	local `index++'

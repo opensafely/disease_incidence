@@ -138,6 +138,11 @@ replace imd = 6 if imd_quintile == "Unknown"
 
 label define imd 1 "1 (most deprived)" 2 "2" 3 "3" 4 "4" 5 "5 (least deprived)" 6 "Unknown", modify
 label values imd imd 
+lab var imd "Index of multiple deprivation"
+tab imd, missing
+drop imd_quintile
+
+save "$projectdir/output/data/reference_data_processed_all.dta", replace
 
 *Table of mean age and demographics for reference population, with counts rounded and redacted===============================================*
 
