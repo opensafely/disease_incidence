@@ -4,7 +4,8 @@ from ehrql.codes import ICD10Code
 from datetime import date, datetime
 import codelists_ehrQL as codelists
 
-diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "coeliac", "pmr"]
+diseases = ["depression"]
 codelist_types = ["snomed", "icd"]
 
 index_date = "2016-04-01"
@@ -62,14 +63,14 @@ any_registration = practice_registrations.where(
 dataset.age = patients.age_on(index_date)
 
 age_band = case(  
-    when((dataset.age >= 0) & (dataset.age < 9)).then("age_0_9"),
-    when((dataset.age >= 10) & (dataset.age < 19)).then("age_10_19"),
-    when((dataset.age >= 20) & (dataset.age < 29)).then("age_20_29"),
-    when((dataset.age >= 30) & (dataset.age < 39)).then("age_30_39"),
-    when((dataset.age >= 40) & (dataset.age < 49)).then("age_40_49"),
-    when((dataset.age >= 50) & (dataset.age < 59)).then("age_50_59"),
-    when((dataset.age >= 60) & (dataset.age < 69)).then("age_60_69"),
-    when((dataset.age >= 70) & (dataset.age < 79)).then("age_70_79"),
+    when((dataset.age >= 0) & (dataset.age <= 9)).then("age_0_9"),
+    when((dataset.age >= 10) & (dataset.age <= 19)).then("age_10_19"),
+    when((dataset.age >= 20) & (dataset.age <= 29)).then("age_20_29"),
+    when((dataset.age >= 30) & (dataset.age <= 39)).then("age_30_39"),
+    when((dataset.age >= 40) & (dataset.age <= 49)).then("age_40_49"),
+    when((dataset.age >= 50) & (dataset.age <= 59)).then("age_50_59"),
+    when((dataset.age >= 60) & (dataset.age <= 69)).then("age_60_69"),
+    when((dataset.age >= 70) & (dataset.age <= 79)).then("age_70_79"),
     when((dataset.age >= 80)).then("age_greater_equal_80"),
 )
 

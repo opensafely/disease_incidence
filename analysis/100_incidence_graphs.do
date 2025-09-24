@@ -29,7 +29,9 @@ log using "$logdir/descriptive_tables.log", replace
 *Set Ado file path
 adopath + "$projectdir/analysis/extra_ados"
 
-global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression depression_broad coeliac pmr"
+*global diseases "asthma copd chd stroke heart_failure dementia multiple_sclerosis epilepsy crohns_disease ulcerative_colitis dm_type2 ckd psoriasis atopic_dermatitis osteoporosis rheumatoid depression coeliac pmr"
+global diseases "depression"
+*global diseases "depression_broad"
 
 set type double
 
@@ -453,4 +455,91 @@ graph export "`stem'_combined.tif", replace width(1800) height(1200)
 restore
 */
 
+/*
+*Save data sheets for main figure
+clear
+save "$projectdir/output/data/figure2_data_appended.dta", replace emptyok
+
+use "$projectdir/output/data/redacted_standardised.dta", clear
+
+levelsof disease, local(levels)
+local first = 1
+
+foreach disease_ of local levels {
+
+serset clear
+graph use "$projectdir/output/figures/adj_sex_`disease_'.gph"
+serset dir
+serset use, clear
+order mo_year_diagn, first
+rename mo_year_diagn Date
+rename s_rate_male rate_male
+rename s_rate_male_ma ma_male
+rename s_rate_female rate_female
+rename s_rate_female_ma ma_female
+
+foreach v of varlist _all {
+	capture confirm numeric variable `v'
+	if !_rc {
+		if "`v'" != "Date" {
+			format `v' %9.3f
+		}
+	}
+}
+
+if "`disease_'" == "rheumatoid" {
+	gen str32 Disease = "Rheumatoid Arthritis"
+}
+else if "`disease_'" == "copd" {
+	gen str32 Disease = "COPD"
+}
+else if "`disease_'" == "crohns_disease" {
+	gen str32 Disease = "Crohn's Disease"
+}
+else if "`disease_'" == "dm_type2" {
+	gen str32 Disease = "Diabetes Mellitus Type 2"
+}
+else if "`disease_'" == "chd" {
+	gen str32 Disease = "Coronary Heart Disease"
+}
+else if "`disease_'" == "ckd" {
+	gen str32 Disease = "Chronic Kidney Disease"
+}
+else if "`disease_'" == "coeliac" {
+	gen str32 Disease = "Coeliac Disease"
+}
+else if "`disease_'" == "pmr" {
+	gen str32 Disease = "Polymyalgia Rheumatica"
+}
+else if "`disease_'" == "stroke" {
+	gen str32 Disease = "Stroke and TIA"
+}
+else {
+	gen str32 Disease = strproper(subinstr("`disease_'", "_", " ",.))
+}
+
+order Disease, first
+
+reshape long rate_ ma_, i(Date Disease) j(Sex) string
+replace Sex = "Female" if Sex=="female"
+replace Sex = "Male" if Sex=="male"
+
+rename rate value_rate
+rename ma value_ma
+reshape long value_, i(Date Disease Sex) j(Measure) string
+
+replace Measure = "" if Measure == "rate"
+replace Measure = "Female trend" if Measure == "ma" & Sex == "Female"
+replace Measure = "Male trend" if Measure == "ma" & Sex == "Male"
+rename value_ Incidence_rate
+order Incidence_rate, after(Date)
+
+append using "$projectdir/output/data/figure2_data_appended.dta"
+save "$projectdir/output/data/figure2_data_appended.dta", replace 
+}
+
+use "$projectdir/output/data/figure2_data_appended.dta", clear
+sort Disease Date Sex Measure
+export excel using "$projectdir/output/tables/Figure 2 Data.xlsx", sheet("Chart") firstrow(variables) replace
+*/
 log close	
