@@ -12,8 +12,9 @@ USER-INSTALLED ADO:
 ==============================================================================*/
 
 *Set filepaths
+*global running_locally = 1   // Running on local machine
 global projectdir `c(pwd)'
-di "$projectdir"
+global running_locally = 0   // Running on OpenSAFELY console
 
 capture mkdir "$projectdir/output/data"
 capture mkdir "$projectdir/output/tables"
@@ -141,6 +142,13 @@ bysort disease measure (mo_year_diagn): gen rate_imd4_ma =(rate_imd4[_n-1]+rate_
 bysort disease measure (mo_year_diagn): gen rate_imd5_ma =(rate_imd5[_n-1]+rate_imd5[_n]+rate_imd5[_n+1])/3
 bysort disease measure (mo_year_diagn): gen rate_imdunk_ma =(rate_imdunk[_n-1]+rate_imdunk[_n]+rate_imdunk[_n+1])/3
 
+gen disease_title = subinstr(disease_full, "_", " ",.)
+order disease_title, after(disease_full)
+replace disease_title = "Diabetes Mellitus Type 2" if disease == "dm_type2" 
+replace disease_title = "Depression and depressive symptoms" if disease == "depression_broad" 
+replace disease_title = "Stroke and TIA" if disease == "stroke" 
+drop disease_full
+
 save "$projectdir/output/data/redacted_standardised.dta", replace
 
 **Save subset of data for use with ARIMA
@@ -160,43 +168,6 @@ local index=1
 
 levelsof disease, local(levels)
 foreach disease_ of local levels {
-	
-	***Label diseases
-	di "`disease_'"
-	
-    if "`disease_'" == "rheumatoid" {
-		local disease_title "Rheumatoid Arthritis"
-    }
-	else if "`disease_'" == "copd" {
-		local disease_title "COPD"
-	}
-	else if "`disease_'" == "crohns_disease" {
-		local disease_title "Crohn's Disease"
-	}
-	else if "`disease_'" == "dm_type2" {
-		local disease_title "Diabetes Mellitus Type 2"
-	}
-	else if "`disease_'" == "chd" {
-		local disease_title "Coronary Heart Disease"
-	}
-	else if "`disease_'" == "ckd" {
-		local disease_title "Chronic Kidney Disease"
-	}
-	else if "`disease_'" == "coeliac" {
-		local disease_title "Coeliac Disease"
-	}
-	else if "`disease_'" == "pmr" {
-		local disease_title "Polymyalgia Rheumatica"
-	}
-	else if "`disease_'" == "depression_broad" {
-		local disease_title "Depression and depressive symptoms"
-	}
-	else if "`disease_'" == "stroke" {
-		local disease_title "Stroke and TIA"
-	}
-	else {
-		local disease_title = strproper(subinstr("`disease_'", "_", " ",.))
-	}
 
 	*Label y-axis (for combined graph)
 	if `index' == 1 | `index' == 6 | `index' == 11 | `index' == 16 {
@@ -221,6 +192,10 @@ foreach disease_ of local levels {
 	preserve
 	keep if measure=="Incidence"
 	keep if disease == "`disease_'"
+	
+	*Local full disease name
+	local disease_title = disease_title[1]
+	display "`disease_title'"
 	
 	***Set y-axis format
 	egen s_rate_all_min = min(s_rate_all)
@@ -269,6 +244,10 @@ foreach disease_ of local levels {
 	preserve
 	keep if measure=="Prevalence"
 	keep if disease == "`disease_'"
+	
+	*Local full disease name
+	local disease_title = disease_title[1]
+	display "`disease_title'"
 	
 	***Ranges for prevalence graphs
 	egen s_rate_all_av = mean(s_rate_all)
@@ -328,17 +307,21 @@ foreach disease_ of local levels {
 	local `index++'
 }
 
-/*Combine graphs (Nb. this doesnt work in OpenSAFELY console)
-preserve
-cd "$projectdir/output/figures"
+*Combine graphs (Nb. this doesnt work in OpenSAFELY console)
+if $running_locally {
+	preserve
+	cd "$projectdir/output/figures"
 
-foreach stem in inc_adj adj_sex inc_comp unadj_age unadj_imd prev_adj prev_comp {
-	graph combine `stem'_1 `stem'_2 `stem'_3 `stem'_4 `stem'_5 `stem'_6 `stem'_7 `stem'_8 `stem'_9 `stem'_10 `stem'_11 `stem'_12 `stem'_13 `stem'_14 `stem'_15 `stem'_16 `stem'_17 `stem'_18 `stem'_19, col(5) name(`stem'_combined, replace)
-graph export "`stem'_combined.png", replace
-graph export "`stem'_combined.tif", replace width(1800) height(1200)
+	foreach stem in inc_adj adj_sex inc_comp unadj_age unadj_imd prev_adj prev_comp {
+		graph combine `stem'_1 `stem'_2 `stem'_3 `stem'_4 `stem'_5 `stem'_6 `stem'_7 `stem'_8 `stem'_9 `stem'_10 `stem'_11 `stem'_12 `stem'_13 `stem'_14 `stem'_15 `stem'_16 `stem'_17 `stem'_18 `stem'_19, col(5) name(`stem'_combined, replace)
+	graph export "`stem'_combined.png", replace
+	graph export "`stem'_combined.tif", replace width(1800) height(1200)
+	}
+	restore
 }
-restore
-*/
+else {
+    di "Not running locally — skipping graph combine"
+}
 
 **Do separate graphs for ethnicity due to smaller number of counts in some diseases
 use "$projectdir/output/data/redacted_standardised.dta", clear
@@ -375,28 +358,7 @@ foreach disease_ of local levels {
 	else if "`disease_'" == "ulcerative_colitis" {
 		continue
 	}
-	else if "`disease_'" == "copd" {
-		local disease_title "COPD"
-	}
-	else if "`disease_'" == "dm_type2" {
-		local disease_title "Diabetes Mellitus Type 2"
-	}
-	else if "`disease_'" == "chd" {
-		local disease_title "Coronary Heart Disease"
-	}
-	else if "`disease_'" == "ckd" {
-		local disease_title "Chronic Kidney Disease"
-	}
-	else if "`disease_'" == "depression_broad" {
-		local disease_title "Depression and depressive symptoms"
-	}
-	else if "`disease_'" == "stroke" {
-		local disease_title "Stroke and TIA"
-	}
-	else {
-		local disease_title = strproper(subinstr("`disease_'", "_", " ",.))
-	}
-
+	
 	*Label y-axis (for combined graph)
 	if `index' == 1 | `index' == 5 | `index' == 9 {
 		local ytitle "Monthly incidence rate per 100,000"
@@ -418,6 +380,10 @@ foreach disease_ of local levels {
 	preserve
 	keep if measure=="Incidence"
 	keep if disease == "`disease_'"
+	
+	*Local full disease name
+	local disease_title = disease_title[1]
+	display "`disease_title'"
 		
 	***Set y-axis format
 	egen s_rate_all_min = min(s_rate_all)
@@ -441,17 +407,21 @@ foreach disease_ of local levels {
 	local `index++'
 }
 
-/*Combine graphs - Nb. this doesn't work in OpenSAFELY console
-preserve
-cd "$projectdir/output/figures"
+*Combine graphs (Nb. this doesnt work in OpenSAFELY console)
+if $running_locally {
+	preserve
+	cd "$projectdir/output/figures"
 
-foreach stem in unadj_ethn {
-	graph combine `stem'_1 `stem'_2 `stem'_3 `stem'_4 `stem'_5 `stem'_6 `stem'_7 `stem'_8 `stem'_9 `stem'_10 `stem'_11, col(4) name(`stem'_combined, replace)
-graph export "`stem'_combined.png", replace
-graph export "`stem'_combined.tif", replace width(1800) height(1200)
+	foreach stem in unadj_ethn {
+		graph combine `stem'_1 `stem'_2 `stem'_3 `stem'_4 `stem'_5 `stem'_6 `stem'_7 `stem'_8 `stem'_9 `stem'_10 `stem'_11, col(4) name(`stem'_combined, replace)
+	graph export "`stem'_combined.png", replace
+	graph export "`stem'_combined.tif", replace width(1800) height(1200)
+	}
+	restore
 }
-restore
-*/
+else {
+    di "Not running locally — skipping graph combine"
+}
 
 /*
 *Save data sheets for main figure
@@ -540,4 +510,5 @@ use "$projectdir/output/data/figure2_data_appended.dta", clear
 sort Disease Date Sex Measure
 export excel using "$projectdir/output/tables/Figure 2 Data.xlsx", sheet("Chart") firstrow(variables) replace
 */
+
 log close	
