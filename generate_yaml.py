@@ -1,5 +1,4 @@
-#diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "depression_broad", "coeliac", "pmr"]
-diseases = ["depression"]
+diseases = ["asthma", "copd", "chd", "stroke", "heart_failure", "dementia", "multiple_sclerosis", "epilepsy", "crohns_disease", "ulcerative_colitis", "dm_type2", "ckd", "psoriasis", "atopic_dermatitis", "osteoporosis", "rheumatoid", "depression", "depression_broad", "coeliac", "pmr"]
 
 yaml_header = """
 version: '3.0'
@@ -100,9 +99,9 @@ yaml_footer_template = f"""
         figure3: output/figures/seasonal_pre_covid_*.svg
         figure4: output/figures/auto_residuals_*.svg
         figure5: output/figures/obs_pred_*.svg
-        figure6: output/figures/prophet_*.svg
+        #figure6: output/figures/prophet_*.svg
         table1: output/tables/change_incidence_byyear.csv
-        table2: output/tables/change_incidence_byyear_prophet.csv.csv
+        #table2: output/tables/change_incidence_byyear_prophet.csv
         table3: output/tables/values_*.csv   
 """
 
