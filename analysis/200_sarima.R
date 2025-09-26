@@ -33,6 +33,9 @@ library(lubridate)
 
 sessionInfo()
 
+#running_locally <- TRUE
+running_locally <- FALSE
+
 # Create directories if needed
 dir_create(here::here("output/figures"), showWarnings = FALSE, recurse = TRUE)
 dir_create(here::here("output/tables"), showWarnings = FALSE, recurse = TRUE)
@@ -713,40 +716,45 @@ for (j in 1:length(disease_list)) {
   index_axis <- index_axis + 1
 }    
 
-# # Generate combined graphs for each disease - Nb. the below doesn't run in the OpenSAFELY console
-# dis_vec <- as.character(disease_list)
-# 
-# # List and read all RDS files that match the pattern (for SARIMA)
-# rds_files <- list.files(path = "output/figures/", pattern = "^obs_pred_incidence.*_.*\\.rds$", full.names = TRUE)
-# fnames <- basename(rds_files)
-# file_dis <- sub("^obs_pred_incidence_(.*)\\.rds$", "\\1", fnames)
-# keep <- file_dis %in% dis_vec
-# matching_rds <- rds_files[keep]
-# matching_dis <- file_dis[keep]
-# idx <- match(matching_dis, dis_vec)
-# ord <- order(idx, na.last = NA)
-# matching_rds <- matching_rds[ord]
-# plot_list <- lapply(matching_rds, readRDS)
-# 
-# png("output/figures/sarima_combined.png", width = 12830, height = 8680, res = 720)
-# do.call(grid.arrange, c(plot_list, ncol = 5))
-# dev.off()
-# 
-# # List and read all RDS files that match the pattern (for Prophet sensitivity)
-# rds_files_p <- list.files(path = "output/figures/", pattern = "^prophet_incidence.*_.*\\.rds$", full.names = TRUE)
-# fnames_p <- basename(rds_files_p)
-# file_dis_p <- sub("^prophet_incidence_(.*)\\.rds$", "\\1", fnames_p)
-# keep <- file_dis_p %in% dis_vec
-# matching_rds_p <- rds_files_p[keep]
-# matching_dis_p <- file_dis_p[keep]
-# idx_p <- match(matching_dis_p, dis_vec)
-# ord_p <- order(idx_p, na.last = NA)
-# matching_rds_p <- matching_rds_p[ord_p]
-# plot_list <- lapply(matching_rds_p, readRDS)
-# 
-# png("output/figures/sarima_combined_prophet.png", width = 12830, height = 8680, res = 720)
-# do.call(grid.arrange, c(plot_list, ncol=5))
-# dev.off()
+# Combine graphs (Nb. this doesnt work in OpenSAFELY console)
+if (running_locally) {
+  dis_vec <- as.character(disease_list)
+  
+  # List and read all RDS files that match the pattern (for SARIMA)
+  rds_files <- list.files(path = "output/figures/", pattern = "^obs_pred_incidence.*_.*\\.rds$", full.names = TRUE)
+  fnames <- basename(rds_files)
+  file_dis <- sub("^obs_pred_incidence_(.*)\\.rds$", "\\1", fnames)
+  keep <- file_dis %in% dis_vec
+  matching_rds <- rds_files[keep]
+  matching_dis <- file_dis[keep]
+  idx <- match(matching_dis, dis_vec)
+  ord <- order(idx, na.last = NA)
+  matching_rds <- matching_rds[ord]
+  plot_list <- lapply(matching_rds, readRDS)
+  
+  png("output/figures/sarima_combined.png", width = 12830, height = 8680, res = 720)
+  do.call(grid.arrange, c(plot_list, ncol = 5))
+  dev.off()
+  
+  # List and read all RDS files that match the pattern (for Prophet sensitivity)
+  rds_files_p <- list.files(path = "output/figures/", pattern = "^prophet_incidence.*_.*\\.rds$", full.names = TRUE)
+  fnames_p <- basename(rds_files_p)
+  file_dis_p <- sub("^prophet_incidence_(.*)\\.rds$", "\\1", fnames_p)
+  keep <- file_dis_p %in% dis_vec
+  matching_rds_p <- rds_files_p[keep]
+  matching_dis_p <- file_dis_p[keep]
+  idx_p <- match(matching_dis_p, dis_vec)
+  ord_p <- order(idx_p, na.last = NA)
+  matching_rds_p <- matching_rds_p[ord_p]
+  plot_list <- lapply(matching_rds_p, readRDS)
+  
+  png("output/figures/sarima_combined_prophet.png", width = 12830, height = 8680, res = 720)
+  do.call(grid.arrange, c(plot_list, ncol=5))
+  dev.off()
+  
+} else {
+  message("Not running locally — skipping graph combine")
+}  
 
 dev.off()
 graphics.off()
