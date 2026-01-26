@@ -1,0 +1,126 @@
+code,term
+M05,Seropositive rheumatoid arthritis
+M050,Felty syndrome
+M0500,Felty syndrome - Multiple sites
+M0501,Felty syndrome - Shoulder region
+M0502,Felty syndrome - Upper arm
+M0503,Felty syndrome - Forearm
+M0504,Felty syndrome - Hand
+M0505,Felty syndrome - Pelvic region and thigh
+M0506,Felty syndrome - Lower leg
+M0507,Felty syndrome - Ankle and foot
+M0508,Felty syndrome - Other
+M0509,Felty syndrome - Site unspecified
+M052,Rheumatoid vasculitis
+M0520,Rheumatoid vasculitis - Multiple sites
+M0521,Rheumatoid vasculitis - Shoulder region
+M0522,Rheumatoid vasculitis - Upper arm
+M0523,Rheumatoid vasculitis - Forearm
+M0524,Rheumatoid vasculitis - Hand
+M0525,Rheumatoid vasculitis - Pelvic region and thigh
+M0526,Rheumatoid vasculitis - Lower leg
+M0527,Rheumatoid vasculitis - Ankle and foot
+M0528,Rheumatoid vasculitis - Other
+M0529,Rheumatoid vasculitis - Site unspecified
+M053,Rheumatoid arthritis with involvement of other organs and systems
+M0530,Rheumatoid arthritis with involvement of other organs and systems - Multiple sites
+M0531,Rheumatoid arthritis with involvement of other organs and systems - Shoulder region
+M0532,Rheumatoid arthritis with involvement of other organs and systems - Upper arm
+M0533,Rheumatoid arthritis with involvement of other organs and systems - Forearm
+M0534,Rheumatoid arthritis with involvement of other organs and systems - Hand
+M0535,Rheumatoid arthritis with involvement of other organs and systems - Pelvic region and thigh
+M0536,Rheumatoid arthritis with involvement of other organs and systems - Lower leg
+M0537,Rheumatoid arthritis with involvement of other organs and systems - Ankle and foot
+M0538,Rheumatoid arthritis with involvement of other organs and systems - Other
+M0539,Rheumatoid arthritis with involvement of other organs and systems - Site unspecified
+M058,Other seropositive rheumatoid arthritis
+M0580,Other seropositive rheumatoid arthritis - Multiple sites
+M0581,Other seropositive rheumatoid arthritis - Shoulder region
+M0582,Other seropositive rheumatoid arthritis - Upper arm
+M0583,Other seropositive rheumatoid arthritis - Forearm
+M0584,Other seropositive rheumatoid arthritis - Hand
+M0585,Other seropositive rheumatoid arthritis - Pelvic region and thigh
+M0586,Other seropositive rheumatoid arthritis - Lower leg
+M0587,Other seropositive rheumatoid arthritis - Ankle and foot
+M0588,Other seropositive rheumatoid arthritis - Other
+M0589,Other seropositive rheumatoid arthritis - Site unspecified
+M059,"Seropositive rheumatoid arthritis, unspecified"
+M0590,"Seropositive rheumatoid arthritis, unspecified - Multiple sites"
+M0591,"Seropositive rheumatoid arthritis, unspecified - Shoulder region"
+M0592,"Seropositive rheumatoid arthritis, unspecified - Upper arm"
+M0593,"Seropositive rheumatoid arthritis, unspecified - Forearm"
+M0594,"Seropositive rheumatoid arthritis, unspecified - Hand"
+M0595,"Seropositive rheumatoid arthritis, unspecified - Pelvic region and thigh"
+M0596,"Seropositive rheumatoid arthritis, unspecified - Lower leg"
+M0597,"Seropositive rheumatoid arthritis, unspecified - Ankle and foot"
+M0598,"Seropositive rheumatoid arthritis, unspecified - Other"
+M0599,"Seropositive rheumatoid arthritis, unspecified - Site unspecified"
+M06,Other rheumatoid arthritis
+M060,Seronegative rheumatoid arthritis
+M0600,Seronegative rheumatoid arthritis - Multiple sites
+M0601,Seronegative rheumatoid arthritis - Shoulder region
+M0602,Seronegative rheumatoid arthritis - Upper arm
+M0603,Seronegative rheumatoid arthritis - Forearm
+M0604,Seronegative rheumatoid arthritis - Hand
+M0605,Seronegative rheumatoid arthritis - Pelvic region and thigh
+M0606,Seronegative rheumatoid arthritis - Lower leg
+M0607,Seronegative rheumatoid arthritis - Ankle and foot
+M0608,Seronegative rheumatoid arthritis - Other
+M0609,Seronegative rheumatoid arthritis - Site unspecified
+M062,Rheumatoid bursitis
+M0620,Rheumatoid bursitis - Multiple sites
+M0621,Rheumatoid bursitis - Shoulder region
+M0622,Rheumatoid bursitis - Upper arm
+M0623,Rheumatoid bursitis - Forearm
+M0624,Rheumatoid bursitis - Hand
+M0625,Rheumatoid bursitis - Pelvic region and thigh
+M0626,Rheumatoid bursitis - Lower leg
+M0627,Rheumatoid bursitis - Ankle and foot
+M0628,Rheumatoid bursitis - Other
+M0629,Rheumatoid bursitis - Site unspecified
+M063,Rheumatoid nodule
+M0630,Rheumatoid nodule - Multiple sites
+M0631,Rheumatoid nodule - Shoulder region
+M0632,Rheumatoid nodule - Upper arm
+M0633,Rheumatoid nodule - Forearm
+M0634,Rheumatoid nodule - Hand
+M0635,Rheumatoid nodule - Pelvic region and thigh
+M0636,Rheumatoid nodule - Lower leg
+M0637,Rheumatoid nodule - Ankle and foot
+M0638,Rheumatoid nodule - Other
+M0639,Rheumatoid nodule - Site unspecified
+M068,Other specified rheumatoid arthritis
+M0680,Other specified rheumatoid arthritis - Multiple sites
+M0681,Other specified rheumatoid arthritis - Shoulder region
+M0682,Other specified rheumatoid arthritis - Upper arm
+M0683,Other specified rheumatoid arthritis - Forearm
+M0684,Other specified rheumatoid arthritis - Hand
+M0685,Other specified rheumatoid arthritis - Pelvic region and thigh
+M0686,Other specified rheumatoid arthritis - Lower leg
+M0687,Other specified rheumatoid arthritis - Ankle and foot
+M0688,Other specified rheumatoid arthritis - Other
+M0689,Other specified rheumatoid arthritis - Site unspecified
+M069,"Rheumatoid arthritis, unspecified"
+M0690,"Rheumatoid arthritis, unspecified - Multiple sites"
+M0691,"Rheumatoid arthritis, unspecified - Shoulder region"
+M0692,"Rheumatoid arthritis, unspecified - Upper arm"
+M0693,"Rheumatoid arthritis, unspecified - Forearm"
+M0694,"Rheumatoid arthritis, unspecified - Hand"
+M0695,"Rheumatoid arthritis, unspecified - Pelvic region and thigh"
+M0696,"Rheumatoid arthritis, unspecified - Lower leg"
+M0697,"Rheumatoid arthritis, unspecified - Ankle and foot"
+M0698,"Rheumatoid arthritis, unspecified - Other"
+M0699,"Rheumatoid arthritis, unspecified - Site unspecified"
+M080,Juvenile rheumatoid arthritis
+M0800,Juvenile rheumatoid arthritis - Multiple sites
+M0801,Juvenile rheumatoid arthritis - Shoulder region
+M0802,Juvenile rheumatoid arthritis - Upper arm
+M0803,Juvenile rheumatoid arthritis - Forearm
+M0804,Juvenile rheumatoid arthritis - Hand
+M0805,Juvenile rheumatoid arthritis - Pelvic region and thigh
+M0806,Juvenile rheumatoid arthritis - Lower leg
+M0807,Juvenile rheumatoid arthritis - Ankle and foot
+M0808,Juvenile rheumatoid arthritis - Other
+M0809,Juvenile rheumatoid arthritis - Site unspecified
+J990,Rheumatoid lung disease M05.1
+M051,Rheumatoid lung disease J99.0
