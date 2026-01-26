@@ -76,7 +76,10 @@ def main():
     icd = [
         t
         for t in tree.body
-        if isinstance(t, ast.Assign) and t.targets[0].id.endswith("_icd")
+        if isinstance(t, ast.Assign)
+        and t.targets[0].id.endswith("_icd")
+        and isinstance(t.value, ast.Call)
+        and t.value.func.id == "codelist_from_csv"
     ]
 
     icd_codelist_paths = [Path(c) for c in [i.value.args[0].value for i in icd]]
