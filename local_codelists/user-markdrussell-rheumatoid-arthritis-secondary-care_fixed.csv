@@ -1,4 +1,5 @@
 code,term
+J990,Rheumatoid lung disease M05.1
 M05,Seropositive rheumatoid arthritis
 M050,Felty syndrome
 M0500,Felty syndrome - Multiple sites
@@ -11,6 +12,17 @@ M0506,Felty syndrome - Lower leg
 M0507,Felty syndrome - Ankle and foot
 M0508,Felty syndrome - Other
 M0509,Felty syndrome - Site unspecified
+M051,Rheumatoid lung disease J99.0
+M0510,Rheumatoid lung disease (J99.0*) - Multiple sites
+M0511,Rheumatoid lung disease (J99.0*) - Shoulder region
+M0512,Rheumatoid lung disease (J99.0*) - Upper arm
+M0513,Rheumatoid lung disease (J99.0*) - Forearm
+M0514,Rheumatoid lung disease (J99.0*) - Hand
+M0515,Rheumatoid lung disease (J99.0*) - Pelvic region and thigh
+M0516,Rheumatoid lung disease (J99.0*) - Lower leg
+M0517,Rheumatoid lung disease (J99.0*) - Ankle and foot
+M0518,Rheumatoid lung disease (J99.0*) - Other
+M0519,Rheumatoid lung disease (J99.0*) - Site unspecified
 M052,Rheumatoid vasculitis
 M0520,Rheumatoid vasculitis - Multiple sites
 M0521,Rheumatoid vasculitis - Shoulder region
@@ -122,5 +134,3 @@ M0806,Juvenile rheumatoid arthritis - Lower leg
 M0807,Juvenile rheumatoid arthritis - Ankle and foot
 M0808,Juvenile rheumatoid arthritis - Other
 M0809,Juvenile rheumatoid arthritis - Site unspecified
-J990,Rheumatoid lung disease M05.1
-M051,Rheumatoid lung disease J99.0

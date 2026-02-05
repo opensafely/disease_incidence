@@ -1,0 +1,28 @@
+code,term
+K50,Crohn disease [regional enteritis]
+K500,Crohn disease of small intestine
+K501,Crohn disease of large intestine
+K508,Other Crohn disease
+K509,"Crohn disease, unspecified"
+M074,Arthropathy in Crohn disease [regional enteritis] K50.-
+M0740,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Multiple sites
+M0741,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Shoulder region
+M0742,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Upper arm
+M0743,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Forearm
+M0744,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Hand
+M0745,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Pelvic region and thigh
+M0746,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Lower leg
+M0747,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Ankle and foot
+M0748,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Other
+M0749,Arthropathy in Crohn disease [regional enteritis] (K50.-†) - Site unspecified
+M091,Juvenile arthritis in Crohn disease [regional enteritis] K50.-
+M0910,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Multiple sites
+M0911,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Shoulder region
+M0912,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Upper arm
+M0913,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Forearm
+M0914,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Hand
+M0915,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Pelvic region and thigh
+M0916,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Lower leg
+M0917,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Ankle and foot
+M0918,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Other
+M0919,Juvenile arthritis in Crohn disease [regional enteritis] (K50.-†) - Site unspecified

@@ -189,6 +189,28 @@ M8197,"Osteoporosis, unspecified - Ankle and foot"
 M8198,"Osteoporosis, unspecified - Other"
 M8199,"Osteoporosis, unspecified - Site unspecified"
 M82,Osteoporosis in diseases classified elsewhere
+M820,Osteoporosis in multiple myelomatosis C90.0
+M8200,Osteoporosis in multiple myelomatosis (C90.0†) - Multiple sites
+M8201,Osteoporosis in multiple myelomatosis (C90.0†) - Shoulder region
+M8202,Osteoporosis in multiple myelomatosis (C90.0†) - Upper arm
+M8203,Osteoporosis in multiple myelomatosis (C90.0†) - Forearm
+M8204,Osteoporosis in multiple myelomatosis (C90.0†) - Hand
+M8205,Osteoporosis in multiple myelomatosis (C90.0†) - Pelvic region and thigh
+M8206,Osteoporosis in multiple myelomatosis (C90.0†) - Lower leg
+M8207,Osteoporosis in multiple myelomatosis (C90.0†) - Ankle and foot
+M8208,Osteoporosis in multiple myelomatosis (C90.0†) - Other
+M8209,Osteoporosis in multiple myelomatosis (C90.0†) - Site unspecified
+M821,Osteoporosis in endocrine disorders E00-E34
+M8210,Osteoporosis in endocrine disorders (E00-E34†) - Multiple sites
+M8211,Osteoporosis in endocrine disorders (E00-E34†) - Shoulder region
+M8212,Osteoporosis in endocrine disorders (E00-E34†) - Upper arm
+M8213,Osteoporosis in endocrine disorders (E00-E34†) - Forearm
+M8214,Osteoporosis in endocrine disorders (E00-E34†) - Hand
+M8215,Osteoporosis in endocrine disorders (E00-E34†) - Pelvic region and thigh
+M8216,Osteoporosis in endocrine disorders (E00-E34†) - Lower leg
+M8217,Osteoporosis in endocrine disorders (E00-E34†) - Ankle and foot
+M8218,Osteoporosis in endocrine disorders (E00-E34†) - Other
+M8219,Osteoporosis in endocrine disorders (E00-E34†) - Site unspecified
 M828,Osteoporosis in other diseases classified elsewhere
 M8280,Osteoporosis in other diseases classified elsewhere - Multiple sites
 M8281,Osteoporosis in other diseases classified elsewhere - Shoulder region
@@ -200,5 +222,3 @@ M8286,Osteoporosis in other diseases classified elsewhere - Lower leg
 M8287,Osteoporosis in other diseases classified elsewhere - Ankle and foot
 M8288,Osteoporosis in other diseases classified elsewhere - Other
 M8289,Osteoporosis in other diseases classified elsewhere - Site unspecified
-M820,Osteoporosis in multiple myelomatosis C90.0
-M821,Osteoporosis in endocrine disorders E00-E34

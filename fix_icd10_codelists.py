@@ -29,7 +29,7 @@ def write_fixed_codelist(codelist: dict, path: Path):
             f, fieldnames=codelist_output[0].keys(), extrasaction="ignore"
         )
         writer.writeheader()
-        writer.writerows(codelist_output)
+        writer.writerows(sorted(codelist_output, key=lambda x: x["code"]))
 
 
 # get child codes of every code in codelist, add in if missing
@@ -43,7 +43,10 @@ def fix_missing_children(codelist: dict, icd_combined: list) -> dict:
 
     child_codes = dict()
     for code in codelist:
-        child_codes |= find_children(code)
+        children = find_children(code)
+        # don't add if sibling codes found - likely purposeful exclusion
+        if not any(set(codelist.keys()).intersection(children.keys())):
+            child_codes |= find_children(code)
 
     # prioritise original codelist entries over anything we find
     return child_codes | codelist
@@ -67,7 +70,7 @@ def fix_version_differences(codelist: dict, icd_combined: list) -> dict:
 
 
 def main():
-    with Path("icd_combined_2026-01-26.csv").open() as f:
+    with Path("icd_combined_2026-02-05.csv").open() as f:
         icd_combined = list(csv.DictReader(f))
 
     codelists_ehrQL = Path("analysis/codelists_ehrQL.py").read_text()
@@ -86,7 +89,7 @@ def main():
     for icd_codelist_path in icd_codelist_paths:
         codelist = load_codelist(icd_codelist_path)
         fixed_codelist = fix_missing_children(codelist, icd_combined)
-        fixed_codelist = fix_version_differences(codelist, icd_combined)
+        fixed_codelist = fix_version_differences(fixed_codelist, icd_combined)
         if fixed_codelist != codelist:
             write_fixed_codelist(fixed_codelist, icd_codelist_path)
 
