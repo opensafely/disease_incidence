@@ -1,0 +1,31 @@
+code,term
+K51,Ulcerative colitis
+K510,Ulcerative (chronic) pancolitis
+K512,Ulcerative (chronic) proctitis
+K513,Ulcerative (chronic) rectosigmoiditis
+K514,Inflammatory polyps
+K515,Left sided colitis
+K518,Other ulcerative colitis
+K519,"Ulcerative colitis, unspecified"
+M075,Arthropathy in ulcerative colitis K51.-
+M0750,Arthropathy in ulcerative colitis (K51.-†) - Multiple sites
+M0751,Arthropathy in ulcerative colitis (K51.-†) - Shoulder region
+M0752,Arthropathy in ulcerative colitis (K51.-†) - Upper arm
+M0753,Arthropathy in ulcerative colitis (K51.-†) - Forearm
+M0754,Arthropathy in ulcerative colitis (K51.-†) - Hand
+M0755,Arthropathy in ulcerative colitis (K51.-†) - Pelvic region and thigh
+M0756,Arthropathy in ulcerative colitis (K51.-†) - Lower leg
+M0757,Arthropathy in ulcerative colitis (K51.-†) - Ankle and foot
+M0758,Arthropathy in ulcerative colitis (K51.-†) - Other
+M0759,Arthropathy in ulcerative colitis (K51.-†) - Site unspecified
+M092,Juvenile arthritis in ulcerative colitis K51.-
+M0920,Juvenile arthritis in ulcerative colitis (K51.-†) - Multiple sites
+M0921,Juvenile arthritis in ulcerative colitis (K51.-†) - Shoulder region
+M0922,Juvenile arthritis in ulcerative colitis (K51.-†) - Upper arm
+M0923,Juvenile arthritis in ulcerative colitis (K51.-†) - Forearm
+M0924,Juvenile arthritis in ulcerative colitis (K51.-†) - Hand
+M0925,Juvenile arthritis in ulcerative colitis (K51.-†) - Pelvic region and thigh
+M0926,Juvenile arthritis in ulcerative colitis (K51.-†) - Lower leg
+M0927,Juvenile arthritis in ulcerative colitis (K51.-†) - Ankle and foot
+M0928,Juvenile arthritis in ulcerative colitis (K51.-†) - Other
+M0929,Juvenile arthritis in ulcerative colitis (K51.-†) - Site unspecified

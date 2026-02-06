@@ -1,0 +1,66 @@
+code,term
+L40,Psoriasis
+L400,Psoriasis vulgaris
+L401,Generalized pustular psoriasis
+L402,Acrodermatitis continua
+L403,Pustulosis palmaris et plantaris
+L404,Guttate psoriasis
+L405,Arthropathic psoriasis M07.0-M07.3 M09.0
+L408,Other psoriasis
+L409,"Psoriasis, unspecified"
+M07,Psoriatic and enteropathic arthropathies
+M070,Distal interphalangeal psoriatic arthropathy L40.5
+M0700,Distal interphalangeal psoriatic arthropathy (L40.5†) - Multiple sites
+M0701,Distal interphalangeal psoriatic arthropathy (L40.5†) - Shoulder region
+M0702,Distal interphalangeal psoriatic arthropathy (L40.5†) - Upper arm
+M0703,Distal interphalangeal psoriatic arthropathy (L40.5†) - Forearm
+M0704,Distal interphalangeal psoriatic arthropathy (L40.5†) - Hand
+M0705,Distal interphalangeal psoriatic arthropathy (L40.5†) - Pelvic region and thigh
+M0706,Distal interphalangeal psoriatic arthropathy (L40.5†) - Lower leg
+M0707,Distal interphalangeal psoriatic arthropathy (L40.5†) - Ankle and foot
+M0708,Distal interphalangeal psoriatic arthropathy (L40.5†) - Other
+M0709,Distal interphalangeal psoriatic arthropathy (L40.5†) - Site unspecified
+M071,Arthritis mutilans L40.5
+M0710,Arthritis mutilans (L40.5†) - Multiple sites
+M0711,Arthritis mutilans (L40.5†) - Shoulder region
+M0712,Arthritis mutilans (L40.5†) - Upper arm
+M0713,Arthritis mutilans (L40.5†) - Forearm
+M0714,Arthritis mutilans (L40.5†) - Hand
+M0715,Arthritis mutilans (L40.5†) - Pelvic region and thigh
+M0716,Arthritis mutilans (L40.5†) - Lower leg
+M0717,Arthritis mutilans (L40.5†) - Ankle and foot
+M0718,Arthritis mutilans (L40.5†) - Other
+M0719,Arthritis mutilans (L40.5†) - Site unspecified
+M072,Psoriatic spondylitis L40.5
+M0720,Psoriatic spondylitis (L40.5†) - Multiple sites
+M0721,Psoriatic spondylitis (L40.5†) - Shoulder region
+M0722,Psoriatic spondylitis (L40.5†) - Upper arm
+M0723,Psoriatic spondylitis (L40.5†) - Forearm
+M0724,Psoriatic spondylitis (L40.5†) - Hand
+M0725,Psoriatic spondylitis (L40.5†) - Pelvic region and thigh
+M0726,Psoriatic spondylitis (L40.5†) - Lower leg
+M0727,Psoriatic spondylitis (L40.5†) - Ankle and foot
+M0728,Psoriatic spondylitis (L40.5†) - Other
+M0729,Psoriatic spondylitis (L40.5†) - Site unspecified
+M073,Other psoriatic arthropathies L40.5
+M0730,Other psoriatic arthropathies (L40.5†) - Multiple sites
+M0731,Other psoriatic arthropathies (L40.5†) - Shoulder region
+M0732,Other psoriatic arthropathies (L40.5†) - Upper arm
+M0733,Other psoriatic arthropathies (L40.5†) - Forearm
+M0734,Other psoriatic arthropathies (L40.5†) - Hand
+M0735,Other psoriatic arthropathies (L40.5†) - Pelvic region and thigh
+M0736,Other psoriatic arthropathies (L40.5†) - Lower leg
+M0737,Other psoriatic arthropathies (L40.5†) - Ankle and foot
+M0738,Other psoriatic arthropathies (L40.5†) - Other
+M0739,Other psoriatic arthropathies (L40.5†) - Site unspecified
+M090,Juvenile arthritis in psoriasis L40.5
+M0900,Juvenile arthritis in psoriasis (L40.5†) - Multiple sites
+M0901,Juvenile arthritis in psoriasis (L40.5†) - Shoulder region
+M0902,Juvenile arthritis in psoriasis (L40.5†) - Upper arm
+M0903,Juvenile arthritis in psoriasis (L40.5†) - Forearm
+M0904,Juvenile arthritis in psoriasis (L40.5†) - Hand
+M0905,Juvenile arthritis in psoriasis (L40.5†) - Pelvic region and thigh
+M0906,Juvenile arthritis in psoriasis (L40.5†) - Lower leg
+M0907,Juvenile arthritis in psoriasis (L40.5†) - Ankle and foot
+M0908,Juvenile arthritis in psoriasis (L40.5†) - Other
+M0909,Juvenile arthritis in psoriasis (L40.5†) - Site unspecified
