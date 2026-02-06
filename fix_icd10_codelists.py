@@ -24,12 +24,13 @@ def write_fixed_codelist(codelist: dict, path: Path):
         row = {"code": code} | values
         codelist_output.append(row)
 
-    with output_path(path).open("w") as f:
-        writer = csv.DictWriter(
-            f, fieldnames=codelist_output[0].keys(), extrasaction="ignore"
-        )
+    fixed_path = output_path(path)
+    with fixed_path.open("w") as f:
+        writer = csv.DictWriter(f, fieldnames=["code", "term"], extrasaction="ignore")
         writer.writeheader()
         writer.writerows(sorted(codelist_output, key=lambda x: x["code"]))
+
+    return fixed_path
 
 
 # get child codes of every code in codelist, add in if missing
@@ -73,7 +74,8 @@ def main():
     with Path("icd_combined_2026-02-05.csv").open() as f:
         icd_combined = list(csv.DictReader(f))
 
-    codelists_ehrQL = Path("analysis/codelists_ehrQL.py").read_text()
+    codelists_ehrQL_path = Path("analysis/codelists_ehrQL.py")
+    codelists_ehrQL = codelists_ehrQL_path.read_text()
 
     tree = ast.parse(codelists_ehrQL)
     icd = [
@@ -86,12 +88,19 @@ def main():
     ]
 
     icd_codelist_paths = [Path(c) for c in [i.value.args[0].value for i in icd]]
+    fixed_codelists = []
     for icd_codelist_path in icd_codelist_paths:
         codelist = load_codelist(icd_codelist_path)
         fixed_codelist = fix_missing_children(codelist, icd_combined)
         fixed_codelist = fix_version_differences(fixed_codelist, icd_combined)
         if fixed_codelist != codelist:
-            write_fixed_codelist(fixed_codelist, icd_codelist_path)
+            fixed_path = write_fixed_codelist(fixed_codelist, icd_codelist_path)
+            fixed_codelists.append((icd_codelist_path, fixed_path))
+
+    for old_path, new_path in fixed_codelists:
+        codelists_ehrQL = codelists_ehrQL.replace(str(old_path), str(new_path))
+
+    Path("analysis/codelists_ehrQL.py").write_text(codelists_ehrQL)
 
 
 if __name__ == "__main__":

@@ -130,7 +130,7 @@ crohns_disease_snomed = codelist_from_csv(
 )
 
 crohns_disease_icd = codelist_from_csv(
-    "codelists/user-markdrussell-crohns-disease-secondary-care.csv", column="code",
+    "local_codelists/user-markdrussell-crohns-disease-secondary-care_fixed.csv", column="code",
 )
 
 ulcerative_colitis_snomed = codelist_from_csv(
@@ -138,7 +138,7 @@ ulcerative_colitis_snomed = codelist_from_csv(
 )
 
 ulcerative_colitis_icd = codelist_from_csv(
-    "codelists/user-markdrussell-ulcerative-colitis-secondary-care.csv", column="code",
+    "local_codelists/user-markdrussell-ulcerative-colitis-secondary-care_fixed.csv", column="code",
 )
 
 dm_type2_snomed = codelist_from_csv(
@@ -178,7 +178,7 @@ psoriasis_snomed = codelist_from_csv(
 )
 
 psoriasis_icd = codelist_from_csv(
-    "codelists/user-markdrussell-psoriasis-secondary-care.csv", column="code",
+    "local_codelists/user-markdrussell-psoriasis-secondary-care_fixed.csv", column="code",
 )
 
 atopic_dermatitis_snomed = codelist_from_csv(
@@ -194,7 +194,7 @@ osteoporosis_snomed = codelist_from_csv(
 )
 
 osteoporosis_icd = codelist_from_csv(
-    "codelists/user-markdrussell-osteoporosis-secondary-care.csv", column="code",
+    "local_codelists/user-markdrussell-osteoporosis-secondary-care_fixed.csv", column="code",
 )
 
 osteoporosis_resolved = codelist_from_csv(
@@ -263,5 +263,5 @@ rheumatoid_snomed = codelist_from_csv(
 )
 
 rheumatoid_icd = codelist_from_csv(
-    "codelists/user-markdrussell-rheumatoid-arthritis-secondary-care.csv", column="code",
+    "local_codelists/user-markdrussell-rheumatoid-arthritis-secondary-care_fixed.csv", column="code",
 )
